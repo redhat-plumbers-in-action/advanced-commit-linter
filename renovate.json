@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  
+  "labels": ["type: dependencies", "merge-strategy: rebase"],
+  "github-actions": {
+    "addLabels": ["github-actions"]
+  },
+  
+  "js": {
+    "addLabels": ["javascript"]
+  }
+}
