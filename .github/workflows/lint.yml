@@ -1,6 +1,6 @@
 ---
 
-name: Linting suite
+name: Linters
 
 on:
   push:
@@ -13,24 +13,6 @@ permissions:
   contents: read
 
 jobs:
-  super-linter:
-    name: Super Linter
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Repository checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Lint Code Base
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
-          VALIDATE_TYPESCRIPT_STANDARD: false
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   lint:
     name: Linters
     runs-on: ubuntu-latest
@@ -38,10 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: 17
+          node-version: 18
           cache: yarn
 
       - name: Install
@@ -55,6 +37,3 @@ jobs:
 
       - name: ESLint
         run: yarn run lint
-
-      # - name: Run CSpell
-      #   run: yarn run lint:spellcheck
