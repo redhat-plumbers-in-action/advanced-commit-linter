@@ -9,12 +9,12 @@ import { UpstreamValidator } from './upstream-validator';
 export declare class Validator {
     readonly config: Config;
     readonly context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events];
     trackerValidator: TrackerValidator[];
     upstreamValidator: UpstreamValidator;
     constructor(config: Config, context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]);
     validateAll(validatedCommits: Commit[]): OutputValidatedPullRequestMetadataT['validation'];
     validateCommit(commitMetadata: SingleCommitMetadataT): Promise<ValidatedCommitT>;

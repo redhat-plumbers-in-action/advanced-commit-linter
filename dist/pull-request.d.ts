@@ -7,11 +7,11 @@ export declare class PullRequest {
     constructor(id: number, _metadata: Metadata);
     get metadata(): Metadata;
     publishComment(content: string, context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]): Promise<number | undefined>;
     private createComment;
     private updateComment;
     static getPullRequest(id: number, context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]): Promise<PullRequest>;
 }

@@ -8,13 +8,13 @@ export declare class UpstreamValidator {
     isCherryPickPolicyEmpty: boolean;
     constructor(config: ConfigT['policy']['cherry-pick'], isCherryPickPolicyEmpty: boolean);
     validate(singleCommitMetadata: SingleCommitMetadataT, context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]): Promise<UpstreamT | undefined>;
     loopPolicy(cherryPick: SingleCommitMetadataT['message']['cherryPick'][number], context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]): Promise<UpstreamT['data']>;
     verifyCherryPick(cherryPick: SingleCommitMetadataT['message']['cherryPick'][number], upstream: ConfigCherryPickT['upstream'][number], context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]): Promise<UpstreamT['data'][number]>;
     isException(exceptionPolicy: ConfigExceptionT | undefined, commitBody: string): string;
     getStatus(data: UpstreamT['data'], exception: UpstreamT['exception']): StatusT;
