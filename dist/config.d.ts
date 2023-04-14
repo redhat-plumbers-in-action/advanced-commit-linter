@@ -5,27 +5,27 @@ export declare class Config {
     policy: ConfigT['policy'];
     constructor(config: unknown);
     get tracker(): {
-        exception?: {
-            label?: string[] | undefined;
-            note?: string[] | undefined;
-        } | undefined;
-        url?: string | undefined;
         keyword: string[];
         'issue-format': string[];
-    }[];
-    get cherryPick(): {
+        url?: string | undefined;
         exception?: {
             label?: string[] | undefined;
             note?: string[] | undefined;
         } | undefined;
+    }[];
+    get cherryPick(): {
         upstream: {
             github: string;
         }[];
+        exception?: {
+            label?: string[] | undefined;
+            note?: string[] | undefined;
+        } | undefined;
     };
     isTrackerPolicyEmpty(): boolean;
     isCherryPickPolicyEmpty(): boolean;
     static getConfig(context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]): Promise<Config>;
     static isConfigEmpty(config: unknown): boolean;
 }

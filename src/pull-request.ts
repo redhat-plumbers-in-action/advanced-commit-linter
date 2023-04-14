@@ -32,7 +32,7 @@ export class PullRequest {
     return commentPayload.id;
   }
 
-  private createComment(
+  private async createComment(
     body: string,
     context: {
       [K in keyof typeof events]: Context<(typeof events)[K][number]>;

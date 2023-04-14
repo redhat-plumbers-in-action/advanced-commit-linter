@@ -29,21 +29,21 @@ export declare const configCherryPickSchema: z.ZodObject<{
         note?: string[] | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    upstream: {
+        github: string;
+    }[];
     exception?: {
         label?: string[] | undefined;
         note?: string[] | undefined;
     } | undefined;
-    upstream: {
-        github: string;
-    }[];
 }, {
+    upstream: {
+        github: string;
+    }[];
     exception?: {
         label?: string[] | undefined;
         note?: string[] | undefined;
     } | undefined;
-    upstream: {
-        github: string;
-    }[];
 }>;
 export type ConfigCherryPickT = z.infer<typeof configCherryPickSchema>;
 export declare const configTrackerSchema: z.ZodObject<{
@@ -61,21 +61,21 @@ export declare const configTrackerSchema: z.ZodObject<{
         note?: string[] | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    keyword: string[];
+    'issue-format': string[];
+    url?: string | undefined;
     exception?: {
         label?: string[] | undefined;
         note?: string[] | undefined;
     } | undefined;
-    url?: string | undefined;
-    keyword: string[];
-    'issue-format': string[];
 }, {
+    keyword: string[];
+    'issue-format': string[];
+    url?: string | undefined;
     exception?: {
         label?: string[] | undefined;
         note?: string[] | undefined;
     } | undefined;
-    url?: string | undefined;
-    keyword: string[];
-    'issue-format': string[];
 }>;
 export type ConfigTrackerT = z.infer<typeof configTrackerSchema>;
 export declare const configSchema: z.ZodObject<{
@@ -99,21 +99,21 @@ export declare const configSchema: z.ZodObject<{
                 note?: string[] | undefined;
             }>>;
         }, "strip", z.ZodTypeAny, {
+            upstream: {
+                github: string;
+            }[];
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            upstream: {
-                github: string;
-            }[];
         }, {
+            upstream: {
+                github: string;
+            }[];
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            upstream: {
-                github: string;
-            }[];
         }>>>;
         tracker: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
             keyword: z.ZodArray<z.ZodString, "many">;
@@ -130,101 +130,101 @@ export declare const configSchema: z.ZodObject<{
                 note?: string[] | undefined;
             }>>;
         }, "strip", z.ZodTypeAny, {
+            keyword: string[];
+            'issue-format': string[];
+            url?: string | undefined;
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            url?: string | undefined;
-            keyword: string[];
-            'issue-format': string[];
         }, {
+            keyword: string[];
+            'issue-format': string[];
+            url?: string | undefined;
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            url?: string | undefined;
-            keyword: string[];
-            'issue-format': string[];
         }>, "many">>>;
     }, "strip", z.ZodTypeAny, {
         'cherry-pick': {
-            exception?: {
-                label?: string[] | undefined;
-                note?: string[] | undefined;
-            } | undefined;
             upstream: {
                 github: string;
             }[];
-        };
-        tracker: {
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            url?: string | undefined;
+        };
+        tracker: {
             keyword: string[];
             'issue-format': string[];
+            url?: string | undefined;
+            exception?: {
+                label?: string[] | undefined;
+                note?: string[] | undefined;
+            } | undefined;
         }[];
     }, {
         'cherry-pick'?: {
-            exception?: {
-                label?: string[] | undefined;
-                note?: string[] | undefined;
-            } | undefined;
             upstream: {
                 github: string;
             }[];
-        } | undefined;
-        tracker?: {
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            url?: string | undefined;
+        } | undefined;
+        tracker?: {
             keyword: string[];
             'issue-format': string[];
+            url?: string | undefined;
+            exception?: {
+                label?: string[] | undefined;
+                note?: string[] | undefined;
+            } | undefined;
         }[] | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     policy: {
         'cherry-pick': {
-            exception?: {
-                label?: string[] | undefined;
-                note?: string[] | undefined;
-            } | undefined;
             upstream: {
                 github: string;
             }[];
-        };
-        tracker: {
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            url?: string | undefined;
+        };
+        tracker: {
             keyword: string[];
             'issue-format': string[];
+            url?: string | undefined;
+            exception?: {
+                label?: string[] | undefined;
+                note?: string[] | undefined;
+            } | undefined;
         }[];
     };
 }, {
     policy: {
         'cherry-pick'?: {
-            exception?: {
-                label?: string[] | undefined;
-                note?: string[] | undefined;
-            } | undefined;
             upstream: {
                 github: string;
             }[];
-        } | undefined;
-        tracker?: {
             exception?: {
                 label?: string[] | undefined;
                 note?: string[] | undefined;
             } | undefined;
-            url?: string | undefined;
+        } | undefined;
+        tracker?: {
             keyword: string[];
             'issue-format': string[];
+            url?: string | undefined;
+            exception?: {
+                label?: string[] | undefined;
+                note?: string[] | undefined;
+            } | undefined;
         }[] | undefined;
     };
 }>;

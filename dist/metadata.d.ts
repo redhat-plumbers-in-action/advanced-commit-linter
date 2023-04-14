@@ -14,7 +14,7 @@ export declare class Metadata {
     static readonly metadataCommentID = "comment-id";
     setMetadata(): Promise<void>;
     static getMetadata(issueNumber: number, context: {
-        [K in keyof typeof events]: Context<typeof events[K][number]>;
+        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]): Promise<Metadata>;
 }
 export {};
