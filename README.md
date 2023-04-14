@@ -4,7 +4,7 @@
   <h1 align="center">Advanced Commit Linter</h1>
 </p>
 
-[![GitHub Marketplace][market-status]][market] [![Tests][test-status]][test] [![Lint Code Base][linter-status]][linter] [![CodeQL][codeql-status]][codeql] [![Check dist/][check-dist-status]][check-dist] [![codecov][codecov-status]][codecov] [![Mergify Status][mergify-status]][mergify]
+[![GitHub Marketplace][market-status]][market] [![Tests][test-status]][test] [![Lint Code Base][linter-status]][linter] [![CodeQL][codeql-status]][codeql] [![Check dist/][check-dist-status]][check-dist] [![codecov][codecov-status]][codecov]
 
 <!-- Status links -->
 
@@ -26,31 +26,272 @@
 [codecov]: https://codecov.io/gh/redhat-plumbers-in-action/advanced-commit-linter
 [codecov-status]: https://codecov.io/gh/redhat-plumbers-in-action/advanced-commit-linter/branch/main/graph/badge.svg?token=YO0RD8EESQ
 
-[mergify]: https://mergify.com
-[mergify-status]: https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/redhat-plumbers-in-action/advanced-commit-linter&style=flat
-
 <!-- -->
 
-TBA
+Advanced Commit Linter is a GitHub Action that lint commit messages of PR. It checks for issue trackers and upstream references. Results are displayed as a status check and Pull Request comment.
 
 ## How does it work
 
 TBA
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/linter-comment-dark.png">
+  <img src="docs/images/linter-comment-light.png" width="600" />
+</picture>
+
 ## Features
 
-TBD
+* Tracker references validator
+* Upstream references (cherry-pick) validator
+* Summary comment on Pull Request
 
 ## Usage
 
-TBA
+To set up Advanced Commit Linter, we need three files:
 
-### Real-life examples
+* Workflow that captures Pull Request metadata (number and commit metadata) and uploads this data as an artifact
+* Workflow that runs on `workflow-run` trigger, downloads artifact, and runs `advanced-commit-linter` GitHub Action
+* `advanced-commit-linter.yml` configuration
 
-TBA
+<!-- markdownlint-disable MD013 -->
+> **Note**: Setup is complicated due to GitHub [permissions on `GITHUB_TOKEN`](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token). When used in workflow executed from fork it has `read-only` permissions. By using the `workflow-run` trigger we are able to [safely overcome this limitation](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/) and it allows us to comment on Pull Requests.
+
+```yml
+policy:
+  cherry-pick:
+    upstream:
+      - github: systemd/systemd
+      - github: systemd/systemd-stable
+    exception:
+      note:
+        - rhel-only
+  tracker:
+    - keyword:
+        - 'Resolves: #'
+        - 'Related: #'
+      issue-format:
+        - '[0-9]+$'
+      url: 'https://bugzilla.redhat.com/show_bug.cgi?id='
+      exception:
+        note:
+          - github-only
+    - keyword:
+        - 'Resolves: '
+        - 'Related: '
+      issue-format:
+        - 'JIRA-1234'
+      url: 'https://issues.redhat.com/browse/'
+      exception:
+        note:
+          - github-only
+```
+
+```yml
+name: Gather Pull Request Metadata
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  gather-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - id: Metadata
+        name: Gather Pull Request Metadata
+        uses: redhat-plumbers-in-action/gather-pull-request-metadata@v1
+
+      - name: Upload artifact with gathered metadata
+        uses: actions/upload-artifact@v3
+        with:
+          name: pr-metadata
+          path: ${{ steps.Metadata.outputs.metadata-file }}
+```
+
+```yml
+name: Commit Linter
+on:
+  workflow_run:
+    workflows: [ Gather Pull Request Metadata ]
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  download-metadata:
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    outputs:
+      pr-metadata: ${{ steps.Artifact.outputs.pr-metadata-json }}
+
+    steps:
+      - id: Artifact
+        name: Download Artifact
+        uses: redhat-plumbers-in-action/download-artifact@v1
+        with:
+          name: pr-metadata
+
+  commit-linter:
+    needs: [ download-metadata ]
+    runs-on: ubuntu-latest
+
+    outputs:
+      validated-pr-metadata: ${{ steps.commit-linter.outputs.validated-pr-metadata }}
+
+    permissions:
+      # required for commit statuses
+      statuses: write
+      # required for PR comments
+      pull-requests: write
+
+    steps:
+      - id: commit-linter
+        name: Lint Commits
+        uses: redhat-plumbers-in-action/advanced-commit-linter@v1
+        with:
+          pr-metadata: ${{ needs.download-metadata.outputs.pr-metadata }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+```
 
 ## Configuration options
 
+Action currently accepts the following options:
+
+```yml
+# ...
+
+- uses: redhat-plumbers-in-action/advanced-commit-linter@v1
+  with:
+    pr-metadata: <pr-metadata.json>
+    token:       <GitHub token or PAT>
+
+# ...
+```
+
+### pr-metadata
+
+Stringified JSON Pull Request metadata provided by GitHub Action [`redhat-plumbers-in-action/gather-pull-request-metadata`](https://github.com/redhat-plumbers-in-action/gather-pull-request-metadata).
+
+Pull Request metadata has the following format: [metadata format](https://github.com/redhat-plumbers-in-action/gather-pull-request-metadata#metadata)
+
+* default value: `undefined`
+* requirements: `required`
+
 ### token
 
-## Limitations
+GitHub token or PAT is used for creating comments on Pull Request and setting commit statuses.
+
+```yml
+# required permission
+permissions:
+  statuses: write
+  pull-requests: write
+```
+
+* default value: `undefined`
+* requirements: `required`
+* recomended value: `secrets.GITHUB_TOKEN`
+
+## Policy
+
+Action is configured using special policy file: `.github/advanced-commit-linter.yml`. The structure needs to be as follows:
+
+```yml
+policy:
+  cherry-pick:
+    upstream:
+      - github: systemd/systemd
+      - github: systemd/systemd-stable
+    exception:
+      note:
+        - rhel-only
+  tracker:
+    - keyword:
+        - 'Resolves: #'
+        - 'Related: #'
+      issue-format:
+        - '[0-9]+$'
+      url: 'https://bugzilla.redhat.com/show_bug.cgi?id='
+      exception:
+        note:
+          - github-only
+    - keyword:
+        - 'Resolves: '
+        - 'Related: '
+      issue-format:
+        - 'JIRA-1234'
+      url: 'https://issues.redhat.com/browse/'
+      exception:
+        note:
+          - github-only
+```
+
+### `cherry-pick` keyword
+
+The section that specifies upstreams for which you frequently cherry-pick.
+
+* requirements: `optional`
+
+### `cherry-pick.upstream` keyword
+
+An array of upstreams. Currently, the only supported upstream location is GitHub.
+
+Supported keys:
+
+* `github` - GitHub repository in format `<org>/<repo>`
+* requirements: `required`
+
+### `cherry-pick.exception` keyword
+
+Property that describes possible exceptions for referencing upstream commits in commit messages. Currently supported exceptions:
+
+* `note` - for example `downstream-only` or `rhel-only`
+
+### `tracker` keyword
+
+The section specifies the form and type of required trackers.
+
+### `tracker[].keyword` keyword
+
+Keyword that prefixes tracker identificator.
+
+* requirements: `required`
+* example: `Fixes:`
+
+### `tracker[].issue-format` keyword
+
+Regex that describes identificator of given tracker.
+
+* requirements: `required`
+* example: `[0-9]+$`
+
+### `tracker[].url` keyword
+
+Url to better display detected trackers in Pull Request comment as a link. Tracker ID will be appended at the end of `url`.
+
+* requirements: `optional`
+* example: `https://issues.redhat.com/browse/`
+
+### `tracker[].exception` keyword
+
+Property that describes possible exceptions for referencing trackers in commit messages. Currently supported exceptions:
+
+* `note` - for example `github-only` or `tests-only`
+
+## Outputs
+
+### validated-pr-metadata
+
+TBA
