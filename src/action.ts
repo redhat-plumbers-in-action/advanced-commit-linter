@@ -16,7 +16,7 @@ import { PullRequest } from './pull-request';
 const action = (probot: Probot) => {
   probot.on(
     events.workflow_run,
-    async (context: Context<typeof events.workflow_run[number]>) => {
+    async (context: Context<(typeof events.workflow_run)[number]>) => {
       const config = await Config.getConfig(context);
 
       const prMetadataUnsafe = JSON.parse(

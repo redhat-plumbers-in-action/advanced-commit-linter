@@ -28,7 +28,7 @@ export class Config {
 
   static async getConfig(
     context: {
-      [K in keyof typeof events]: Context<typeof events[K][number]>;
+      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
   ): Promise<Config> {
     const retrievedConfig = await context.config('advanced-commit-linter.yml');

@@ -45,7 +45,7 @@ export class Metadata {
   static async getMetadata(
     issueNumber: number,
     context: {
-      [K in keyof typeof events]: Context<typeof events[K][number]>;
+      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
   ) {
     const controller = new MetadataController(

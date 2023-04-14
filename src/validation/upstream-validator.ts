@@ -22,7 +22,7 @@ export class UpstreamValidator {
   async validate(
     singleCommitMetadata: SingleCommitMetadataT,
     context: {
-      [K in keyof typeof events]: Context<typeof events[K][number]>;
+      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
   ): Promise<UpstreamT | undefined> {
     let data: UpstreamT['data'] = [];
@@ -48,7 +48,7 @@ export class UpstreamValidator {
   async loopPolicy(
     cherryPick: SingleCommitMetadataT['message']['cherryPick'][number],
     context: {
-      [K in keyof typeof events]: Context<typeof events[K][number]>;
+      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
   ): Promise<UpstreamT['data']> {
     return this.cleanArray(
@@ -62,7 +62,7 @@ export class UpstreamValidator {
     cherryPick: SingleCommitMetadataT['message']['cherryPick'][number],
     upstream: ConfigCherryPickT['upstream'][number],
     context: {
-      [K in keyof typeof events]: Context<typeof events[K][number]>;
+      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
   ): Promise<UpstreamT['data'][number]> {
     try {
