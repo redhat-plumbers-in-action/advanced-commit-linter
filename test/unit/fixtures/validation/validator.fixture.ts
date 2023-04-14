@@ -95,7 +95,7 @@ const githubContext = {
     },
   },
 } as {
-  [K in keyof typeof events]: Context<typeof events[K][number]>;
+  [K in keyof typeof events]: Context<(typeof events)[K][number]>;
 }[keyof typeof events];
 
 const noPolicyValidator = new Validator(emptyPolicy, githubContext);

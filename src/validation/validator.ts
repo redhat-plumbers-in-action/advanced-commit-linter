@@ -22,7 +22,7 @@ export class Validator {
   constructor(
     readonly config: Config,
     readonly context: {
-      [K in keyof typeof events]: Context<typeof events[K][number]>;
+      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
   ) {
     this.trackerValidator = this.config.tracker.map(

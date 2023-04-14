@@ -6,7 +6,7 @@ import { UpstreamValidator } from '../../../../src/validation/upstream-validator
 export interface IUpstreamValidatorTestContext {
   'systemd-rhel-policy': UpstreamValidator;
   githubContext: (expectedResult: 'pass' | 'fail') => {
-    [K in keyof typeof events]: Context<typeof events[K][number]>;
+    [K in keyof typeof events]: Context<(typeof events)[K][number]>;
   }[keyof typeof events];
 }
 
@@ -41,7 +41,7 @@ export const upstreamValidatorContextFixture: IUpstreamValidatorTestContext = {
         },
       },
     } as {
-      [K in keyof typeof events]: Context<typeof events[K][number]>;
+      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events];
   },
 };
