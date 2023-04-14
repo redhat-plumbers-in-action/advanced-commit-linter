@@ -10,6 +10,7 @@ branding:
 inputs:
   pr-metadata:
     required: true
+    default: ${{ github.event.number }}
     description: Pull Request metadata
   token:
     required: true
