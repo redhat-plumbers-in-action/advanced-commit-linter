@@ -24,7 +24,7 @@ class Metadata {
     static async getMetadata(issueNumber, context) {
         const controller = new MetadataController('advanced-commit-linter', context.repo({
             headers: {
-                authorization: getInput('token', { required: true }),
+                authorization: `Bearer ${getInput('token', { required: true })}`,
             },
         }));
         const parsedCommentID = z

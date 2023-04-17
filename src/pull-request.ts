@@ -29,7 +29,8 @@ export class PullRequest {
       return;
     }
 
-    return commentPayload.id;
+    this.metadata.commentID = commentPayload.id.toString();
+    await this.metadata.setMetadata();
   }
 
   private async createComment(
