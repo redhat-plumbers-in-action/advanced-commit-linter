@@ -54,8 +54,6 @@ const action = (probot: Probot) => {
         commits: validatedCommits.map(commit => commit.validated),
       };
 
-      // TODO post comment on PR / set metadata / update summary / set labels
-
       const pr = await PullRequest.getPullRequest(prMetadata.number, context);
       pr.publishComment(validated.validation.message, context);
 
@@ -63,7 +61,7 @@ const action = (probot: Probot) => {
 
       await context.octokit.repos.createCommitStatus(
         context.repo({
-          state: 'success',
+          state: validated.validation.status,
           sha: prMetadata.commits[prMetadata.commits.length - 1].sha,
           context: `Advanced Commit Linter`,
         })
