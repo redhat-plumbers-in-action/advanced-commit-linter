@@ -8,7 +8,7 @@ export declare class PullRequest {
     get metadata(): Metadata;
     publishComment(content: string, context: {
         [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]): Promise<number | undefined>;
+    }[keyof typeof events]): Promise<void>;
     private createComment;
     private updateComment;
     static getPullRequest(id: number, context: {

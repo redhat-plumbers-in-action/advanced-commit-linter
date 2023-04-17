@@ -52,7 +52,7 @@ export class Metadata {
       'advanced-commit-linter',
       context.repo({
         headers: {
-          authorization: getInput('token', { required: true }),
+          authorization: `Bearer ${getInput('token', { required: true })}`,
         },
       })
     );

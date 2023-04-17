@@ -19,7 +19,8 @@ export class PullRequest {
             warning(`Failed to create comment.`);
             return;
         }
-        return commentPayload.id;
+        this.metadata.commentID = commentPayload.id.toString();
+        await this.metadata.setMetadata();
     }
     async createComment(body, context) {
         if (!body || body === '')
