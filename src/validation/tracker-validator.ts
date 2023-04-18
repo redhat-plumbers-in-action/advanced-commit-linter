@@ -7,9 +7,10 @@ import {
 } from '../schema/config';
 import { SingleCommitMetadataT } from '../schema/input';
 import { StatusT, TrackerT, ValidatedCommitT } from '../schema/output';
+import { warning } from '@actions/core';
 
 export class TrackerValidator {
-  constructor(public config: ConfigTrackerT) {}
+  constructor(readonly config: ConfigTrackerT) {}
 
   validate(singleCommitMetadata: SingleCommitMetadataT): TrackerT {
     return {
@@ -22,29 +23,30 @@ export class TrackerValidator {
   }
 
   loopPolicy(commitBody: SingleCommitMetadataT['message']['body']): TrackerT {
-    const trackerResult: TrackerT = {
-      data: { keyword: '', id: '' },
-    };
+    const trackerResult: TrackerT = {};
+
+    warning(`config.keyword: ${this.config.keyword}`);
 
     for (const keyword of this.config.keyword) {
       for (const issueFormat of this.config['issue-format']) {
-        const reference = this.getTrackerReference(
-          keyword,
-          issueFormat,
-          commitBody,
-          this.config.url
-        );
+        const reference = this.matchTracker(keyword, issueFormat, commitBody);
 
         if (reference) {
           trackerResult.data = {
-            ...reference,
+            keyword,
+            id: reference,
           };
+
+          if (this.config.url) {
+            trackerResult.data.url = `${this.config.url}${reference}`;
+          }
         }
 
-        trackerResult.exception = this.isException(
-          this.config.exception,
-          commitBody
-        );
+        const exception = this.isException(this.config.exception, commitBody);
+
+        if (exception) {
+          trackerResult.exception = exception;
+        }
 
         if (reference || trackerResult.exception !== undefined)
           return trackerResult;
@@ -54,26 +56,20 @@ export class TrackerValidator {
     return trackerResult;
   }
 
-  getTrackerReference(
+  matchTracker(
     keyword: string,
-    issueFormat: string,
-    commitBody: string,
-    url: string | undefined
-  ): TrackerT['data'] {
+    trackerFormat: string,
+    commitBody: string
+  ): string | undefined {
     const regexp = new RegExp(
-      `(^\\s*|\\\\n|\\n)(${keyword})(${issueFormat})$`,
+      `(^\\s*|\\\\n|\\n)(${keyword})(${trackerFormat})$`,
       'gm'
     );
+
     const matches = commitBody.matchAll(regexp);
 
     for (const match of matches) {
-      if (Array.isArray(match) && match.length >= 4) {
-        return {
-          keyword: `${keyword}`,
-          id: `${match[3]}`,
-          url: url ? `${url}${match[3]}` : '',
-        };
-      }
+      if (Array.isArray(match) && match.length >= 4) return match[3];
     }
 
     return undefined;
@@ -87,7 +83,7 @@ export class TrackerValidator {
       .extend({ note: z.array(z.string()) })
       .safeParse(exceptionPolicy);
 
-    if (!exceptionPolicySafe.success) return '';
+    if (!exceptionPolicySafe.success) return undefined;
 
     for (const exception of exceptionPolicySafe.data.note) {
       const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
@@ -152,11 +148,7 @@ export class TrackerValidator {
     if (validationArray.data.length === 0) return validationArray;
 
     const cleanedData = validationArray.data.filter(
-      tracker =>
-        JSON.stringify(tracker) !==
-        JSON.stringify({
-          data: { keyword: '', id: '' },
-        })
+      tracker => JSON.stringify(tracker) !== JSON.stringify({})
     );
 
     return {

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { configExceptionSchema, } from '../schema/config';
+import { warning } from '@actions/core';
 export class TrackerValidator {
     constructor(config) {
         this.config = config;
@@ -8,33 +9,36 @@ export class TrackerValidator {
         return Object.assign(Object.assign({}, this.loopPolicy(singleCommitMetadata.message.body)), { exception: this.isException(this.config.exception, singleCommitMetadata.message.body) });
     }
     loopPolicy(commitBody) {
-        const trackerResult = {
-            data: { keyword: '', id: '' },
-        };
+        const trackerResult = {};
+        warning(`config.keyword: ${this.config.keyword}`);
         for (const keyword of this.config.keyword) {
             for (const issueFormat of this.config['issue-format']) {
-                const reference = this.getTrackerReference(keyword, issueFormat, commitBody, this.config.url);
+                const reference = this.matchTracker(keyword, issueFormat, commitBody);
                 if (reference) {
-                    trackerResult.data = Object.assign({}, reference);
+                    trackerResult.data = {
+                        keyword,
+                        id: reference,
+                    };
+                    if (this.config.url) {
+                        trackerResult.data.url = `${this.config.url}${reference}`;
+                    }
                 }
-                trackerResult.exception = this.isException(this.config.exception, commitBody);
+                const exception = this.isException(this.config.exception, commitBody);
+                if (exception) {
+                    trackerResult.exception = exception;
+                }
                 if (reference || trackerResult.exception !== undefined)
                     return trackerResult;
             }
         }
         return trackerResult;
     }
-    getTrackerReference(keyword, issueFormat, commitBody, url) {
-        const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${keyword})(${issueFormat})$`, 'gm');
+    matchTracker(keyword, trackerFormat, commitBody) {
+        const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${keyword})(${trackerFormat})$`, 'gm');
         const matches = commitBody.matchAll(regexp);
         for (const match of matches) {
-            if (Array.isArray(match) && match.length >= 4) {
-                return {
-                    keyword: `${keyword}`,
-                    id: `${match[3]}`,
-                    url: url ? `${url}${match[3]}` : '',
-                };
-            }
+            if (Array.isArray(match) && match.length >= 4)
+                return match[3];
         }
         return undefined;
     }
@@ -43,7 +47,7 @@ export class TrackerValidator {
             .extend({ note: z.array(z.string()) })
             .safeParse(exceptionPolicy);
         if (!exceptionPolicySafe.success)
-            return '';
+            return undefined;
         for (const exception of exceptionPolicySafe.data.note) {
             const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
             const matches = commitBody.matchAll(regexp);
@@ -92,10 +96,7 @@ export class TrackerValidator {
             return undefined;
         if (validationArray.data.length === 0)
             return validationArray;
-        const cleanedData = validationArray.data.filter(tracker => JSON.stringify(tracker) !==
-            JSON.stringify({
-                data: { keyword: '', id: '' },
-            }));
+        const cleanedData = validationArray.data.filter(tracker => JSON.stringify(tracker) !== JSON.stringify({}));
         return Object.assign(Object.assign({}, validationArray), { data: cleanedData });
     }
 }
