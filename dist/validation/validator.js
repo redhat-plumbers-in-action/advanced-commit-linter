@@ -9,7 +9,7 @@ export class Validator {
     }
     validateAll(validatedCommits) {
         const tracker = this.generalTracker(validatedCommits);
-        const status = this.overallStatus(tracker /*, validatedCommits*/);
+        const status = this.overallStatus(tracker, validatedCommits);
         const message = this.overallMessage(tracker, validatedCommits);
         return {
             status,
@@ -123,14 +123,27 @@ export class Validator {
         // The following commits meets all requirements
         return `Tracker - ${trackerID}\n\n${commits}`;
     }
-    overallStatus(tracker
-    // commitsMetadata: OutputCommitMetadataT
-    ) {
-        let status = 'failure';
-        if (tracker) {
-            status = 'success';
+    overallStatus(tracker, commitsMetadata) {
+        if (!this.config.isTrackerPolicyEmpty()) {
+            if (tracker === undefined) {
+                return 'failure';
+            }
+            if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && !(tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
+                return 'failure';
+            }
+            if ((tracker === null || tracker === void 0 ? void 0 : tracker.id) === '' && (tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
+                return 'failure';
+            }
         }
-        return status;
+        if (!this.config.isCherryPickPolicyEmpty()) {
+            commitsMetadata.forEach(commit => {
+                var _a;
+                if (((_a = commit.validation.upstream) === null || _a === void 0 ? void 0 : _a.status) === 'failure') {
+                    return 'failure';
+                }
+            });
+        }
+        return 'success';
     }
 }
 //# sourceMappingURL=validator.js.map

@@ -3,7 +3,7 @@ import { Commit } from '../commit';
 import { Config } from '../config';
 import { events } from '../events';
 import { SingleCommitMetadataT } from '../schema/input';
-import { OutputValidatedPullRequestMetadataT, ValidatedCommitT } from '../schema/output';
+import { OutputValidatedPullRequestMetadataT, ValidatedCommitT, StatusT } from '../schema/output';
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
 export declare class Validator {
@@ -21,5 +21,5 @@ export declare class Validator {
     validationSummary(data: ValidatedCommitT, commitTitle: string, commitUrl: string): Pick<ValidatedCommitT, 'status' | 'message'>;
     generalTracker(commitsMetadata: Commit[]): OutputValidatedPullRequestMetadataT['validation']['tracker'];
     overallMessage(tracker: OutputValidatedPullRequestMetadataT['validation']['tracker'], commitsMetadata: Commit[]): string;
-    overallStatus(tracker: OutputValidatedPullRequestMetadataT['validation']['tracker']): "success" | "failure";
+    overallStatus(tracker: OutputValidatedPullRequestMetadataT['validation']['tracker'], commitsMetadata: Commit[]): StatusT;
 }

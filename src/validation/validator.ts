@@ -38,7 +38,7 @@ export class Validator {
     validatedCommits: Commit[]
   ): OutputValidatedPullRequestMetadataT['validation'] {
     const tracker = this.generalTracker(validatedCommits);
-    const status = this.overallStatus(tracker /*, validatedCommits*/);
+    const status = this.overallStatus(tracker, validatedCommits);
     const message = this.overallMessage(tracker, validatedCommits);
 
     return {
@@ -214,14 +214,31 @@ export class Validator {
   }
 
   overallStatus(
-    tracker: OutputValidatedPullRequestMetadataT['validation']['tracker']
-    // commitsMetadata: OutputCommitMetadataT
-  ) {
-    let status: StatusT = 'failure';
+    tracker: OutputValidatedPullRequestMetadataT['validation']['tracker'],
+    commitsMetadata: Commit[]
+  ): StatusT {
+    if (!this.config.isTrackerPolicyEmpty()) {
+      if (tracker === undefined) {
+        return 'failure';
+      }
 
-    if (tracker) {
-      status = 'success';
+      if (!tracker?.id && !tracker?.exception) {
+        return 'failure';
+      }
+
+      if (tracker?.id === '' && tracker?.exception) {
+        return 'failure';
+      }
     }
-    return status;
+
+    if (!this.config.isCherryPickPolicyEmpty()) {
+      commitsMetadata.forEach(commit => {
+        if (commit.validation.upstream?.status === 'failure') {
+          return 'failure';
+        }
+      });
+    }
+
+    return 'success';
   }
 }

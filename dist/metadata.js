@@ -17,9 +17,9 @@ class Metadata {
         }
     }
     async setMetadata() {
-        if (this.commentID !== undefined) {
-            await this.controller.setMetadata(this.issueNumber, Metadata.metadataCommentID, this.commentID);
-        }
+        if (this.commentID === undefined)
+            return;
+        await this.controller.setMetadata(this.issueNumber, Metadata.metadataCommentID, this.commentID);
     }
     static async getMetadata(issueNumber, context) {
         const controller = new MetadataController('advanced-commit-linter', context.repo({

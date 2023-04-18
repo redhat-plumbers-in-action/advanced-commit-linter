@@ -241,11 +241,314 @@ describe('Validator Object', () => {
     });
 
     // ! FIXME - this test is failing, but it should pass
-    it.skip<IValidatorTestContext>('only-cherry-pick-policy configuration', context => {
+    it<IValidatorTestContext>('only-cherry-pick-policy configuration', context => {
       const validated = context['only-cherry-pick-policy'].validateAll(
         context['validated-commits']['only-cherry-pick-policy']['shouldPass']
       );
 
+      expect(
+        context['validated-commits']['only-cherry-pick-policy']['shouldPass']
+      ).toMatchInlineSnapshot(`
+        [
+          Commit {
+            "metadata": {
+              "message": {
+                "body": "feat: add new feature
+
+        rhel-only",
+                "cherryPick": [],
+                "title": "feat: add new feature",
+              },
+              "sha": "1111111111111111111111111111111111111111",
+              "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+            },
+            "validation": {
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\`",
+              "status": "success",
+              "tracker": {
+                "data": [],
+                "message": "\`_no-tracker_\`",
+                "status": "success",
+              },
+              "upstream": {
+                "data": [],
+                "exception": "rhel-only",
+                "status": "success",
+              },
+            },
+          },
+          Commit {
+            "metadata": {
+              "message": {
+                "body": "feat: add new feature
+
+        (cherry picked from commit 2222222222222222222222222222222222222222)",
+                "cherryPick": [
+                  {
+                    "sha": "2222222222222222222222222222222222222222",
+                  },
+                ],
+                "title": "feat: add new feature",
+              },
+              "sha": "1111111111111111111111111111111111111111",
+              "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+            },
+            "validation": {
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url",
+              "status": "success",
+              "tracker": {
+                "data": [],
+                "message": "\`_no-tracker_\`",
+                "status": "success",
+              },
+              "upstream": {
+                "data": [
+                  {
+                    "repo": "systemd/systemd",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                  {
+                    "repo": "systemd/systemd-stable",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                ],
+                "exception": "",
+                "status": "success",
+              },
+            },
+          },
+          Commit {
+            "metadata": {
+              "message": {
+                "body": "feat: add new feature
+
+        rhel-only
+
+        (cherry picked from commit 2222222222222222222222222222222222222222)",
+                "cherryPick": [
+                  {
+                    "sha": "2222222222222222222222222222222222222222",
+                  },
+                ],
+                "title": "feat: add new feature",
+              },
+              "sha": "1111111111111111111111111111111111111111",
+              "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+            },
+            "validation": {
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+              "status": "success",
+              "tracker": {
+                "data": [],
+                "message": "\`_no-tracker_\`",
+                "status": "success",
+              },
+              "upstream": {
+                "data": [
+                  {
+                    "repo": "systemd/systemd",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                  {
+                    "repo": "systemd/systemd-stable",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                ],
+                "exception": "rhel-only",
+                "status": "success",
+              },
+            },
+          },
+          Commit {
+            "metadata": {
+              "message": {
+                "body": "feat: add new feature
+
+        (cherry picked from commit 2222222222222222222222222222222222222222)
+
+        Resolves: #123",
+                "cherryPick": [
+                  {
+                    "sha": "2222222222222222222222222222222222222222",
+                  },
+                ],
+                "title": "feat: add new feature",
+              },
+              "sha": "1111111111111111111111111111111111111111",
+              "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+            },
+            "validation": {
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url",
+              "status": "success",
+              "tracker": {
+                "data": [],
+                "message": "\`_no-tracker_\`",
+                "status": "success",
+              },
+              "upstream": {
+                "data": [
+                  {
+                    "repo": "systemd/systemd",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                  {
+                    "repo": "systemd/systemd-stable",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                ],
+                "exception": "",
+                "status": "success",
+              },
+            },
+          },
+          Commit {
+            "metadata": {
+              "message": {
+                "body": "feat: add new feature
+
+        (cherry picked from commit 2222222222222222222222222222222222222222)
+
+        github-only
+
+        Resolves: #123",
+                "cherryPick": [
+                  {
+                    "sha": "2222222222222222222222222222222222222222",
+                  },
+                ],
+                "title": "feat: add new feature",
+              },
+              "sha": "1111111111111111111111111111111111111111",
+              "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+            },
+            "validation": {
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url",
+              "status": "success",
+              "tracker": {
+                "data": [],
+                "message": "\`_no-tracker_\`",
+                "status": "success",
+              },
+              "upstream": {
+                "data": [
+                  {
+                    "repo": "systemd/systemd",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                  {
+                    "repo": "systemd/systemd-stable",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                ],
+                "exception": "",
+                "status": "success",
+              },
+            },
+          },
+          Commit {
+            "metadata": {
+              "message": {
+                "body": "feat: add new feature
+
+        (cherry picked from commit 2222222222222222222222222222222222222222)
+
+        Resolves: #123
+
+        rhel-only",
+                "cherryPick": [
+                  {
+                    "sha": "2222222222222222222222222222222222222222",
+                  },
+                ],
+                "title": "feat: add new feature",
+              },
+              "sha": "1111111111111111111111111111111111111111",
+              "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+            },
+            "validation": {
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+              "status": "success",
+              "tracker": {
+                "data": [],
+                "message": "\`_no-tracker_\`",
+                "status": "success",
+              },
+              "upstream": {
+                "data": [
+                  {
+                    "repo": "systemd/systemd",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                  {
+                    "repo": "systemd/systemd-stable",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                ],
+                "exception": "rhel-only",
+                "status": "success",
+              },
+            },
+          },
+          Commit {
+            "metadata": {
+              "message": {
+                "body": "feat: add new feature
+
+        (cherry picked from commit 2222222222222222222222222222222222222222)
+
+        github-only
+
+        Resolves: #123
+
+        rhel-only",
+                "cherryPick": [
+                  {
+                    "sha": "2222222222222222222222222222222222222222",
+                  },
+                ],
+                "title": "feat: add new feature",
+              },
+              "sha": "1111111111111111111111111111111111111111",
+              "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+            },
+            "validation": {
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+              "status": "success",
+              "tracker": {
+                "data": [],
+                "message": "\`_no-tracker_\`",
+                "status": "success",
+              },
+              "upstream": {
+                "data": [
+                  {
+                    "repo": "systemd/systemd",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                  {
+                    "repo": "systemd/systemd-stable",
+                    "sha": "upstream-sha",
+                    "url": "upstream-url",
+                  },
+                ],
+                "exception": "rhel-only",
+                "status": "success",
+              },
+            },
+          },
+        ]
+      `);
       expect(validated.status).toEqual('success');
       expect(validated.tracker).toBeUndefined();
       expect(validated.message).toMatchInlineSnapshot(`
