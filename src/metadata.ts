@@ -33,13 +33,13 @@ export class Metadata {
   static readonly metadataCommentID = 'comment-id';
 
   async setMetadata() {
-    if (this.commentID !== undefined) {
-      await this.controller.setMetadata(
-        this.issueNumber,
-        Metadata.metadataCommentID,
-        this.commentID
-      );
-    }
+    if (this.commentID === undefined) return;
+
+    await this.controller.setMetadata(
+      this.issueNumber,
+      Metadata.metadataCommentID,
+      this.commentID
+    );
   }
 
   static async getMetadata(

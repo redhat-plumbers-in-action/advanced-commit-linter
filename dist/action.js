@@ -22,12 +22,11 @@ const action = (probot) => {
         const validatedCommits = await Promise.all(prMetadata.commits.map(async (singleCommit) => new Commit(singleCommit).validate(validator)));
         const validationResults = validator.validateAll(validatedCommits);
         const validated = Object.assign(Object.assign({}, prMetadataUnsafe), { validation: validationResults, commits: validatedCommits.map(commit => commit.validated) });
-        // TODO post comment on PR / set metadata / update summary / set labels
         const pr = await PullRequest.getPullRequest(prMetadata.number, context);
         pr.publishComment(validated.validation.message, context);
         setOutput('validated-pr-metadata', JSON.stringify(validated, null, 2));
         await context.octokit.repos.createCommitStatus(context.repo({
-            state: 'success',
+            state: validated.validation.status,
             sha: prMetadata.commits[prMetadata.commits.length - 1].sha,
             context: `Advanced Commit Linter`,
         }));
