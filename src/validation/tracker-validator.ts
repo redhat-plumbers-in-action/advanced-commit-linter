@@ -107,21 +107,40 @@ export class TrackerValidator {
     return status;
   }
 
+  /**
+   * Get tracker message that will be displayed in Pull Request comment summary
+   * @param trackers - Array of tracker data
+   * @param status - Status of the validation
+   * @param isTrackerPolicyEmpty - If tracker policy is empty
+   * @returns Message to be displayed
+   */
   static getMessage(
     trackers: TrackerT[],
     status: StatusT,
     isTrackerPolicyEmpty: boolean
   ): string {
-    let message = '`_no-tracker_`';
-
-    if (isTrackerPolicyEmpty) return message;
+    if (isTrackerPolicyEmpty) return '`_no-tracker_`';
 
     const trackersResult: string[] = [];
 
     for (const singleTracker of trackers) {
-      if (singleTracker.data === undefined) continue;
-      if (singleTracker.data.url === '')
+      // If no tracker data nor exception, skip
+      if (!singleTracker?.data && !singleTracker?.exception) continue;
+
+      // If no tracker data provided but exception was detected exception, push exception
+      if (singleTracker?.exception && !singleTracker?.data) {
+        trackersResult.push(singleTracker.exception);
+        continue;
+      }
+
+      if (!singleTracker.data) continue;
+      // If no tracker url provided, push only id
+      if (!singleTracker.data.url || singleTracker.data?.url === '') {
         trackersResult.push(singleTracker.data.id);
+        continue;
+      }
+
+      // If tracker url provided, push id with link
       trackersResult.push(
         `[${singleTracker.data.id}](${singleTracker.data.url})`
       );
@@ -129,14 +148,10 @@ export class TrackerValidator {
 
     switch (status) {
       case 'success':
-        message = `${trackersResult.join(', ')}`;
-        break;
+        return `${trackersResult.join(', ')}`;
       case 'failure':
-        message = '`Missing, needs inspection! ✋`';
-        break;
+        return '`Missing, needs inspection! ✋`';
     }
-
-    return message;
   }
 
   static cleanArray(

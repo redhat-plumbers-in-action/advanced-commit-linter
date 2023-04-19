@@ -66,27 +66,43 @@ export class TrackerValidator {
         }
         return status;
     }
+    /**
+     * Get tracker message that will be displayed in Pull Request comment summary
+     * @param trackers - Array of tracker data
+     * @param status - Status of the validation
+     * @param isTrackerPolicyEmpty - If tracker policy is empty
+     * @returns Message to be displayed
+     */
     static getMessage(trackers, status, isTrackerPolicyEmpty) {
-        let message = '`_no-tracker_`';
+        var _a;
         if (isTrackerPolicyEmpty)
-            return message;
+            return '`_no-tracker_`';
         const trackersResult = [];
         for (const singleTracker of trackers) {
-            if (singleTracker.data === undefined)
+            // If no tracker data nor exception, skip
+            if (!(singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.data) && !(singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.exception))
                 continue;
-            if (singleTracker.data.url === '')
+            // If no tracker data provided but exception was detected exception, push exception
+            if ((singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.exception) && !(singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.data)) {
+                trackersResult.push(singleTracker.exception);
+                continue;
+            }
+            if (!singleTracker.data)
+                continue;
+            // If no tracker url provided, push only id
+            if (!singleTracker.data.url || ((_a = singleTracker.data) === null || _a === void 0 ? void 0 : _a.url) === '') {
                 trackersResult.push(singleTracker.data.id);
+                continue;
+            }
+            // If tracker url provided, push id with link
             trackersResult.push(`[${singleTracker.data.id}](${singleTracker.data.url})`);
         }
         switch (status) {
             case 'success':
-                message = `${trackersResult.join(', ')}`;
-                break;
+                return `${trackersResult.join(', ')}`;
             case 'failure':
-                message = '`Missing, needs inspection! ✋`';
-                break;
+                return '`Missing, needs inspection! ✋`';
         }
-        return message;
     }
     static cleanArray(validationArray) {
         if (validationArray === undefined)
