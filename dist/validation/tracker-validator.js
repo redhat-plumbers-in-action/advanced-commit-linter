@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { configExceptionSchema, } from '../schema/config';
-import { warning } from '@actions/core';
 export class TrackerValidator {
     constructor(config) {
         this.config = config;
@@ -10,7 +9,6 @@ export class TrackerValidator {
     }
     loopPolicy(commitBody) {
         const trackerResult = {};
-        warning(`config.keyword: ${this.config.keyword}`);
         for (const keyword of this.config.keyword) {
             for (const issueFormat of this.config['issue-format']) {
                 const reference = this.matchTracker(keyword, issueFormat, commitBody);
@@ -23,13 +21,11 @@ export class TrackerValidator {
                         trackerResult.data.url = `${this.config.url}${reference}`;
                     }
                 }
-                const exception = this.isException(this.config.exception, commitBody);
-                if (exception) {
-                    trackerResult.exception = exception;
-                }
-                if (reference || trackerResult.exception !== undefined)
-                    return trackerResult;
             }
+        }
+        const exception = this.isException(this.config.exception, commitBody);
+        if (exception) {
+            trackerResult.exception = exception;
         }
         return trackerResult;
     }
@@ -70,20 +66,21 @@ export class TrackerValidator {
         }
         return status;
     }
-    static getMessage(tracker, status, isTrackerPolicyEmpty) {
+    static getMessage(trackers, status, isTrackerPolicyEmpty) {
         let message = '`_no-tracker_`';
         if (isTrackerPolicyEmpty)
             return message;
-        const trackers = tracker.map(single => {
-            if (single.data === undefined)
-                return '';
-            if (single.data.url === '')
-                return single.data.id;
-            return `[${single.data.id}](${single.data.url})`;
-        });
+        const trackersResult = [];
+        for (const singleTracker of trackers) {
+            if (singleTracker.data === undefined)
+                continue;
+            if (singleTracker.data.url === '')
+                trackersResult.push(singleTracker.data.id);
+            trackersResult.push(`[${singleTracker.data.id}](${singleTracker.data.url})`);
+        }
         switch (status) {
             case 'success':
-                message = `${trackers.join(', ')}`;
+                message = `${trackersResult.join(', ')}`;
                 break;
             case 'failure':
                 message = '`Missing, needs inspection! ✋`';
@@ -94,7 +91,8 @@ export class TrackerValidator {
     static cleanArray(validationArray) {
         if (validationArray === undefined)
             return undefined;
-        if (validationArray.data.length === 0)
+        if (Array.isArray(validationArray.data) &&
+            validationArray.data.length === 0)
             return validationArray;
         const cleanedData = validationArray.data.filter(tracker => JSON.stringify(tracker) !== JSON.stringify({}));
         return Object.assign(Object.assign({}, validationArray), { data: cleanedData });

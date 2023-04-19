@@ -18,16 +18,18 @@ const trackerSchema = z.object({
 
 export type TrackerT = z.infer<typeof trackerSchema>;
 
+export const upstreamDataSchema = z.object({
+  sha: z.string(),
+  repo: z.string(),
+  url: z.string(),
+});
+
+export type UpstreamDataT = z.infer<typeof upstreamDataSchema>;
+
 const upstreamSchema = z.object({
   status: statusSchema,
   exception: z.string().optional(),
-  data: z.array(
-    z.object({
-      sha: z.string(),
-      repo: z.string(),
-      url: z.string(),
-    })
-  ),
+  data: z.array(upstreamDataSchema),
 });
 
 export type UpstreamT = z.infer<typeof upstreamSchema>;

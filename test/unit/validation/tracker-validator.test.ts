@@ -4,6 +4,7 @@ import {
   ITrackerValidatorTestContext,
   trackerValidatorContextFixture,
 } from '../fixtures/validation/tracker-validator.fixture';
+import { TrackerValidator } from '../../../src/validation/tracker-validator';
 
 describe('Tracker Validator Object', () => {
   beforeEach<ITrackerValidatorTestContext>(context => {
@@ -29,10 +30,6 @@ describe('Tracker Validator Object', () => {
         })
       ).toMatchInlineSnapshot(`
         {
-          "data": {
-            "id": "",
-            "keyword": "",
-          },
           "exception": undefined,
         }
       `);
@@ -74,10 +71,6 @@ describe('Tracker Validator Object', () => {
         })
       ).toMatchInlineSnapshot(`
         {
-          "data": {
-            "id": "",
-            "keyword": "",
-          },
           "exception": "github-only",
         }
       `);
@@ -102,6 +95,83 @@ describe('Tracker Validator Object', () => {
             "url": "https://bugzilla.redhat.com/show_bug.cgi?id=789",
           },
           "exception": "github-only",
+        }
+      `);
+    });
+
+    test<ITrackerValidatorTestContext>('cleanArray()', context => {
+      expect(
+        // @ts-ignore
+        TrackerValidator.cleanArray({
+          message: 'message',
+          status: 'success',
+          data: [
+            {
+              data: {
+                keyword: 'keyword',
+                id: '123',
+              },
+            },
+            {
+              data: {
+                keyword: 'keyword',
+                id: '123',
+              },
+            },
+            {
+              data: {
+                keyword: 'keyword',
+                id: '456',
+              },
+            },
+            {
+              data: {
+                keyword: 'keyword',
+                id: '456',
+              },
+              exception: 'exception',
+            },
+            {
+              exception: 'exception',
+            },
+            {},
+            {},
+          ],
+        })
+      ).toMatchInlineSnapshot(`
+        {
+          "data": [
+            {
+              "data": {
+                "id": "123",
+                "keyword": "keyword",
+              },
+            },
+            {
+              "data": {
+                "id": "123",
+                "keyword": "keyword",
+              },
+            },
+            {
+              "data": {
+                "id": "456",
+                "keyword": "keyword",
+              },
+            },
+            {
+              "data": {
+                "id": "456",
+                "keyword": "keyword",
+              },
+              "exception": "exception",
+            },
+            {
+              "exception": "exception",
+            },
+          ],
+          "message": "message",
+          "status": "success",
         }
       `);
     });

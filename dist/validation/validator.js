@@ -1,6 +1,5 @@
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
-import { warning } from '@actions/core';
 export class Validator {
     constructor(config, context) {
         this.config = config;
@@ -79,7 +78,6 @@ export class Validator {
                     uniqueTracker.push(tracker);
                 }
             }
-            warning(`uniqueTracker: ${JSON.stringify(uniqueTracker)}`);
             if (uniqueTracker.length > 1) {
                 tracker.message = 'Multiple trackers found';
                 return tracker;

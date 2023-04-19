@@ -11,14 +11,15 @@ const trackerSchema = z.object({
     })
         .optional(),
 });
+export const upstreamDataSchema = z.object({
+    sha: z.string(),
+    repo: z.string(),
+    url: z.string(),
+});
 const upstreamSchema = z.object({
     status: statusSchema,
     exception: z.string().optional(),
-    data: z.array(z.object({
-        sha: z.string(),
-        repo: z.string(),
-        url: z.string(),
-    })),
+    data: z.array(upstreamDataSchema),
 });
 const validatedCommitSchema = z.object({
     status: statusSchema,

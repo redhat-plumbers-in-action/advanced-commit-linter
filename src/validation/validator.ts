@@ -14,7 +14,6 @@ import {
 } from '../schema/output';
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
-import { warning } from '@actions/core';
 
 export class Validator {
   trackerValidator: TrackerValidator[];
@@ -150,8 +149,6 @@ export class Validator {
           uniqueTracker.push(tracker);
         }
       }
-
-      warning(`uniqueTracker: ${JSON.stringify(uniqueTracker)}`);
 
       if (uniqueTracker.length > 1) {
         tracker.message = 'Multiple trackers found';

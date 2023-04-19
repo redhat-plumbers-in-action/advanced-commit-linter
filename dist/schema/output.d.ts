@@ -32,6 +32,20 @@ declare const trackerSchema: z.ZodObject<{
     } | undefined;
 }>;
 export type TrackerT = z.infer<typeof trackerSchema>;
+export declare const upstreamDataSchema: z.ZodObject<{
+    sha: z.ZodString;
+    repo: z.ZodString;
+    url: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    url: string;
+    sha: string;
+    repo: string;
+}, {
+    url: string;
+    sha: string;
+    repo: string;
+}>;
+export type UpstreamDataT = z.infer<typeof upstreamDataSchema>;
 declare const upstreamSchema: z.ZodObject<{
     status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
     exception: z.ZodOptional<z.ZodString>;

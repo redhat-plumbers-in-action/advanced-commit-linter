@@ -15,9 +15,9 @@ export declare class UpstreamValidator {
     }[keyof typeof events]): Promise<UpstreamT['data']>;
     verifyCherryPick(cherryPick: SingleCommitMetadataT['message']['cherryPick'][number], upstream: ConfigCherryPickT['upstream'][number], context: {
         [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]): Promise<UpstreamT['data'][number]>;
+    }[keyof typeof events]): Promise<Partial<UpstreamT['data'][number]>>;
     isException(exceptionPolicy: ConfigExceptionT | undefined, commitBody: string): string;
     getStatus(data: UpstreamT['data'], exception: UpstreamT['exception']): StatusT;
-    cleanArray(validationArray: Promise<UpstreamT['data'][number]>[]): Promise<UpstreamT['data']>;
+    cleanArray(validationArray: Promise<Partial<UpstreamT['data'][number]>>[]): Promise<UpstreamT['data']>;
     summary(data: ValidatedCommitT['upstream']): Pick<ValidatedCommitT, 'status' | 'message'>;
 }

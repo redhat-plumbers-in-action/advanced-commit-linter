@@ -203,13 +203,7 @@ describe('Commit Object', () => {
     expect(validated.validation.tracker?.status).toEqual('success');
     expect(validated.validation.upstream?.status).toEqual('success');
 
-    expect(
-      (
-        await context['systemd-rhel-policy'].validate(
-          validatorContextFixture['systemd-rhel-policy']
-        )
-      ).validated
-    ).toMatchInlineSnapshot(`
+    expect(validated).toMatchInlineSnapshot(`
       {
         "message": {
           "body": "feat: add new feature
@@ -244,14 +238,10 @@ describe('Commit Object', () => {
                 "exception": "github-only",
               },
               {
-                "data": {
-                  "id": "",
-                  "keyword": "",
-                },
                 "exception": "github-only",
               },
             ],
-            "message": "[123](https://bugzilla.redhat.com/show_bug.cgi?id=123), [](undefined)",
+            "message": "[123](https://bugzilla.redhat.com/show_bug.cgi?id=123)",
             "status": "success",
           },
           "upstream": {

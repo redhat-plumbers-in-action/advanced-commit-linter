@@ -11,7 +11,12 @@ import {
   ConfigT,
 } from '../schema/config';
 import { SingleCommitMetadataT } from '../schema/input';
-import { StatusT, UpstreamT, ValidatedCommitT } from '../schema/output';
+import {
+  StatusT,
+  upstreamDataSchema,
+  UpstreamT,
+  ValidatedCommitT,
+} from '../schema/output';
 
 export class UpstreamValidator {
   constructor(
@@ -58,27 +63,29 @@ export class UpstreamValidator {
     );
   }
 
+  // TODO: return undefined if all upstreams are empty
   async verifyCherryPick(
     cherryPick: SingleCommitMetadataT['message']['cherryPick'][number],
     upstream: ConfigCherryPickT['upstream'][number],
     context: {
       [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
-  ): Promise<UpstreamT['data'][number]> {
+  ): Promise<Partial<UpstreamT['data'][number]>> {
     try {
       const { status, data } = await context.octokit.repos.getCommit({
         owner: upstream.github.split('/')[0],
         repo: upstream.github.split('/')[1],
         ref: cherryPick.sha,
       });
+
       return status === 200
         ? { sha: data.sha, repo: upstream.github, url: data.html_url }
-        : { sha: '', repo: '', url: '' };
+        : {};
     } catch (e) {
-      error(`Error ocured when verifiing upstream commit: ${e}`);
+      error(`Error ocurred when verifying upstream commit: ${e}`);
     }
 
-    return { sha: '', repo: '', url: '' };
+    return {};
   }
 
   isException(
@@ -119,16 +126,19 @@ export class UpstreamValidator {
   }
 
   async cleanArray(
-    validationArray: Promise<UpstreamT['data'][number]>[]
+    validationArray: Promise<Partial<UpstreamT['data'][number]>>[]
   ): Promise<UpstreamT['data']> {
     if (validationArray === undefined) return [];
 
     const data = await Promise.all(validationArray);
 
-    return data.filter(
-      item =>
-        JSON.stringify(item) !== JSON.stringify({ sha: '', repo: '', url: '' })
+    const filtered = data.filter(
+      item => JSON.stringify(item) !== JSON.stringify({})
     );
+
+    const parsed = z.array(upstreamDataSchema).safeParse(filtered);
+
+    return parsed.success ? parsed.data : [];
   }
 
   summary(
