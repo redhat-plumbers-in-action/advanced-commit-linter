@@ -241,7 +241,7 @@ describe('Commit Object', () => {
                 "exception": "github-only",
               },
             ],
-            "message": "[123](https://bugzilla.redhat.com/show_bug.cgi?id=123)",
+            "message": "[123](https://bugzilla.redhat.com/show_bug.cgi?id=123), github-only",
             "status": "success",
           },
           "upstream": {

@@ -99,9 +99,8 @@ describe('Tracker Validator Object', () => {
       `);
     });
 
-    test<ITrackerValidatorTestContext>('cleanArray()', context => {
+    test('cleanArray()', context => {
       expect(
-        // @ts-ignore
         TrackerValidator.cleanArray({
           message: 'message',
           status: 'success',
@@ -174,6 +173,77 @@ describe('Tracker Validator Object', () => {
           "status": "success",
         }
       `);
+    });
+
+    test('getMessage()', context => {
+      expect(
+        TrackerValidator.getMessage([], 'failure', false)
+      ).toMatchInlineSnapshot('"`Missing, needs inspection! ✋`"');
+
+      expect(
+        TrackerValidator.getMessage(
+          [
+            {
+              exception: 'github-only',
+              data: {
+                id: '123',
+                keyword: 'Resolves: #',
+                url: 'https://bugzilla.redhat.com/show_bug.cgi?id=123',
+              },
+            },
+          ],
+          'success',
+          false
+        )
+      ).toMatchInlineSnapshot(
+        '"[123](https://bugzilla.redhat.com/show_bug.cgi?id=123)"'
+      );
+
+      expect(
+        TrackerValidator.getMessage(
+          [
+            {
+              exception: 'github-only',
+              data: {
+                id: '123',
+                keyword: 'Resolves: #',
+                url: 'https://bugzilla.redhat.com/show_bug.cgi?id=123',
+              },
+            },
+            {
+              exception: 'github-only',
+              data: {
+                id: '456',
+                keyword: 'Related: #',
+                url: 'https://bugzilla.redhat.com/show_bug.cgi?id=456',
+              },
+            },
+            {
+              exception: 'github-only',
+            },
+          ],
+          'success',
+          false
+        )
+      ).toMatchInlineSnapshot(
+        '"[123](https://bugzilla.redhat.com/show_bug.cgi?id=123), [456](https://bugzilla.redhat.com/show_bug.cgi?id=456), github-only"'
+      );
+
+      expect(
+        TrackerValidator.getMessage(
+          [
+            {
+              exception: 'github-only',
+            },
+          ],
+          'success',
+          false
+        )
+      ).toMatchInlineSnapshot('"github-only"');
+
+      expect(
+        TrackerValidator.getMessage([], 'failure', true)
+      ).toMatchInlineSnapshot('"`_no-tracker_`"');
     });
   });
 });
