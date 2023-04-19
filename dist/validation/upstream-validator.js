@@ -1,6 +1,7 @@
 import { error } from '@actions/core';
 import { z } from 'zod';
 import { configExceptionSchema, } from '../schema/config';
+import { upstreamDataSchema, } from '../schema/output';
 export class UpstreamValidator {
     constructor(config, isCherryPickPolicyEmpty) {
         this.config = config;
@@ -24,6 +25,7 @@ export class UpstreamValidator {
             return await this.verifyCherryPick(cherryPick, upstream, context);
         }));
     }
+    // TODO: return undefined if all upstreams are empty
     async verifyCherryPick(cherryPick, upstream, context) {
         try {
             const { status, data } = await context.octokit.repos.getCommit({
@@ -33,12 +35,12 @@ export class UpstreamValidator {
             });
             return status === 200
                 ? { sha: data.sha, repo: upstream.github, url: data.html_url }
-                : { sha: '', repo: '', url: '' };
+                : {};
         }
         catch (e) {
-            error(`Error ocured when verifiing upstream commit: ${e}`);
+            error(`Error ocurred when verifying upstream commit: ${e}`);
         }
-        return { sha: '', repo: '', url: '' };
+        return {};
     }
     isException(exceptionPolicy, commitBody) {
         const exceptionPolicySafe = configExceptionSchema
@@ -68,7 +70,9 @@ export class UpstreamValidator {
         if (validationArray === undefined)
             return [];
         const data = await Promise.all(validationArray);
-        return data.filter(item => JSON.stringify(item) !== JSON.stringify({ sha: '', repo: '', url: '' }));
+        const filtered = data.filter(item => JSON.stringify(item) !== JSON.stringify({}));
+        const parsed = z.array(upstreamDataSchema).safeParse(filtered);
+        return parsed.success ? parsed.data : [];
     }
     summary(data) {
         if ((data === undefined || data.data.length === 0) &&
