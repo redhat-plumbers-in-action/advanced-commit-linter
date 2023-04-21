@@ -21,5 +21,14 @@ export class Commit {
     haveUpstream() {
         return this.validation.upstream !== undefined;
     }
+    static getValidCommits(commits) {
+        return commits.filter(commit => commit.validation.status === 'success');
+    }
+    static getInvalidCommits(commits) {
+        return commits.filter(commit => commit.validation.status === 'failure');
+    }
+    static getListOfCommits(commits) {
+        return commits.map(commit => commit.validation.message).join('\n');
+    }
 }
 //# sourceMappingURL=commit.js.map

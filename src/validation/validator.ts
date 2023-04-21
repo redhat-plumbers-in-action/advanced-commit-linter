@@ -198,16 +198,25 @@ export class Validator {
       }
     }
 
-    const commits = `${commitsMetadata
-      .map(commit => {
-        return commit.validation.message;
-      })
-      .join('\n')}`;
+    const validCommits = Commit.getValidCommits(commitsMetadata);
+    const invalidCommits = Commit.getInvalidCommits(commitsMetadata);
 
-    // TODO: separate commits by their status
-    // The following commits needs inspection
-    // The following commits meets all requirements
-    return `Tracker - ${trackerID}\n\n${commits}`;
+    let summaryMessage = `Tracker - ${trackerID}`;
+    if (validCommits.length > 0) {
+      summaryMessage += '\n\n';
+      summaryMessage += '#### The following commits meet all requirements';
+      summaryMessage += '\n\n';
+      summaryMessage += `${Commit.getListOfCommits(validCommits)}`;
+    }
+
+    if (invalidCommits.length > 0) {
+      summaryMessage += '\n\n';
+      summaryMessage += '#### The following commits need inspection';
+      summaryMessage += '\n\n';
+      summaryMessage += `${Commit.getListOfCommits(invalidCommits)}`;
+    }
+
+    return summaryMessage;
   }
 
   overallStatus(

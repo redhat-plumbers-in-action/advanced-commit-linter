@@ -554,6 +554,8 @@ describe('Validator Object', () => {
       expect(validated.message).toMatchInlineSnapshot(`
         "Tracker - Missing, needs inspection! ✋
 
+        #### The following commits meet all requirements
+
         https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\`
         https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - upstream-url upstream-url
         https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url

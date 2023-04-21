@@ -1,3 +1,4 @@
+import { Commit } from '../commit';
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
 export class Validator {
@@ -111,15 +112,22 @@ export class Validator {
                 trackerID = `[${tracker.id}](${tracker.url})`;
             }
         }
-        const commits = `${commitsMetadata
-            .map(commit => {
-            return commit.validation.message;
-        })
-            .join('\n')}`;
-        // TODO: separate commits by their status
-        // The following commits needs inspection
-        // The following commits meets all requirements
-        return `Tracker - ${trackerID}\n\n${commits}`;
+        const validCommits = Commit.getValidCommits(commitsMetadata);
+        const invalidCommits = Commit.getInvalidCommits(commitsMetadata);
+        let summaryMessage = `Tracker - ${trackerID}`;
+        if (validCommits.length > 0) {
+            summaryMessage += '\n\n';
+            summaryMessage += '#### The following commits meet all requirements';
+            summaryMessage += '\n\n';
+            summaryMessage += `${Commit.getListOfCommits(validCommits)}`;
+        }
+        if (invalidCommits.length > 0) {
+            summaryMessage += '\n\n';
+            summaryMessage += '#### The following commits need inspection';
+            summaryMessage += '\n\n';
+            summaryMessage += `${Commit.getListOfCommits(invalidCommits)}`;
+        }
+        return summaryMessage;
     }
     overallStatus(tracker, commitsMetadata) {
         if (!this.config.isTrackerPolicyEmpty()) {
