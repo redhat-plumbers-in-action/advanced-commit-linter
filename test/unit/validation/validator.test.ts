@@ -162,8 +162,8 @@ describe('Validator Object', () => {
             "status": "failure",
             "tracker": {
               "data": [],
-              "message": "",
-              "status": "success",
+              "message": "Missing issue tracker ✋",
+              "status": "failure",
             },
             "upstream": {
               "data": [],
@@ -180,11 +180,11 @@ describe('Validator Object', () => {
       ).toMatchInlineSnapshot(`
         {
           "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\`",
-          "status": "success",
+          "status": "failure",
           "tracker": {
             "data": [],
-            "message": "",
-            "status": "success",
+            "message": "Missing issue tracker ✋",
+            "status": "failure",
           },
           "upstream": {
             "data": [],
