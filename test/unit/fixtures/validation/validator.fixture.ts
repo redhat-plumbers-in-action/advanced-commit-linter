@@ -9,7 +9,6 @@ import {
   commitsWithTracker,
   commitsWithUpstream,
   commitsWithUpstreamAndTracker,
-  upstreamWithExceptionAndTrackerWithException,
 } from '../commit.fixture';
 
 export interface IValidatorTestContext {
