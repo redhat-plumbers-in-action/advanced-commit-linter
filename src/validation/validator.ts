@@ -100,14 +100,11 @@ export class Validator {
     commitTitle: string,
     commitUrl: string
   ): Pick<ValidatedCommitT, 'status' | 'message'> {
-    let status: StatusT = 'failure';
     const upstreamSummary = this.upstreamValidator.summary(data.upstream);
 
-    status = upstreamSummary.status;
-
     return {
-      status,
-      message: `${commitUrl} - ${commitTitle} - ${upstreamSummary.message}`,
+      status: upstreamSummary.status,
+      message: `${commitUrl} - _${commitTitle}_ - ${upstreamSummary.message}`,
     };
   }
 

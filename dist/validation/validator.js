@@ -42,12 +42,10 @@ export class Validator {
         return validated;
     }
     validationSummary(data, commitTitle, commitUrl) {
-        let status = 'failure';
         const upstreamSummary = this.upstreamValidator.summary(data.upstream);
-        status = upstreamSummary.status;
         return {
-            status,
-            message: `${commitUrl} - ${commitTitle} - ${upstreamSummary.message}`,
+            status: upstreamSummary.status,
+            message: `${commitUrl} - _${commitTitle}_ - ${upstreamSummary.message}`,
         };
     }
     // TODO:

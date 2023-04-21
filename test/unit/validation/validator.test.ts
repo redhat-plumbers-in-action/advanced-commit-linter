@@ -36,7 +36,7 @@ describe('Validator Object', () => {
         await context['no-check-policy'].validateCommit(upstreamAndTracker)
       ).toMatchInlineSnapshot(`
         {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - _no upstream_",
           "status": "success",
           "tracker": {
             "data": [],
@@ -56,7 +56,7 @@ describe('Validator Object', () => {
         await context['only-tracker-policy'].validateCommit(upstreamAndTracker)
       ).toMatchInlineSnapshot(`
         {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - _no upstream_",
           "status": "success",
           "tracker": {
             "data": [
@@ -87,7 +87,7 @@ describe('Validator Object', () => {
         )
       ).toMatchInlineSnapshot(`
         {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
           "status": "success",
           "tracker": {
             "data": [],
@@ -120,7 +120,7 @@ describe('Validator Object', () => {
         )
       ).toMatchInlineSnapshot(`
         {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
           "status": "success",
           "tracker": {
             "data": [
@@ -158,7 +158,7 @@ describe('Validator Object', () => {
       expect(await context['systemd-rhel-policy'].validateCommit(plainCommit))
         .toMatchInlineSnapshot(`
           {
-            "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - **Missing upstream reference** ‼️",
+            "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - **Missing upstream reference** ‼️",
             "status": "failure",
             "tracker": {
               "data": [],
@@ -179,7 +179,7 @@ describe('Validator Object', () => {
         )
       ).toMatchInlineSnapshot(`
         {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\`",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\`",
           "status": "success",
           "tracker": {
             "data": [],
@@ -263,7 +263,7 @@ describe('Validator Object', () => {
               "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
             },
             "validation": {
-              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\`",
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\`",
               "status": "success",
               "tracker": {
                 "data": [],
@@ -294,7 +294,7 @@ describe('Validator Object', () => {
               "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
             },
             "validation": {
-              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url",
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - upstream-url upstream-url",
               "status": "success",
               "tracker": {
                 "data": [],
@@ -338,7 +338,7 @@ describe('Validator Object', () => {
               "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
             },
             "validation": {
-              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
               "status": "success",
               "tracker": {
                 "data": [],
@@ -382,7 +382,7 @@ describe('Validator Object', () => {
               "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
             },
             "validation": {
-              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url",
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - upstream-url upstream-url",
               "status": "success",
               "tracker": {
                 "data": [],
@@ -428,7 +428,7 @@ describe('Validator Object', () => {
               "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
             },
             "validation": {
-              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url",
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - upstream-url upstream-url",
               "status": "success",
               "tracker": {
                 "data": [],
@@ -474,7 +474,7 @@ describe('Validator Object', () => {
               "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
             },
             "validation": {
-              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
               "status": "success",
               "tracker": {
                 "data": [],
@@ -522,7 +522,7 @@ describe('Validator Object', () => {
               "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
             },
             "validation": {
-              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+              "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
               "status": "success",
               "tracker": {
                 "data": [],
@@ -554,13 +554,13 @@ describe('Validator Object', () => {
       expect(validated.message).toMatchInlineSnapshot(`
         "Tracker - Missing, needs inspection! ✋
 
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\`
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url"
+        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\`
+        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - upstream-url upstream-url
+        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url
+        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - upstream-url upstream-url
+        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - upstream-url upstream-url
+        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url
+        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url"
       `);
     });
 

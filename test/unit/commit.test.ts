@@ -56,7 +56,7 @@ describe('Commit Object', () => {
         "sha": "1111111111111111111111111111111111111111",
         "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
         "validation": {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - _no upstream_",
           "status": "success",
           "tracker": {
             "data": [],
@@ -105,7 +105,7 @@ describe('Commit Object', () => {
         "sha": "1111111111111111111111111111111111111111",
         "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
         "validation": {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - _no upstream_",
           "status": "success",
           "tracker": {
             "data": [
@@ -164,7 +164,7 @@ describe('Commit Object', () => {
         "sha": "1111111111111111111111111111111111111111",
         "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
         "validation": {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
           "status": "success",
           "tracker": {
             "data": [],
@@ -225,7 +225,7 @@ describe('Commit Object', () => {
         "sha": "1111111111111111111111111111111111111111",
         "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
         "validation": {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
           "status": "success",
           "tracker": {
             "data": [
