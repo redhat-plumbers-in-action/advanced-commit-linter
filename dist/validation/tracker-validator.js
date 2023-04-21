@@ -58,6 +58,8 @@ export class TrackerValidator {
         let status = 'success';
         if (isTrackerPolicyEmpty)
             return status;
+        if (tracker.length === 0)
+            return 'failure';
         for (const single of tracker) {
             if (single.data === undefined && single.exception === undefined) {
                 status = 'failure';
@@ -101,7 +103,7 @@ export class TrackerValidator {
             case 'success':
                 return `${trackersResult.join(', ')}`;
             case 'failure':
-                return '`Missing, needs inspection! ✋`';
+                return 'Missing issue tracker ✋';
         }
     }
     static cleanArray(validationArray) {

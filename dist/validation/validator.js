@@ -24,6 +24,46 @@ export class Validator {
             status: 'failure',
             message: '',
         };
+        // ! FIXME: if tracker is missing status is success!!!
+        // {
+        //   sha: 'a998f0556169717a25a80e8d7354b376a3d47379',
+        //   url: 'https://github.com/actions-private-playground/systemd-rhel9/commit/a998f0556169717a25a80e8d7354b376a3d47379',
+        //   message: {
+        //     title: 'Update README',
+        //     body: 'Update README\n\n(cherry picked from commit 7d33146dbc1bd727a2923bb2da54856a7cb15fb5)',
+        //     cherryPick: [
+        //       {
+        //         sha: '7d33146dbc1bd727a2923bb2da54856a7cb15fb5',
+        //       },
+        //     ],
+        //   },
+        //   validation: {
+        // !   status: 'success', // <--- should be failure
+        //     message:
+        //       'https://github.com/actions-private-playground/systemd-rhel9/commit/a998f0556169717a25a80e8d7354b376a3d47379 - Update README - https://github.com/systemd/systemd/commit/7d33146dbc1bd727a2923bb2da54856a7cb15fb5 https://github.com/systemd/systemd-stable/commit/7d33146dbc1bd727a2923bb2da54856a7cb15fb5',
+        //     tracker: {
+        // !     status: 'success', // <--- should be failure
+        // ?     message: '', // <--- should be something
+        //       data: [],
+        //     },
+        //     upstream: {
+        //       data: [
+        //         {
+        //           sha: '7d33146dbc1bd727a2923bb2da54856a7cb15fb5',
+        //           repo: 'systemd/systemd',
+        //           url: 'https://github.com/systemd/systemd/commit/7d33146dbc1bd727a2923bb2da54856a7cb15fb5',
+        //         },
+        //         {
+        //           sha: '7d33146dbc1bd727a2923bb2da54856a7cb15fb5',
+        //           repo: 'systemd/systemd-stable',
+        //           url: 'https://github.com/systemd/systemd-stable/commit/7d33146dbc1bd727a2923bb2da54856a7cb15fb5',
+        //         },
+        //       ],
+        //       status: 'success',
+        //       exception: '',
+        //     },
+        //   },
+        // },
         validated.tracker = TrackerValidator.cleanArray({
             status: 'failure',
             message: '',
@@ -42,6 +82,34 @@ export class Validator {
         validated.message = message;
         return validated;
     }
+    // TODO: https://github.com/redhat-plumbers-in-action/advanced-commit-linter/issues/43
+    // "validation": {
+    // ? "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
+    // ! "message": "| sha - _title_ | upstream-url upstream-url |", <--- if success
+    // ! "message": "| sha - _title_ | upstream-error and-or tracker-error |", <--- if failure
+    //   "status": "failure",
+    //   "tracker": {
+    //     "data": [],
+    //     "message": "Missing issue tracker ✋",
+    //     "status": "failure",
+    //   },
+    //   "upstream": {
+    //     "data": [
+    //       {
+    //         "repo": "systemd/systemd",
+    //         "sha": "upstream-sha",
+    //         "url": "upstream-url",
+    //       },
+    //       {
+    //         "repo": "systemd/systemd-stable",
+    //         "sha": "upstream-sha",
+    //         "url": "upstream-url",
+    //       },
+    //     ],
+    //     "exception": "rhel-only",
+    //     "status": "success",
+    //   },
+    // },
     validationSummary(data, commitTitle, commitUrl) {
         const upstreamSummary = this.upstreamValidator.summary(data.upstream);
         return {
