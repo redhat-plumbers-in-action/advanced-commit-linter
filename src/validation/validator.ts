@@ -128,7 +128,7 @@ export class Validator {
         validation.tracker === undefined ||
         validation.tracker.data.length === 0
       ) {
-        tracker.message = 'No tracker found';
+        tracker.message = '**Missing issue tracker ✋**';
         return tracker;
       }
 
@@ -186,14 +186,14 @@ export class Validator {
     tracker: OutputValidatedPullRequestMetadataT['validation']['tracker'],
     commitsMetadata: Commit[]
   ): string {
-    let trackerID = 'Missing, needs inspection! ✋';
+    let trackerID = '**Missing, needs inspection! ✋**';
 
-    if (tracker !== undefined) {
+    if (tracker) {
       if (!tracker?.id && !tracker?.exception) {
         trackerID = tracker.message;
-      } else if (tracker?.id === '' && tracker?.exception) {
+      } else if (!tracker?.id && tracker?.exception) {
         trackerID = `\`${tracker.exception}\``;
-      } else if (tracker?.id !== '') {
+      } else if (tracker?.id) {
         trackerID = `[${tracker.id}](${tracker.url})`;
       }
     }
