@@ -3,8 +3,10 @@ import { describe, it, expect, beforeEach, test } from 'vitest';
 import {
   ICommitTestContext,
   commitContextFixture,
+  upstreamWithException,
 } from './fixtures/commit.fixture';
 import { validatorContextFixture } from './fixtures/validation/validator.fixture';
+import { Commit } from '../../src/commit';
 
 describe('Commit Object', () => {
   beforeEach<ICommitTestContext>(context => {
@@ -243,6 +245,63 @@ describe('Commit Object', () => {
             ],
             "message": "[123](https://bugzilla.redhat.com/show_bug.cgi?id=123), github-only",
             "status": "success",
+          },
+          "upstream": {
+            "data": [
+              {
+                "repo": "systemd/systemd",
+                "sha": "upstream-sha",
+                "url": "upstream-url",
+              },
+              {
+                "repo": "systemd/systemd-stable",
+                "sha": "upstream-sha",
+                "url": "upstream-url",
+              },
+            ],
+            "exception": "rhel-only",
+            "status": "success",
+          },
+        },
+      }
+    `);
+  });
+
+  it<ICommitTestContext>('can validate commit with systemd-rhel configuration - bad commits', async context => {
+    const validated = (
+      await new Commit(upstreamWithException).validate(
+        validatorContextFixture['systemd-rhel-policy']
+      )
+    ).validated;
+
+    expect(validated.validation.status).toEqual('failure');
+    expect(validated.validation.tracker?.status).toEqual('failure');
+    expect(validated.validation.upstream?.status).toEqual('success');
+
+    expect(validated).toMatchInlineSnapshot(`
+      {
+        "message": {
+          "body": "feat: add new feature
+
+      rhel-only
+
+      (cherry picked from commit 2222222222222222222222222222222222222222)",
+          "cherryPick": [
+            {
+              "sha": "2222222222222222222222222222222222222222",
+            },
+          ],
+          "title": "feat: add new feature",
+        },
+        "sha": "1111111111111111111111111111111111111111",
+        "url": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111",
+        "validation": {
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
+          "status": "failure",
+          "tracker": {
+            "data": [],
+            "message": "Missing issue tracker ✋",
+            "status": "failure",
           },
           "upstream": {
             "data": [
