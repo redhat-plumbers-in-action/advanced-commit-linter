@@ -9,4 +9,7 @@ export declare class Commit {
     get validated(): OutputCommitMetadataT[number];
     haveTracker(): boolean;
     haveUpstream(): boolean;
+    static getValidCommits(commits: Commit[]): Commit[];
+    static getInvalidCommits(commits: Commit[]): Commit[];
+    static getListOfCommits(commits: Commit[]): string;
 }
