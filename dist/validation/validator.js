@@ -63,7 +63,7 @@ export class Validator {
         for (const { validation } of commitsMetadata) {
             if (validation.tracker === undefined ||
                 validation.tracker.data.length === 0) {
-                tracker.message = 'No tracker found';
+                tracker.message = '**Missing issue tracker ✋**';
                 return tracker;
             }
             if (validation.tracker.status === 'failure') {
@@ -100,15 +100,15 @@ export class Validator {
         return Object.assign(Object.assign({}, tracker), { id: (_a = prUniqueTracker[0].data) === null || _a === void 0 ? void 0 : _a.id, url: (_b = prUniqueTracker[0].data) === null || _b === void 0 ? void 0 : _b.url, message: 'Tracker found', exception: prUniqueTracker[0].exception });
     }
     overallMessage(tracker, commitsMetadata) {
-        let trackerID = 'Missing, needs inspection! ✋';
-        if (tracker !== undefined) {
+        let trackerID = '**Missing, needs inspection! ✋**';
+        if (tracker) {
             if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && !(tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
                 trackerID = tracker.message;
             }
-            else if ((tracker === null || tracker === void 0 ? void 0 : tracker.id) === '' && (tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
+            else if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && (tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
                 trackerID = `\`${tracker.exception}\``;
             }
-            else if ((tracker === null || tracker === void 0 ? void 0 : tracker.id) !== '') {
+            else if (tracker === null || tracker === void 0 ? void 0 : tracker.id) {
                 trackerID = `[${tracker.id}](${tracker.url})`;
             }
         }

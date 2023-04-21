@@ -552,7 +552,7 @@ describe('Validator Object', () => {
       expect(validated.status).toEqual('success');
       expect(validated.tracker).toBeUndefined();
       expect(validated.message).toMatchInlineSnapshot(`
-        "Tracker - Missing, needs inspection! ✋
+        "Tracker - **Missing, needs inspection! ✋**
 
         #### The following commits meet all requirements
 
