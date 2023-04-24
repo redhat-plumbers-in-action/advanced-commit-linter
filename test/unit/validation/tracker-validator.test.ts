@@ -178,7 +178,7 @@ describe('Tracker Validator Object', () => {
     test('getMessage()', context => {
       expect(
         TrackerValidator.getMessage([], 'failure', false)
-      ).toMatchInlineSnapshot('"Missing issue tracker ✋"');
+      ).toMatchInlineSnapshot('"**Missing issue tracker** ✋"');
 
       expect(
         TrackerValidator.getMessage(

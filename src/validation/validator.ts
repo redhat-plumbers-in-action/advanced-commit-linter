@@ -129,7 +129,10 @@ export class Validator {
     commitTitle: string,
     commitUrl: string
   ): Pick<ValidatedCommitT, 'status' | 'message'> {
-    const upstreamSummary = this.upstreamValidator.summary(data.upstream);
+    const upstreamSummary = this.upstreamValidator.summary(data, {
+      upstream: !this.config.isCherryPickPolicyEmpty(),
+      tracker: !this.config.isTrackerPolicyEmpty(),
+    });
 
     return {
       status: upstreamSummary.status,

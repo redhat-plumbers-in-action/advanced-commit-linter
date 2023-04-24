@@ -8,7 +8,6 @@ import {
   ConfigCherryPickT,
   configExceptionSchema,
   ConfigExceptionT,
-  ConfigT,
 } from '../schema/config';
 import { SingleCommitMetadataT } from '../schema/input';
 import {
@@ -20,7 +19,7 @@ import {
 
 export class UpstreamValidator {
   constructor(
-    public config: ConfigT['policy']['cherry-pick'],
+    public config: ConfigCherryPickT,
     public isCherryPickPolicyEmpty: boolean
   ) {}
 
@@ -142,31 +141,49 @@ export class UpstreamValidator {
   }
 
   summary(
-    data: ValidatedCommitT['upstream']
+    data: ValidatedCommitT,
+    validation: {
+      upstream: boolean;
+      tracker: boolean;
+    }
   ): Pick<ValidatedCommitT, 'status' | 'message'> {
-    if (
-      (data === undefined || data.data.length === 0) &&
-      this.config.upstream.length > 0 &&
-      data?.exception === ''
-    )
-      return {
-        status: 'failure',
-        message: '**Missing upstream reference** ‼️',
-      };
-
-    if (
-      (data === undefined || data.data.length === 0) &&
-      data?.exception === ''
-    )
-      return { status: 'success', message: '_no upstream_' };
+    const validationSummary: Pick<ValidatedCommitT, 'status' | 'message'> = {
+      status: 'success',
+      message: '',
+    };
 
     const message: string[] = [];
 
-    if (data?.exception) {
-      message.push(`\`${data.exception}\``);
+    if (validation.tracker) {
+      if (data.tracker && data.tracker.status === 'failure') {
+        validationSummary.status = 'failure';
+        message.push(data.tracker.message);
+      }
     }
 
-    data?.data.forEach(upstream => {
+    if (validation.upstream) {
+      if (data.upstream && data.upstream.status === 'failure') {
+        validationSummary.status = 'failure';
+        message.push('**Missing upstream reference** ‼️');
+      }
+    }
+
+    if (validationSummary.status === 'failure') {
+      validationSummary.message = message.join(' ');
+      return validationSummary;
+    }
+
+    if (
+      (!data.upstream || data.upstream.data.length === 0) &&
+      data.upstream?.exception === ''
+    )
+      return { status: 'success', message: '_no upstream_' };
+
+    if (data.upstream?.exception) {
+      message.push(`\`${data.upstream?.exception}\``);
+    }
+
+    data.upstream?.data.forEach(upstream => {
       message.push(`${upstream.url}`);
     });
 
