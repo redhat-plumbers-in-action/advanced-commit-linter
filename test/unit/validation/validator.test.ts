@@ -158,11 +158,11 @@ describe('Validator Object', () => {
       expect(await context['systemd-rhel-policy'].validateCommit(plainCommit))
         .toMatchInlineSnapshot(`
           {
-            "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - **Missing upstream reference** ‼️",
+            "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - **Missing issue tracker** ✋ **Missing upstream reference** ‼️",
             "status": "failure",
             "tracker": {
               "data": [],
-              "message": "Missing issue tracker ✋",
+              "message": "**Missing issue tracker** ✋",
               "status": "failure",
             },
             "upstream": {
@@ -179,11 +179,11 @@ describe('Validator Object', () => {
         )
       ).toMatchInlineSnapshot(`
         {
-          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\`",
+          "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - **Missing issue tracker** ✋",
           "status": "failure",
           "tracker": {
             "data": [],
-            "message": "Missing issue tracker ✋",
+            "message": "**Missing issue tracker** ✋",
             "status": "failure",
           },
           "upstream": {

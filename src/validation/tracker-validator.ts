@@ -151,7 +151,7 @@ export class TrackerValidator {
       case 'success':
         return `${trackersResult.join(', ')}`;
       case 'failure':
-        return 'Missing issue tracker ✋';
+        return '**Missing issue tracker** ✋';
     }
   }
 

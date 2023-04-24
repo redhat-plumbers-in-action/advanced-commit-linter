@@ -74,22 +74,36 @@ export class UpstreamValidator {
         const parsed = z.array(upstreamDataSchema).safeParse(filtered);
         return parsed.success ? parsed.data : [];
     }
-    summary(data) {
-        if ((data === undefined || data.data.length === 0) &&
-            this.config.upstream.length > 0 &&
-            (data === null || data === void 0 ? void 0 : data.exception) === '')
-            return {
-                status: 'failure',
-                message: '**Missing upstream reference** ‼️',
-            };
-        if ((data === undefined || data.data.length === 0) &&
-            (data === null || data === void 0 ? void 0 : data.exception) === '')
-            return { status: 'success', message: '_no upstream_' };
+    summary(data, validation) {
+        var _a, _b, _c, _d;
+        const validationSummary = {
+            status: 'success',
+            message: '',
+        };
         const message = [];
-        if (data === null || data === void 0 ? void 0 : data.exception) {
-            message.push(`\`${data.exception}\``);
+        if (validation.tracker) {
+            if (data.tracker && data.tracker.status === 'failure') {
+                validationSummary.status = 'failure';
+                message.push(data.tracker.message);
+            }
         }
-        data === null || data === void 0 ? void 0 : data.data.forEach(upstream => {
+        if (validation.upstream) {
+            if (data.upstream && data.upstream.status === 'failure') {
+                validationSummary.status = 'failure';
+                message.push('**Missing upstream reference** ‼️');
+            }
+        }
+        if (validationSummary.status === 'failure') {
+            validationSummary.message = message.join(' ');
+            return validationSummary;
+        }
+        if ((!data.upstream || data.upstream.data.length === 0) &&
+            ((_a = data.upstream) === null || _a === void 0 ? void 0 : _a.exception) === '')
+            return { status: 'success', message: '_no upstream_' };
+        if ((_b = data.upstream) === null || _b === void 0 ? void 0 : _b.exception) {
+            message.push(`\`${(_c = data.upstream) === null || _c === void 0 ? void 0 : _c.exception}\``);
+        }
+        (_d = data.upstream) === null || _d === void 0 ? void 0 : _d.data.forEach(upstream => {
             message.push(`${upstream.url}`);
         });
         return { status: 'success', message: message.join(' ') };
