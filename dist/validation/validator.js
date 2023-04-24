@@ -77,7 +77,7 @@ export class Validator {
         });
         return {
             status: upstreamSummary.status,
-            message: `${commitUrl} - _${commitTitle}_ - ${upstreamSummary.message}`,
+            message: `| ${commitUrl} - _${commitTitle}_ | ${upstreamSummary.message} |`,
         };
     }
     // TODO:
@@ -150,12 +150,16 @@ export class Validator {
             summaryMessage += '\n\n';
             summaryMessage += '#### The following commits meet all requirements';
             summaryMessage += '\n\n';
+            summaryMessage += '| commit | upstream |\n';
+            summaryMessage += '|---|---|\n';
             summaryMessage += `${Commit.getListOfCommits(validCommits)}`;
         }
         if (invalidCommits.length > 0) {
             summaryMessage += '\n\n';
-            summaryMessage += '#### The following commits need inspection';
+            summaryMessage += '#### The following commits need an inspection';
             summaryMessage += '\n\n';
+            summaryMessage += '| commit | note |\n';
+            summaryMessage += '|---|---|\n';
             summaryMessage += `${Commit.getListOfCommits(invalidCommits)}`;
         }
         return summaryMessage;

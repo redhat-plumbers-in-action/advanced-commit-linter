@@ -94,7 +94,7 @@ export class UpstreamValidator {
             }
         }
         if (validationSummary.status === 'failure') {
-            validationSummary.message = message.join(' ');
+            validationSummary.message = message.join('</br>');
             return validationSummary;
         }
         if ((!data.upstream || data.upstream.data.length === 0) &&
@@ -106,7 +106,7 @@ export class UpstreamValidator {
         (_d = data.upstream) === null || _d === void 0 ? void 0 : _d.data.forEach(upstream => {
             message.push(`${upstream.url}`);
         });
-        return { status: 'success', message: message.join(' ') };
+        return { status: 'success', message: message.join('</br>') };
     }
 }
 //# sourceMappingURL=upstream-validator.js.map
