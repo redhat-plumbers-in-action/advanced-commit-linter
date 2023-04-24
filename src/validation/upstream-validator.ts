@@ -169,7 +169,7 @@ export class UpstreamValidator {
     }
 
     if (validationSummary.status === 'failure') {
-      validationSummary.message = message.join(' ');
+      validationSummary.message = message.join('</br>');
       return validationSummary;
     }
 
@@ -187,6 +187,6 @@ export class UpstreamValidator {
       message.push(`${upstream.url}`);
     });
 
-    return { status: 'success', message: message.join(' ') };
+    return { status: 'success', message: message.join('</br>') };
   }
 }
