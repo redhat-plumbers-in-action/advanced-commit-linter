@@ -220,6 +220,7 @@ export class Validator {
   ): string {
     let trackerID = '**Missing, needs inspection! ✋**';
 
+    // ! FIXME: This is duplication of code from TrackerValidator.getMessage() and should be refactored
     if (tracker) {
       if (!tracker?.id && !tracker?.exception) {
         trackerID = tracker.message;

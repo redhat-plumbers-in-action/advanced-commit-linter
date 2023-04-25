@@ -10,6 +10,7 @@ import {
   IValidatorTestContext,
   validatorContextFixture,
 } from '../fixtures/validation/validator.fixture';
+import { Commit } from '../../../src/commit';
 
 describe('Validator Object', () => {
   beforeEach<IValidatorTestContext>(context => {
@@ -601,6 +602,52 @@ describe('Validator Object', () => {
         {
           "message": "Multiple trackers found",
         }
+      `);
+    });
+  });
+
+  describe('overallMessage()', () => {
+    test<IValidatorTestContext>('systemd-rhel-policy all passed', context => {
+      expect(
+        context['systemd-rhel-policy'].overallMessage(
+          undefined,
+          context['validated-commits']['systemd-rhel-policy'].shouldPass
+        )
+      ).toMatchInlineSnapshot(`
+        "Tracker - **Missing, needs inspection! ✋**
+
+        #### The following commits meet all requirements
+
+        | commit | upstream |
+        |---|---|
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | upstream-url</br>upstream-url |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | upstream-url</br>upstream-url |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | \`rhel-only\`</br>upstream-url</br>upstream-url |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | \`rhel-only\`</br>upstream-url</br>upstream-url |"
+      `);
+    });
+
+    test<IValidatorTestContext>('systemd-rhel-policy some failed', context => {
+      expect(
+        context['systemd-rhel-policy'].overallMessage(
+          { id: '123456789', url: 'www.tracker.url/', message: '' },
+          context['validated-commits']['systemd-rhel-policy'].shouldFail
+        )
+      ).toMatchInlineSnapshot(`
+        "Tracker - [123456789](www.tracker.url/)
+
+        #### The following commits meet all requirements
+
+        | commit | upstream |
+        |---|---|
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | upstream-url</br>upstream-url |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | upstream-url</br>upstream-url |
+
+        #### The following commits need an inspection
+
+        | commit | note |
+        |---|---|
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | **Missing issue tracker** ✋</br>**Missing upstream reference** ‼️ |"
       `);
     });
   });
