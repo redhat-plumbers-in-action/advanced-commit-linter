@@ -41,7 +41,7 @@ describe('Validator Object', () => {
           "status": "success",
           "tracker": {
             "data": [],
-            "message": "\`_no-tracker_\`",
+            "message": "_no tracker_",
             "status": "success",
           },
           "upstream": {
@@ -92,7 +92,7 @@ describe('Validator Object', () => {
           "status": "success",
           "tracker": {
             "data": [],
-            "message": "\`_no-tracker_\`",
+            "message": "_no tracker_",
             "status": "success",
           },
           "upstream": {
@@ -207,12 +207,16 @@ describe('Validator Object', () => {
       expect(validated.status).toEqual('success');
       expect(validated.tracker).toBeUndefined();
       expect(validated.message).toMatchInlineSnapshot(`
-        "Tracker - Missing, needs inspection! ✋
+        "Tracker - _no tracker_
 
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_"
+        #### The following commits meet all requirements
+
+        | commit | upstream |
+        |---|---|
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |"
       `);
     });
 
@@ -231,13 +235,17 @@ describe('Validator Object', () => {
       expect(validated.message).toMatchInlineSnapshot(`
         "Tracker - \`github-only\`, [123](https://bugzilla.redhat.com/show_bug.cgi?id=123)
 
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - _no upstream_"
+        #### The following commits meet all requirements
+
+        | commit | upstream |
+        |---|---|
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | _no upstream_ |"
       `);
     });
 
@@ -268,7 +276,7 @@ describe('Validator Object', () => {
               "status": "success",
               "tracker": {
                 "data": [],
-                "message": "\`_no-tracker_\`",
+                "message": "_no tracker_",
                 "status": "success",
               },
               "upstream": {
@@ -299,7 +307,7 @@ describe('Validator Object', () => {
               "status": "success",
               "tracker": {
                 "data": [],
-                "message": "\`_no-tracker_\`",
+                "message": "_no tracker_",
                 "status": "success",
               },
               "upstream": {
@@ -343,7 +351,7 @@ describe('Validator Object', () => {
               "status": "success",
               "tracker": {
                 "data": [],
-                "message": "\`_no-tracker_\`",
+                "message": "_no tracker_",
                 "status": "success",
               },
               "upstream": {
@@ -387,7 +395,7 @@ describe('Validator Object', () => {
               "status": "success",
               "tracker": {
                 "data": [],
-                "message": "\`_no-tracker_\`",
+                "message": "_no tracker_",
                 "status": "success",
               },
               "upstream": {
@@ -433,7 +441,7 @@ describe('Validator Object', () => {
               "status": "success",
               "tracker": {
                 "data": [],
-                "message": "\`_no-tracker_\`",
+                "message": "_no tracker_",
                 "status": "success",
               },
               "upstream": {
@@ -479,7 +487,7 @@ describe('Validator Object', () => {
               "status": "success",
               "tracker": {
                 "data": [],
-                "message": "\`_no-tracker_\`",
+                "message": "_no tracker_",
                 "status": "success",
               },
               "upstream": {
@@ -527,7 +535,7 @@ describe('Validator Object', () => {
               "status": "success",
               "tracker": {
                 "data": [],
-                "message": "\`_no-tracker_\`",
+                "message": "_no tracker_",
                 "status": "success",
               },
               "upstream": {
@@ -569,12 +577,12 @@ describe('Validator Object', () => {
       `);
     });
 
-    it.skip<IValidatorTestContext>('systemd-rhel-policy configuration', context => {
+    it<IValidatorTestContext>('systemd-rhel-policy configuration', context => {
       const validated = context['systemd-rhel-policy'].validateAll(
         context['validated-commits']['systemd-rhel-policy']['shouldPass']
       );
 
-      expect(validated.status).toEqual('success');
+      expect(validated.status).toEqual('failure');
       expect(validated.tracker).toBeDefined();
       expect(validated.tracker).toMatchInlineSnapshot(`
         {
@@ -584,10 +592,14 @@ describe('Validator Object', () => {
       expect(validated.message).toMatchInlineSnapshot(`
         "Tracker - Multiple trackers found
 
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url
-        https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - feat: add new feature - \`rhel-only\` upstream-url upstream-url"
+        #### The following commits meet all requirements
+
+        | commit | upstream |
+        |---|---|
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | upstream-url</br>upstream-url |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | upstream-url</br>upstream-url |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | \`rhel-only\`</br>upstream-url</br>upstream-url |
+        | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | \`rhel-only\`</br>upstream-url</br>upstream-url |"
       `);
     });
   });

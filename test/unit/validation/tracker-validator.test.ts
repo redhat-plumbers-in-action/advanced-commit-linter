@@ -243,7 +243,7 @@ describe('Tracker Validator Object', () => {
 
       expect(
         TrackerValidator.getMessage([], 'failure', true)
-      ).toMatchInlineSnapshot('"`_no-tracker_`"');
+      ).toMatchInlineSnapshot('"_no tracker_"');
     });
   });
 });
