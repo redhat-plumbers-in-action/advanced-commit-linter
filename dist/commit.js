@@ -4,8 +4,6 @@ export class Commit {
         this.validation = {
             status: 'failure',
             message: '',
-            tracker: undefined,
-            upstream: undefined,
         };
     }
     async validate(validator) {

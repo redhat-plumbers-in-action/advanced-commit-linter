@@ -78,7 +78,7 @@ export class TrackerValidator {
     static getMessage(trackers, status, isTrackerPolicyEmpty) {
         var _a;
         if (isTrackerPolicyEmpty)
-            return '`_no-tracker_`';
+            return '_no tracker_';
         const trackersResult = [];
         for (const singleTracker of trackers) {
             // If no tracker data nor exception, skip

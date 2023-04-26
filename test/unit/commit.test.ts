@@ -62,7 +62,7 @@ describe('Commit Object', () => {
           "status": "success",
           "tracker": {
             "data": [],
-            "message": "\`_no-tracker_\`",
+            "message": "_no tracker_",
             "status": "success",
           },
           "upstream": {
@@ -170,7 +170,7 @@ describe('Commit Object', () => {
           "status": "success",
           "tracker": {
             "data": [],
-            "message": "\`_no-tracker_\`",
+            "message": "_no tracker_",
             "status": "success",
           },
           "upstream": {

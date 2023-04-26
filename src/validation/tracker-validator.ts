@@ -120,7 +120,7 @@ export class TrackerValidator {
     status: StatusT,
     isTrackerPolicyEmpty: boolean
   ): string {
-    if (isTrackerPolicyEmpty) return '`_no-tracker_`';
+    if (isTrackerPolicyEmpty) return '_no tracker_';
 
     const trackersResult: string[] = [];
 
