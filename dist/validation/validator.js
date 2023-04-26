@@ -132,6 +132,7 @@ export class Validator {
     }
     overallMessage(tracker, commitsMetadata) {
         let trackerID = '**Missing, needs inspection! ✋**';
+        // ! FIXME: This is duplication of code from TrackerValidator.getMessage() and should be refactored
         if (tracker) {
             if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && !(tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
                 trackerID = tracker.message;
