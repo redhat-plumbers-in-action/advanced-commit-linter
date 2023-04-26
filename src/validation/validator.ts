@@ -96,35 +96,6 @@ export class Validator {
     return validated;
   }
 
-  // TODO: https://github.com/redhat-plumbers-in-action/advanced-commit-linter/issues/43
-  // "validation": {
-  // ? "message": "https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ - \`rhel-only\` upstream-url upstream-url",
-  // ! "message": "| sha - _title_ | upstream-url upstream-url |", <--- if success
-  // ! "message": "| sha - _title_ | upstream-error and-or tracker-error |", <--- if failure
-  //   "status": "failure",
-  //   "tracker": {
-  //     "data": [],
-  //     "message": "Missing issue tracker ✋",
-  //     "status": "failure",
-  //   },
-  //   "upstream": {
-  //     "data": [
-  //       {
-  //         "repo": "systemd/systemd",
-  //         "sha": "upstream-sha",
-  //         "url": "upstream-url",
-  //       },
-  //       {
-  //         "repo": "systemd/systemd-stable",
-  //         "sha": "upstream-sha",
-  //         "url": "upstream-url",
-  //       },
-  //     ],
-  //     "exception": "rhel-only",
-  //     "status": "success",
-  //   },
-  // },
-
   validationSummary(
     data: ValidatedCommit,
     commitTitle: string,
@@ -146,7 +117,6 @@ export class Validator {
   // ! get unique tracker of PR
   // ! when commit is marked by exception and commit with tracker exist return only tracker othervise return exception
   // ! when multiple trackers exist return error???
-
   generalTracker(
     commitsMetadata: Commit[]
   ): OutputValidatedPullRequestMetadata['validation']['tracker'] {
