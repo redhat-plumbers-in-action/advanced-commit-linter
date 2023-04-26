@@ -1,5 +1,5 @@
-import { Context } from 'probot';
 import { error } from '@actions/core';
+import { Context } from 'probot';
 import { z } from 'zod';
 
 import { events } from '../events';

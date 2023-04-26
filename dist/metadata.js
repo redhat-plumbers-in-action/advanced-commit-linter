@@ -1,5 +1,5 @@
-import MetadataController from 'issue-metadata';
 import { getInput } from '@actions/core';
+import MetadataController from 'issue-metadata';
 import { z } from 'zod';
 class Metadata {
     constructor(issueNumber, controller, metadata) {

@@ -1,10 +1,4 @@
 import { Context } from 'probot';
-import { Commit } from '../commit';
-import { Config } from '../config';
-
-import { events } from '../events';
-
-import { SingleCommitMetadataT } from '../schema/input';
 
 import {
   OutputValidatedPullRequestMetadataT,
@@ -14,6 +8,13 @@ import {
 } from '../schema/output';
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
+
+import { Commit } from '../commit';
+import { Config } from '../config';
+
+import { events } from '../events';
+
+import { SingleCommitMetadataT } from '../schema/input';
 
 export class Validator {
   trackerValidator: TrackerValidator[];
