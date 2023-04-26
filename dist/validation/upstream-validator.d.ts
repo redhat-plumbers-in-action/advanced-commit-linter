@@ -1,26 +1,26 @@
 import { Context } from 'probot';
 import { events } from '../events';
-import { ConfigCherryPickT, ConfigExceptionT } from '../schema/config';
-import { SingleCommitMetadataT } from '../schema/input';
-import { StatusT, UpstreamT, ValidatedCommitT } from '../schema/output';
+import { ConfigCherryPick, ConfigException } from '../schema/config';
+import { SingleCommitMetadata } from '../schema/input';
+import { Status, Upstream, ValidatedCommit } from '../schema/output';
 export declare class UpstreamValidator {
-    config: ConfigCherryPickT;
+    config: ConfigCherryPick;
     isCherryPickPolicyEmpty: boolean;
-    constructor(config: ConfigCherryPickT, isCherryPickPolicyEmpty: boolean);
-    validate(singleCommitMetadata: SingleCommitMetadataT, context: {
+    constructor(config: ConfigCherryPick, isCherryPickPolicyEmpty: boolean);
+    validate(singleCommitMetadata: SingleCommitMetadata, context: {
         [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]): Promise<UpstreamT | undefined>;
-    loopPolicy(cherryPick: SingleCommitMetadataT['message']['cherryPick'][number], context: {
+    }[keyof typeof events]): Promise<Upstream | undefined>;
+    loopPolicy(cherryPick: SingleCommitMetadata['message']['cherryPick'][number], context: {
         [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]): Promise<UpstreamT['data']>;
-    verifyCherryPick(cherryPick: SingleCommitMetadataT['message']['cherryPick'][number], upstream: ConfigCherryPickT['upstream'][number], context: {
+    }[keyof typeof events]): Promise<Upstream['data']>;
+    verifyCherryPick(cherryPick: SingleCommitMetadata['message']['cherryPick'][number], upstream: ConfigCherryPick['upstream'][number], context: {
         [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]): Promise<Partial<UpstreamT['data'][number]>>;
-    isException(exceptionPolicy: ConfigExceptionT | undefined, commitBody: string): string;
-    getStatus(data: UpstreamT['data'], exception: UpstreamT['exception']): StatusT;
-    cleanArray(validationArray: Promise<Partial<UpstreamT['data'][number]>>[]): Promise<UpstreamT['data']>;
-    summary(data: ValidatedCommitT, validation: {
+    }[keyof typeof events]): Promise<Partial<Upstream['data'][number]>>;
+    isException(exceptionPolicy: ConfigException | undefined, commitBody: string): string;
+    getStatus(data: Upstream['data'], exception: Upstream['exception']): Status;
+    cleanArray(validationArray: Promise<Partial<Upstream['data'][number]>>[]): Promise<Upstream['data']>;
+    summary(data: ValidatedCommit, validation: {
         upstream: boolean;
         tracker: boolean;
-    }): Pick<ValidatedCommitT, 'status' | 'message'>;
+    }): Pick<ValidatedCommit, 'status' | 'message'>;
 }

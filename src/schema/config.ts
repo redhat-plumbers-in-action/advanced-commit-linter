@@ -5,7 +5,7 @@ export const configExceptionSchema = z.object({
   note: z.array(z.string()).optional(),
 });
 
-export type ConfigExceptionT = z.infer<typeof configExceptionSchema>;
+export type ConfigException = z.infer<typeof configExceptionSchema>;
 
 export const configCherryPickSchema = z.object({
   upstream: z.array(
@@ -16,7 +16,7 @@ export const configCherryPickSchema = z.object({
   exception: configExceptionSchema.optional(),
 });
 
-export type ConfigCherryPickT = z.infer<typeof configCherryPickSchema>;
+export type ConfigCherryPick = z.infer<typeof configCherryPickSchema>;
 
 export const configTrackerSchema = z.object({
   keyword: z.array(z.string()),
@@ -25,13 +25,15 @@ export const configTrackerSchema = z.object({
   exception: configExceptionSchema.optional(),
 });
 
-export type ConfigTrackerT = z.infer<typeof configTrackerSchema>;
+export type ConfigTracker = z.infer<typeof configTrackerSchema>;
 
-export const configSchema = z.object({
-  policy: z.object({
-    'cherry-pick': configCherryPickSchema.optional().default({ upstream: [] }),
-    tracker: z.array(configTrackerSchema).optional().default([]),
-  }),
+export const configPolicySchema = z.object({
+  'cherry-pick': configCherryPickSchema.optional().default({ upstream: [] }),
+  tracker: z.array(configTrackerSchema).optional().default([]),
 });
 
-export type ConfigT = z.output<typeof configSchema>;
+export type ConfigPolicy = z.infer<typeof configPolicySchema>;
+
+export const configSchema = z.object({
+  policy: configPolicySchema.optional().default({}),
+});

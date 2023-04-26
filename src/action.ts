@@ -5,12 +5,9 @@ import { events } from './events';
 import { Config } from './config';
 import { Validator } from './validation/validator';
 
-import {
-  pullRequestMetadataSchema,
-  PullRequestMetadataT,
-} from './schema/input';
+import { pullRequestMetadataSchema, PullRequestMetadata } from './schema/input';
 import { Commit } from './commit';
-import { OutputValidatedPullRequestMetadataT } from './schema/output';
+import { OutputValidatedPullRequestMetadata } from './schema/output';
 import { PullRequest } from './pull-request';
 
 const action = (probot: Probot) => {
@@ -46,8 +43,8 @@ const action = (probot: Probot) => {
 
       const validationResults = validator.validateAll(validatedCommits);
 
-      const validated: OutputValidatedPullRequestMetadataT = {
-        ...(prMetadataUnsafe as PullRequestMetadataT & {
+      const validated: OutputValidatedPullRequestMetadata = {
+        ...(prMetadataUnsafe as PullRequestMetadata & {
           [key: string]: string;
         }),
         validation: validationResults,

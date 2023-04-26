@@ -2,10 +2,10 @@ import { Context } from 'probot';
 
 import { events } from './events';
 
-import { configSchema, ConfigT } from './schema/config';
+import { configSchema, ConfigPolicy } from './schema/config';
 
 export class Config {
-  policy: ConfigT['policy'];
+  policy: ConfigPolicy;
 
   constructor(config: unknown) {
     this.policy = configSchema.parse(config).policy;

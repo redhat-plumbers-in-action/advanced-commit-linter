@@ -14,15 +14,15 @@ export const singleCommitMetadataSchema = z.object({
   }),
 });
 
-export type SingleCommitMetadataT = z.infer<typeof singleCommitMetadataSchema>;
+export type SingleCommitMetadata = z.infer<typeof singleCommitMetadataSchema>;
 
 export const commitMetadataSchema = z.array(singleCommitMetadataSchema);
 
-export type CommitMetadataT = z.infer<typeof commitMetadataSchema>;
+export type CommitMetadata = z.infer<typeof commitMetadataSchema>;
 
 export const pullRequestMetadataSchema = z.object({
   number: z.number(),
   commits: commitMetadataSchema,
 });
 
-export type PullRequestMetadataT = z.infer<typeof pullRequestMetadataSchema>;
+export type PullRequestMetadata = z.infer<typeof pullRequestMetadataSchema>;

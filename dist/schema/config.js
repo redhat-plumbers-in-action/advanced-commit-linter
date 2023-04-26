@@ -15,10 +15,11 @@ export const configTrackerSchema = z.object({
     url: z.string().optional(),
     exception: configExceptionSchema.optional(),
 });
+export const configPolicySchema = z.object({
+    'cherry-pick': configCherryPickSchema.optional().default({ upstream: [] }),
+    tracker: z.array(configTrackerSchema).optional().default([]),
+});
 export const configSchema = z.object({
-    policy: z.object({
-        'cherry-pick': configCherryPickSchema.optional().default({ upstream: [] }),
-        tracker: z.array(configTrackerSchema).optional().default([]),
-    }),
+    policy: configPolicySchema.optional().default({}),
 });
 //# sourceMappingURL=config.js.map

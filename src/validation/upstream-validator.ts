@@ -5,37 +5,37 @@ import { z } from 'zod';
 import { events } from '../events';
 
 import {
-  ConfigCherryPickT,
+  ConfigCherryPick,
   configExceptionSchema,
-  ConfigExceptionT,
+  ConfigException,
 } from '../schema/config';
-import { SingleCommitMetadataT } from '../schema/input';
+import { SingleCommitMetadata } from '../schema/input';
 import {
-  StatusT,
+  Status,
   upstreamDataSchema,
-  UpstreamT,
-  ValidatedCommitT,
+  Upstream,
+  ValidatedCommit,
 } from '../schema/output';
 
 export class UpstreamValidator {
   constructor(
-    public config: ConfigCherryPickT,
+    public config: ConfigCherryPick,
     public isCherryPickPolicyEmpty: boolean
   ) {}
 
   async validate(
-    singleCommitMetadata: SingleCommitMetadataT,
+    singleCommitMetadata: SingleCommitMetadata,
     context: {
       [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
-  ): Promise<UpstreamT | undefined> {
-    let data: UpstreamT['data'] = [];
+  ): Promise<Upstream | undefined> {
+    let data: Upstream['data'] = [];
 
     for (const cherryPick of singleCommitMetadata.message.cherryPick) {
       data = data.concat(await this.loopPolicy(cherryPick, context));
     }
 
-    const result: UpstreamT = {
+    const result: Upstream = {
       data,
       status: 'failure',
       exception: this.isException(
@@ -50,11 +50,11 @@ export class UpstreamValidator {
   }
 
   async loopPolicy(
-    cherryPick: SingleCommitMetadataT['message']['cherryPick'][number],
+    cherryPick: SingleCommitMetadata['message']['cherryPick'][number],
     context: {
       [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
-  ): Promise<UpstreamT['data']> {
+  ): Promise<Upstream['data']> {
     return this.cleanArray(
       this.config.upstream.map(async upstream => {
         return await this.verifyCherryPick(cherryPick, upstream, context);
@@ -64,12 +64,12 @@ export class UpstreamValidator {
 
   // TODO: return undefined if all upstreams are empty
   async verifyCherryPick(
-    cherryPick: SingleCommitMetadataT['message']['cherryPick'][number],
-    upstream: ConfigCherryPickT['upstream'][number],
+    cherryPick: SingleCommitMetadata['message']['cherryPick'][number],
+    upstream: ConfigCherryPick['upstream'][number],
     context: {
       [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
-  ): Promise<Partial<UpstreamT['data'][number]>> {
+  ): Promise<Partial<Upstream['data'][number]>> {
     try {
       const { status, data } = await context.octokit.repos.getCommit({
         owner: upstream.github.split('/')[0],
@@ -88,7 +88,7 @@ export class UpstreamValidator {
   }
 
   isException(
-    exceptionPolicy: ConfigExceptionT | undefined,
+    exceptionPolicy: ConfigException | undefined,
     commitBody: string
   ) {
     const exceptionPolicySafe = configExceptionSchema
@@ -111,11 +111,8 @@ export class UpstreamValidator {
     return '';
   }
 
-  getStatus(
-    data: UpstreamT['data'],
-    exception: UpstreamT['exception']
-  ): StatusT {
-    let status: StatusT = 'failure';
+  getStatus(data: Upstream['data'], exception: Upstream['exception']): Status {
+    let status: Status = 'failure';
 
     if (data.length > 0 || exception || this.isCherryPickPolicyEmpty) {
       status = 'success';
@@ -125,8 +122,8 @@ export class UpstreamValidator {
   }
 
   async cleanArray(
-    validationArray: Promise<Partial<UpstreamT['data'][number]>>[]
-  ): Promise<UpstreamT['data']> {
+    validationArray: Promise<Partial<Upstream['data'][number]>>[]
+  ): Promise<Upstream['data']> {
     if (validationArray === undefined) return [];
 
     const data = await Promise.all(validationArray);
@@ -141,13 +138,13 @@ export class UpstreamValidator {
   }
 
   summary(
-    data: ValidatedCommitT,
+    data: ValidatedCommit,
     validation: {
       upstream: boolean;
       tracker: boolean;
     }
-  ): Pick<ValidatedCommitT, 'status' | 'message'> {
-    const validationSummary: Pick<ValidatedCommitT, 'status' | 'message'> = {
+  ): Pick<ValidatedCommit, 'status' | 'message'> {
+    const validationSummary: Pick<ValidatedCommit, 'status' | 'message'> = {
       status: 'success',
       message: '',
     };

@@ -1,15 +1,15 @@
 import { Validator } from './validation/validator';
 
-import { SingleCommitMetadataT } from './schema/input';
-import { OutputCommitMetadataT, ValidatedCommitT } from './schema/output';
+import { SingleCommitMetadata } from './schema/input';
+import { OutputCommitMetadata, ValidatedCommit } from './schema/output';
 
 export class Commit {
-  validation: ValidatedCommitT = {
+  validation: ValidatedCommit = {
     status: 'failure',
     message: '',
   };
 
-  constructor(readonly metadata: SingleCommitMetadataT) {}
+  constructor(readonly metadata: SingleCommitMetadata) {}
 
   async validate(validator: Validator): Promise<Commit> {
     this.validation = await validator.validateCommit(this.metadata);
@@ -17,7 +17,7 @@ export class Commit {
     return this;
   }
 
-  get validated(): OutputCommitMetadataT[number] {
+  get validated(): OutputCommitMetadata[number] {
     return {
       ...this.metadata,
       validation: this.validation,

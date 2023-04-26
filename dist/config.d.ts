@@ -1,8 +1,8 @@
 import { Context } from 'probot';
 import { events } from './events';
-import { ConfigT } from './schema/config';
+import { ConfigPolicy } from './schema/config';
 export declare class Config {
-    policy: ConfigT['policy'];
+    policy: ConfigPolicy;
     constructor(config: unknown);
     get tracker(): {
         keyword: string[];

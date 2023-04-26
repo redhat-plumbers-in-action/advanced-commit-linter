@@ -1,5 +1,5 @@
 import { Commit } from '../../../src/commit';
-import { SingleCommitMetadataT } from '../../../src/schema/input';
+import { SingleCommitMetadata } from '../../../src/schema/input';
 
 export interface ICommitTestContext {
   'no-check-policy': Commit;
@@ -8,7 +8,7 @@ export interface ICommitTestContext {
   'systemd-rhel-policy': Commit;
 }
 
-export const plainCommit: SingleCommitMetadataT = {
+export const plainCommit: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -18,7 +18,7 @@ export const plainCommit: SingleCommitMetadataT = {
   },
 };
 
-export const plainCommitWithUpstreamException: SingleCommitMetadataT = {
+export const plainCommitWithUpstreamException: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -28,7 +28,7 @@ export const plainCommitWithUpstreamException: SingleCommitMetadataT = {
   },
 };
 
-export const plainCommitWithTrackerException: SingleCommitMetadataT = {
+export const plainCommitWithTrackerException: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -38,7 +38,7 @@ export const plainCommitWithTrackerException: SingleCommitMetadataT = {
   },
 };
 
-export const tracker: SingleCommitMetadataT = {
+export const tracker: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -48,7 +48,7 @@ export const tracker: SingleCommitMetadataT = {
   },
 };
 
-export const TrackerWithException: SingleCommitMetadataT = {
+export const TrackerWithException: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -58,7 +58,7 @@ export const TrackerWithException: SingleCommitMetadataT = {
   },
 };
 
-export const upstream: SingleCommitMetadataT = {
+export const upstream: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -68,7 +68,7 @@ export const upstream: SingleCommitMetadataT = {
   },
 };
 
-export const upstreamWithException: SingleCommitMetadataT = {
+export const upstreamWithException: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -78,7 +78,7 @@ export const upstreamWithException: SingleCommitMetadataT = {
   },
 };
 
-export const upstreamAndTracker: SingleCommitMetadataT = {
+export const upstreamAndTracker: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -88,7 +88,7 @@ export const upstreamAndTracker: SingleCommitMetadataT = {
   },
 };
 
-export const upstreamAndTrackerWithException: SingleCommitMetadataT = {
+export const upstreamAndTrackerWithException: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -98,7 +98,7 @@ export const upstreamAndTrackerWithException: SingleCommitMetadataT = {
   },
 };
 
-export const upstreamWithExceptionAndTracker: SingleCommitMetadataT = {
+export const upstreamWithExceptionAndTracker: SingleCommitMetadata = {
   sha: '1111111111111111111111111111111111111111',
   url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
   message: {
@@ -108,7 +108,7 @@ export const upstreamWithExceptionAndTracker: SingleCommitMetadataT = {
   },
 };
 
-export const upstreamWithExceptionAndTrackerWithException: SingleCommitMetadataT =
+export const upstreamWithExceptionAndTrackerWithException: SingleCommitMetadata =
   {
     sha: '1111111111111111111111111111111111111111',
     url: 'https://github.com/org/repo/commit/1111111111111111111111111111111111111111',
@@ -119,13 +119,13 @@ export const upstreamWithExceptionAndTrackerWithException: SingleCommitMetadataT
     },
   };
 
-export const commitsWithMissingData: SingleCommitMetadataT[] = [
+export const commitsWithMissingData: SingleCommitMetadata[] = [
   plainCommit,
   upstreamAndTracker,
   upstreamAndTracker,
 ];
 
-export const commitsWithTracker: SingleCommitMetadataT[] = [
+export const commitsWithTracker: SingleCommitMetadata[] = [
   plainCommitWithTrackerException,
   tracker,
   TrackerWithException,
@@ -135,7 +135,7 @@ export const commitsWithTracker: SingleCommitMetadataT[] = [
   upstreamWithExceptionAndTrackerWithException,
 ];
 
-export const commitsWithUpstream: SingleCommitMetadataT[] = [
+export const commitsWithUpstream: SingleCommitMetadata[] = [
   plainCommitWithUpstreamException,
   upstream,
   upstreamWithException,
@@ -145,7 +145,7 @@ export const commitsWithUpstream: SingleCommitMetadataT[] = [
   upstreamWithExceptionAndTrackerWithException,
 ];
 
-export const commitsWithUpstreamAndTracker: SingleCommitMetadataT[] = [
+export const commitsWithUpstreamAndTracker: SingleCommitMetadata[] = [
   upstreamAndTracker,
   upstreamAndTrackerWithException,
   upstreamWithExceptionAndTracker,
