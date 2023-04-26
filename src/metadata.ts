@@ -1,9 +1,9 @@
+import { getInput } from '@actions/core';
+import MetadataController from 'issue-metadata';
 import { Context } from 'probot';
+import { z } from 'zod';
 
 import { events } from './events';
-import MetadataController from 'issue-metadata';
-import { getInput } from '@actions/core';
-import { z } from 'zod';
 
 type MetadataObjectT = {
   commentID: string | undefined;

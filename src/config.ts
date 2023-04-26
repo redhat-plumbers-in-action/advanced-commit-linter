@@ -1,6 +1,7 @@
 import { Context } from 'probot';
 
 import { events } from './events';
+
 import { configSchema, ConfigT } from './schema/config';
 
 export class Config {

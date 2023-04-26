@@ -1,6 +1,6 @@
+import MetadataController from 'issue-metadata';
 import { Context } from 'probot';
 import { events } from './events';
-import MetadataController from 'issue-metadata';
 type MetadataObjectT = {
     commentID: string | undefined;
 };

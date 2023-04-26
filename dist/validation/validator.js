@@ -1,6 +1,6 @@
-import { Commit } from '../commit';
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
+import { Commit } from '../commit';
 export class Validator {
     constructor(config, context) {
         this.config = config;
