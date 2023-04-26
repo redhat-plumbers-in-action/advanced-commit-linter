@@ -2,7 +2,7 @@ import { getInput, setOutput } from '@actions/core';
 import { events } from './events';
 import { Config } from './config';
 import { Validator } from './validation/validator';
-import { pullRequestMetadataSchema, } from './schema/input';
+import { pullRequestMetadataSchema } from './schema/input';
 import { Commit } from './commit';
 import { PullRequest } from './pull-request';
 const action = (probot) => {

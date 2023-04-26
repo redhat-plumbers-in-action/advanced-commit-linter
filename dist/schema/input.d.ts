@@ -46,7 +46,7 @@ export declare const singleCommitMetadataSchema: z.ZodObject<{
     url: string;
     sha: string;
 }>;
-export type SingleCommitMetadataT = z.infer<typeof singleCommitMetadataSchema>;
+export type SingleCommitMetadata = z.infer<typeof singleCommitMetadataSchema>;
 export declare const commitMetadataSchema: z.ZodArray<z.ZodObject<{
     sha: z.ZodString;
     url: z.ZodString;
@@ -94,7 +94,7 @@ export declare const commitMetadataSchema: z.ZodArray<z.ZodObject<{
     url: string;
     sha: string;
 }>, "many">;
-export type CommitMetadataT = z.infer<typeof commitMetadataSchema>;
+export type CommitMetadata = z.infer<typeof commitMetadataSchema>;
 export declare const pullRequestMetadataSchema: z.ZodObject<{
     number: z.ZodNumber;
     commits: z.ZodArray<z.ZodObject<{
@@ -171,4 +171,4 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
         sha: string;
     }[];
 }>;
-export type PullRequestMetadataT = z.infer<typeof pullRequestMetadataSchema>;
+export type PullRequestMetadata = z.infer<typeof pullRequestMetadataSchema>;

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 declare const statusSchema: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
-export type StatusT = z.infer<typeof statusSchema>;
+export type Status = z.infer<typeof statusSchema>;
 declare const trackerSchema: z.ZodObject<{
     exception: z.ZodOptional<z.ZodString>;
     data: z.ZodOptional<z.ZodObject<{
@@ -31,7 +31,7 @@ declare const trackerSchema: z.ZodObject<{
         url?: string | undefined;
     } | undefined;
 }>;
-export type TrackerT = z.infer<typeof trackerSchema>;
+export type Tracker = z.infer<typeof trackerSchema>;
 export declare const upstreamDataSchema: z.ZodObject<{
     sha: z.ZodString;
     repo: z.ZodString;
@@ -45,7 +45,7 @@ export declare const upstreamDataSchema: z.ZodObject<{
     sha: string;
     repo: string;
 }>;
-export type UpstreamDataT = z.infer<typeof upstreamDataSchema>;
+export type UpstreamData = z.infer<typeof upstreamDataSchema>;
 declare const upstreamSchema: z.ZodObject<{
     status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
     exception: z.ZodOptional<z.ZodString>;
@@ -79,7 +79,7 @@ declare const upstreamSchema: z.ZodObject<{
     }[];
     exception?: string | undefined;
 }>;
-export type UpstreamT = z.infer<typeof upstreamSchema>;
+export type Upstream = z.infer<typeof upstreamSchema>;
 declare const validatedCommitSchema: z.ZodObject<{
     status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
     message: z.ZodString;
@@ -221,7 +221,7 @@ declare const validatedCommitSchema: z.ZodObject<{
         exception?: string | undefined;
     } | undefined;
 }>;
-export type ValidatedCommitT = z.infer<typeof validatedCommitSchema>;
+export type ValidatedCommit = z.infer<typeof validatedCommitSchema>;
 declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
     message: z.ZodObject<{
         title: z.ZodString;
@@ -460,7 +460,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
     url: string;
     sha: string;
 }>, "many">;
-export type OutputCommitMetadataT = z.infer<typeof outputCommitMetadataSchema>;
+export type OutputCommitMetadata = z.infer<typeof outputCommitMetadataSchema>;
 export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
     validation: z.ZodObject<{
         status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
@@ -833,5 +833,5 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         sha: string;
     }[];
 }>;
-export type OutputValidatedPullRequestMetadataT = z.infer<typeof outputValidatedPullRequestMetadataSchema>;
+export type OutputValidatedPullRequestMetadata = z.infer<typeof outputValidatedPullRequestMetadataSchema>;
 export {};

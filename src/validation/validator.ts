@@ -1,10 +1,10 @@
 import { Context } from 'probot';
 
 import {
-  OutputValidatedPullRequestMetadataT,
-  TrackerT,
-  ValidatedCommitT,
-  StatusT,
+  OutputValidatedPullRequestMetadata,
+  Tracker,
+  ValidatedCommit,
+  Status,
 } from '../schema/output';
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
@@ -14,7 +14,7 @@ import { Config } from '../config';
 
 import { events } from '../events';
 
-import { SingleCommitMetadataT } from '../schema/input';
+import { SingleCommitMetadata } from '../schema/input';
 
 export class Validator {
   trackerValidator: TrackerValidator[];
@@ -37,7 +37,7 @@ export class Validator {
 
   validateAll(
     validatedCommits: Commit[]
-  ): OutputValidatedPullRequestMetadataT['validation'] {
+  ): OutputValidatedPullRequestMetadata['validation'] {
     const tracker = this.generalTracker(validatedCommits);
     const status = this.overallStatus(tracker, validatedCommits);
     const message = this.overallMessage(tracker, validatedCommits);
@@ -50,9 +50,9 @@ export class Validator {
   }
 
   async validateCommit(
-    commitMetadata: SingleCommitMetadataT
-  ): Promise<ValidatedCommitT> {
-    const validated: ValidatedCommitT = {
+    commitMetadata: SingleCommitMetadata
+  ): Promise<ValidatedCommit> {
+    const validated: ValidatedCommit = {
       status: 'failure',
       message: '',
     };
@@ -126,10 +126,10 @@ export class Validator {
   // },
 
   validationSummary(
-    data: ValidatedCommitT,
+    data: ValidatedCommit,
     commitTitle: string,
     commitUrl: string
-  ): Pick<ValidatedCommitT, 'status' | 'message'> {
+  ): Pick<ValidatedCommit, 'status' | 'message'> {
     const upstreamSummary = this.upstreamValidator.summary(data, {
       upstream: !this.config.isCherryPickPolicyEmpty(),
       tracker: !this.config.isTrackerPolicyEmpty(),
@@ -149,13 +149,13 @@ export class Validator {
 
   generalTracker(
     commitsMetadata: Commit[]
-  ): OutputValidatedPullRequestMetadataT['validation']['tracker'] {
+  ): OutputValidatedPullRequestMetadata['validation']['tracker'] {
     if (this.config.isTrackerPolicyEmpty()) return undefined;
 
-    const tracker: OutputValidatedPullRequestMetadataT['validation']['tracker'] =
+    const tracker: OutputValidatedPullRequestMetadata['validation']['tracker'] =
       { message: '' };
 
-    const prUniqueTracker: TrackerT[] = [];
+    const prUniqueTracker: Tracker[] = [];
     for (const { validation } of commitsMetadata) {
       if (
         validation.tracker === undefined ||
@@ -170,7 +170,7 @@ export class Validator {
         return tracker;
       }
 
-      const uniqueTracker: TrackerT[] = [];
+      const uniqueTracker: Tracker[] = [];
       for (const tracker of validation.tracker.data) {
         const isDuplicate = uniqueTracker.find(
           obj => obj.data?.id === tracker.data?.id
@@ -216,7 +216,7 @@ export class Validator {
   }
 
   overallMessage(
-    tracker: OutputValidatedPullRequestMetadataT['validation']['tracker'],
+    tracker: OutputValidatedPullRequestMetadata['validation']['tracker'],
     commitsMetadata: Commit[]
   ): string {
     let trackerID = '**Missing, needs inspection! ✋**';
@@ -258,9 +258,9 @@ export class Validator {
   }
 
   overallStatus(
-    tracker: OutputValidatedPullRequestMetadataT['validation']['tracker'],
+    tracker: OutputValidatedPullRequestMetadata['validation']['tracker'],
     commitsMetadata: Commit[]
-  ): StatusT {
+  ): Status {
     if (!this.config.isTrackerPolicyEmpty()) {
       if (tracker === undefined) {
         return 'failure';

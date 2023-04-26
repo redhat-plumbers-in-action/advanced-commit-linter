@@ -1,14 +1,14 @@
-import { ConfigExceptionT, ConfigTrackerT } from '../schema/config';
-import { SingleCommitMetadataT } from '../schema/input';
-import { StatusT, TrackerT, ValidatedCommitT } from '../schema/output';
+import { ConfigException, ConfigTracker } from '../schema/config';
+import { SingleCommitMetadata } from '../schema/input';
+import { Status, Tracker, ValidatedCommit } from '../schema/output';
 export declare class TrackerValidator {
-    readonly config: ConfigTrackerT;
-    constructor(config: ConfigTrackerT);
-    validate(singleCommitMetadata: SingleCommitMetadataT): TrackerT;
-    loopPolicy(commitBody: SingleCommitMetadataT['message']['body']): TrackerT;
+    readonly config: ConfigTracker;
+    constructor(config: ConfigTracker);
+    validate(singleCommitMetadata: SingleCommitMetadata): Tracker;
+    loopPolicy(commitBody: SingleCommitMetadata['message']['body']): Tracker;
     matchTracker(keyword: string, trackerFormat: string, commitBody: string): string | undefined;
-    isException(exceptionPolicy: ConfigExceptionT | undefined, commitBody: string): string | undefined;
-    static getStatus(tracker: TrackerT[], isTrackerPolicyEmpty: boolean): StatusT;
+    isException(exceptionPolicy: ConfigException | undefined, commitBody: string): string | undefined;
+    static getStatus(tracker: Tracker[], isTrackerPolicyEmpty: boolean): Status;
     /**
      * Get tracker message that will be displayed in Pull Request comment summary
      * @param trackers - Array of tracker data
@@ -16,6 +16,6 @@ export declare class TrackerValidator {
      * @param isTrackerPolicyEmpty - If tracker policy is empty
      * @returns Message to be displayed
      */
-    static getMessage(trackers: TrackerT[], status: StatusT, isTrackerPolicyEmpty: boolean): string;
-    static cleanArray(validationArray: ValidatedCommitT['tracker']): ValidatedCommitT['tracker'];
+    static getMessage(trackers: Tracker[], status: Status, isTrackerPolicyEmpty: boolean): string;
+    static cleanArray(validationArray: ValidatedCommit['tracker']): ValidatedCommit['tracker'];
 }

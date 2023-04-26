@@ -2,16 +2,16 @@ import { z } from 'zod';
 
 import {
   configExceptionSchema,
-  ConfigExceptionT,
-  ConfigTrackerT,
+  ConfigException,
+  ConfigTracker,
 } from '../schema/config';
-import { SingleCommitMetadataT } from '../schema/input';
-import { StatusT, TrackerT, ValidatedCommitT } from '../schema/output';
+import { SingleCommitMetadata } from '../schema/input';
+import { Status, Tracker, ValidatedCommit } from '../schema/output';
 
 export class TrackerValidator {
-  constructor(readonly config: ConfigTrackerT) {}
+  constructor(readonly config: ConfigTracker) {}
 
-  validate(singleCommitMetadata: SingleCommitMetadataT): TrackerT {
+  validate(singleCommitMetadata: SingleCommitMetadata): Tracker {
     return {
       ...this.loopPolicy(singleCommitMetadata.message.body),
       exception: this.isException(
@@ -21,8 +21,8 @@ export class TrackerValidator {
     };
   }
 
-  loopPolicy(commitBody: SingleCommitMetadataT['message']['body']): TrackerT {
-    const trackerResult: TrackerT = {};
+  loopPolicy(commitBody: SingleCommitMetadata['message']['body']): Tracker {
+    const trackerResult: Tracker = {};
 
     for (const keyword of this.config.keyword) {
       for (const issueFormat of this.config['issue-format']) {
@@ -69,7 +69,7 @@ export class TrackerValidator {
   }
 
   isException(
-    exceptionPolicy: ConfigExceptionT | undefined,
+    exceptionPolicy: ConfigException | undefined,
     commitBody: string
   ): string | undefined {
     const exceptionPolicySafe = configExceptionSchema
@@ -90,11 +90,8 @@ export class TrackerValidator {
     }
   }
 
-  static getStatus(
-    tracker: TrackerT[],
-    isTrackerPolicyEmpty: boolean
-  ): StatusT {
-    let status: StatusT = 'success';
+  static getStatus(tracker: Tracker[], isTrackerPolicyEmpty: boolean): Status {
+    let status: Status = 'success';
     if (isTrackerPolicyEmpty) return status;
     if (tracker.length === 0) return 'failure';
 
@@ -116,8 +113,8 @@ export class TrackerValidator {
    * @returns Message to be displayed
    */
   static getMessage(
-    trackers: TrackerT[],
-    status: StatusT,
+    trackers: Tracker[],
+    status: Status,
     isTrackerPolicyEmpty: boolean
   ): string {
     if (isTrackerPolicyEmpty) return '_no tracker_';
@@ -156,8 +153,8 @@ export class TrackerValidator {
   }
 
   static cleanArray(
-    validationArray: ValidatedCommitT['tracker']
-  ): ValidatedCommitT['tracker'] {
+    validationArray: ValidatedCommit['tracker']
+  ): ValidatedCommit['tracker'] {
     if (validationArray === undefined) return undefined;
     if (
       Array.isArray(validationArray.data) &&

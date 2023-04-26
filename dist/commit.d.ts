@@ -1,12 +1,12 @@
 import { Validator } from './validation/validator';
-import { SingleCommitMetadataT } from './schema/input';
-import { OutputCommitMetadataT, ValidatedCommitT } from './schema/output';
+import { SingleCommitMetadata } from './schema/input';
+import { OutputCommitMetadata, ValidatedCommit } from './schema/output';
 export declare class Commit {
-    readonly metadata: SingleCommitMetadataT;
-    validation: ValidatedCommitT;
-    constructor(metadata: SingleCommitMetadataT);
+    readonly metadata: SingleCommitMetadata;
+    validation: ValidatedCommit;
+    constructor(metadata: SingleCommitMetadata);
     validate(validator: Validator): Promise<Commit>;
-    get validated(): OutputCommitMetadataT[number];
+    get validated(): OutputCommitMetadata[number];
     haveTracker(): boolean;
     haveUpstream(): boolean;
     static getValidCommits(commits: Commit[]): Commit[];
