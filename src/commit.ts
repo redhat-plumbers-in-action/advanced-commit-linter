@@ -7,8 +7,6 @@ export class Commit {
   validation: ValidatedCommitT = {
     status: 'failure',
     message: '',
-    tracker: undefined,
-    upstream: undefined,
   };
 
   constructor(readonly metadata: SingleCommitMetadataT) {}
