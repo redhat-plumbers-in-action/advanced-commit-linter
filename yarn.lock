@@ -1428,7 +1428,7 @@ __metadata:
     "@vitest/coverage-c8": 0.30.1
     eslint: ^8.29.0
     eslint-plugin-prettier: 4.2.1
-    issue-metadata: ^0.1.5
+    issue-metadata: ^0.1.6
     js-yaml: 4.1.0
     nock: 13.3.0
     prettier: 2.8.8
@@ -3188,13 +3188,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"issue-metadata@npm:^0.1.5":
-  version: 0.1.5
-  resolution: "issue-metadata@npm:0.1.5"
+"issue-metadata@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "issue-metadata@npm:0.1.6"
   dependencies:
     "@octokit/request": ^6.2.3
     zod: ^3.21.4
-  checksum: 5c6a1f5fb61ed3b764f07046d5b50a65cadb1e359819d23b16d28b7454db21f4ef2f8759f0a2cfa1e456706672cc1b96c379eac3c10a3b370e492e4c7c6facc6
+  checksum: c0ba12156b71aa3288daeda7fe156b63c03ba68eb7992361a352973abe0334a7e00443dbe8baed244e9f8222339ebd854b52d6c27c1c7e3f743549396a588ca2
   languageName: node
   linkType: hard
 
