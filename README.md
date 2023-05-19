@@ -151,8 +151,8 @@ jobs:
       validated-pr-metadata: ${{ steps.commit-linter.outputs.validated-pr-metadata }}
 
     permissions:
-      # required for commit statuses
-      statuses: write
+      # required for creation of checks
+      checks: write
       # required for PR comments
       pull-requests: write
 
@@ -191,12 +191,12 @@ Pull Request metadata has the following format: [metadata format](https://github
 
 ### token
 
-GitHub token or PAT is used for creating comments on Pull Request and setting commit statuses.
+GitHub token or PAT is used for creating comments on Pull Request and setting checks.
 
 ```yml
 # required permission
 permissions:
-  statuses: write
+  checks: write
   pull-requests: write
 ```
 
