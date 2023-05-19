@@ -23,13 +23,20 @@ const action = (probot: Probot) => {
       );
 
       const prMetadata = pullRequestMetadataSchema.parse(prMetadataUnsafe);
+      const commitSha = prMetadata.commits[prMetadata.commits.length - 1].sha;
 
-      await context.octokit.repos.createCommitStatus(
+      // Initialize check run - check in progress
+      // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#create-a-check-run
+      const checkRun = await context.octokit.checks.create(
         context.repo({
-          state: 'pending',
-          sha: prMetadata.commits[prMetadata.commits.length - 1].sha,
-          description: 'validation',
-          context: `Advanced Commit Linter`,
+          name: 'Advanced Commit Linter',
+          head_sha: commitSha,
+          status: 'in_progress',
+          started_at: new Date().toISOString(),
+          output: {
+            title: 'Advanced Commit Linter',
+            summary: 'Commit validation in progress',
+          },
         })
       );
 
@@ -56,11 +63,18 @@ const action = (probot: Probot) => {
 
       setOutput('validated-pr-metadata', JSON.stringify(validated, null, 2));
 
-      await context.octokit.repos.createCommitStatus(
+      // Update check run - check completed + conclusion
+      // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#update-a-check-run
+      await context.octokit.checks.update(
         context.repo({
-          state: validated.validation.status,
-          sha: prMetadata.commits[prMetadata.commits.length - 1].sha,
-          context: `Advanced Commit Linter`,
+          check_run_id: checkRun.data.id,
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          conclusion: validated.validation.status,
+          output: {
+            title: 'Advanced Commit Linter',
+            summary: validated.validation.message,
+          },
         })
       );
     }
