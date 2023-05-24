@@ -14,6 +14,7 @@ export interface IValidatorTestContext {
   'no-check-policy': Validator;
   'only-tracker-policy': Validator;
   'only-cherry-pick-policy': Validator;
+  'cherry-pick-with-label': Validator;
   'systemd-rhel-policy': Validator;
   'validated-commits': {
     [key in Exclude<keyof IValidatorTestContext, 'validated-commits'>]: {
@@ -49,6 +50,19 @@ const onlyCherryPickPolicy = new Config({
         { github: 'systemd/systemd-stable' },
       ],
       exception: { note: ['rhel-only'] },
+    },
+  },
+});
+
+const cherryPickWithLabelPolicy = new Config({
+  policy: {
+    'cherry-pick': {
+      upstream: [
+        { github: 'systemd/systemd' },
+        { github: 'systemd/systemd-stable' },
+      ],
+      exception: { note: ['rhel-only'] },
+      label: 'pr/needs-upstream',
     },
   },
 });
@@ -96,6 +110,10 @@ const githubContext = {
 const noPolicyValidator = new Validator(emptyPolicy, githubContext);
 const trackerValidator = new Validator(onlyTrackerPolicy, githubContext);
 const upstreamValidator = new Validator(onlyCherryPickPolicy, githubContext);
+const cherryPickWithLabelValidator = new Validator(
+  cherryPickWithLabelPolicy,
+  githubContext
+);
 const systemdPolicyValidator = new Validator(systemdPolicy, githubContext);
 
 const validatedCommits: IValidatorTestContext['validated-commits'] = {
@@ -131,6 +149,18 @@ const validatedCommits: IValidatorTestContext['validated-commits'] = {
       )
     ),
   },
+  'cherry-pick-with-label': {
+    shouldPass: await Promise.all(
+      commitsWithUpstream.map(async singleCommit =>
+        new Commit(singleCommit).validate(cherryPickWithLabelValidator)
+      )
+    ),
+    shouldFail: await Promise.all(
+      commitsWithMissingData.map(async singleCommit =>
+        new Commit(singleCommit).validate(cherryPickWithLabelValidator)
+      )
+    ),
+  },
   'systemd-rhel-policy': {
     shouldPass: await Promise.all(
       commitsWithUpstreamAndTracker.map(async singleCommit =>
@@ -149,6 +179,7 @@ export const validatorContextFixture: IValidatorTestContext = {
   'no-check-policy': noPolicyValidator,
   'only-tracker-policy': trackerValidator,
   'only-cherry-pick-policy': upstreamValidator,
+  'cherry-pick-with-label': cherryPickWithLabelValidator,
   'systemd-rhel-policy': systemdPolicyValidator,
   'validated-commits': validatedCommits,
 };

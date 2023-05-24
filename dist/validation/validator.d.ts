@@ -8,7 +8,7 @@ import { SingleCommitMetadata } from '../schema/input';
 export declare class Validator {
     readonly config: Config;
     readonly octokit: CustomOctokit;
-    trackerValidator: TrackerValidator[];
+    trackerValidators: TrackerValidator[];
     upstreamValidator: UpstreamValidator;
     constructor(config: Config, octokit: CustomOctokit);
     validateAll(validatedCommits: Commit[]): OutputValidatedPullRequestMetadata['validation'];
@@ -17,4 +17,8 @@ export declare class Validator {
     generalTracker(commitsMetadata: Commit[]): OutputValidatedPullRequestMetadata['validation']['tracker'];
     overallMessage(tracker: OutputValidatedPullRequestMetadata['validation']['tracker'], commitsMetadata: Commit[]): string;
     overallStatus(tracker: OutputValidatedPullRequestMetadata['validation']['tracker'], commitsMetadata: Commit[]): Status;
+    getUpstreamLabel(validatedCommits: Commit[]): {
+        add: string[];
+        remove: string[];
+    };
 }

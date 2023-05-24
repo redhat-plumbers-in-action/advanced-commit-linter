@@ -5,7 +5,7 @@ export class Validator {
     constructor(config, octokit) {
         this.config = config;
         this.octokit = octokit;
-        this.trackerValidator = this.config.tracker.map(config => new TrackerValidator(config));
+        this.trackerValidators = this.config.tracker.map(config => new TrackerValidator(config));
         this.upstreamValidator = new UpstreamValidator(this.config.cherryPick, this.config.isCherryPickPolicyEmpty());
     }
     validateAll(validatedCommits) {
@@ -27,7 +27,7 @@ export class Validator {
         validated.tracker = TrackerValidator.cleanArray({
             status: 'failure',
             message: '',
-            data: this.trackerValidator.map(tracker => tracker.validate(commitMetadata)),
+            data: this.trackerValidators.map(tracker => tracker.validate(commitMetadata)),
         });
         if (validated.tracker) {
             validated.tracker.status = TrackerValidator.getStatus(validated.tracker.data, this.config.isTrackerPolicyEmpty());
@@ -164,6 +164,22 @@ export class Validator {
             });
         }
         return 'success';
+    }
+    getUpstreamLabel(validatedCommits) {
+        const labels = {
+            add: [],
+            remove: [],
+        };
+        if (this.config.isCherryPickPolicyEmpty())
+            return labels;
+        const hasUpstreamFailure = validatedCommits.some(commit => { var _a; return ((_a = commit.validation.upstream) === null || _a === void 0 ? void 0 : _a.status) === 'failure'; });
+        if (hasUpstreamFailure) {
+            labels.add.push(this.config.upstreamLabel);
+        }
+        else {
+            labels.remove.push(this.config.upstreamLabel);
+        }
+        return labels;
     }
 }
 //# sourceMappingURL=validator.js.map

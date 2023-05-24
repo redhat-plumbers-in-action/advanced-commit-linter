@@ -19,6 +19,10 @@ export class Config {
     return this.policy['cherry-pick'];
   }
 
+  get upstreamLabel(): string {
+    return this.policy['cherry-pick'].label;
+  }
+
   isTrackerPolicyEmpty() {
     return this.policy.tracker.length === 0;
   }

@@ -12,6 +12,7 @@ export declare const configCherryPickSchema: z.ZodObject<{
         label: z.ZodOptional<z.ZodArray<z.ZodString>>;
         note: z.ZodOptional<z.ZodArray<z.ZodString>>;
     }, z.core.$strip>>;
+    label: z.ZodDefault<z.ZodString>;
 }, z.core.$strip>;
 export type ConfigCherryPick = z.infer<typeof configCherryPickSchema>;
 export declare const configTrackerTypeSchema: z.ZodUnion<readonly [z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>;
@@ -36,6 +37,7 @@ export declare const configPolicySchema: z.ZodObject<{
             label: z.ZodOptional<z.ZodArray<z.ZodString>>;
             note: z.ZodOptional<z.ZodArray<z.ZodString>>;
         }, z.core.$strip>>;
+        label: z.ZodDefault<z.ZodString>;
     }, z.core.$strip>>>;
     tracker: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
         keyword: z.ZodArray<z.ZodString>;
@@ -59,6 +61,7 @@ export declare const configSchema: z.ZodObject<{
                 label: z.ZodOptional<z.ZodArray<z.ZodString>>;
                 note: z.ZodOptional<z.ZodArray<z.ZodString>>;
             }, z.core.$strip>>;
+            label: z.ZodDefault<z.ZodString>;
         }, z.core.$strip>>>;
         tracker: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
             keyword: z.ZodArray<z.ZodString>;
