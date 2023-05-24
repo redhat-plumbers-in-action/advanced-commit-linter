@@ -7,16 +7,25 @@ export class TrackerValidator {
   constructor(readonly config: ConfigTracker) {}
 
   validate(singleCommitMetadata: SingleCommitMetadata): Tracker {
+    // Check if exception label is present in commit message
+    const exception = isException(
+      this.config.exception,
+      singleCommitMetadata.message.body
+    );
+
+    // Check if tracker reference is present in commit message
+    // ? Only first occurrence is returned - see matchTracker()
+    const detectedTrackers: Tracker = this.gatherTrackers(
+      singleCommitMetadata.message.body
+    );
+
     return {
-      ...this.loopPolicy(singleCommitMetadata.message.body),
-      exception: isException(
-        this.config.exception,
-        singleCommitMetadata.message.body
-      ),
+      ...detectedTrackers,
+      exception,
     };
   }
 
-  loopPolicy(commitBody: SingleCommitMetadata['message']['body']): Tracker {
+  gatherTrackers(commitBody: SingleCommitMetadata['message']['body']): Tracker {
     const trackerResult: Tracker = {};
 
     for (const keyword of this.config.keyword) {
