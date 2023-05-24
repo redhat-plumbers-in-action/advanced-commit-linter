@@ -1,13 +1,17 @@
-import { z } from 'zod';
-import { configExceptionSchema, } from '../schema/config';
+import { isException } from './util';
 export class TrackerValidator {
     constructor(config) {
         this.config = config;
     }
     validate(singleCommitMetadata) {
-        return Object.assign(Object.assign({}, this.loopPolicy(singleCommitMetadata.message.body)), { exception: this.isException(this.config.exception, singleCommitMetadata.message.body) });
+        // Check if exception label is present in commit message
+        const exception = isException(this.config.exception, singleCommitMetadata.message.body);
+        // Check if tracker reference is present in commit message
+        // ? Only first occurrence is returned - see matchTracker()
+        const detectedTrackers = this.gatherTrackers(singleCommitMetadata.message.body);
+        return Object.assign(Object.assign({}, detectedTrackers), { exception });
     }
-    loopPolicy(commitBody) {
+    gatherTrackers(commitBody) {
         const trackerResult = {};
         for (const keyword of this.config.keyword) {
             for (const issueFormat of this.config['issue-format']) {
@@ -23,7 +27,7 @@ export class TrackerValidator {
                 }
             }
         }
-        const exception = this.isException(this.config.exception, commitBody);
+        const exception = isException(this.config.exception, commitBody);
         if (exception) {
             trackerResult.exception = exception;
         }
@@ -37,22 +41,6 @@ export class TrackerValidator {
                 return match[3];
         }
         return undefined;
-    }
-    isException(exceptionPolicy, commitBody) {
-        const exceptionPolicySafe = configExceptionSchema
-            .extend({ note: z.array(z.string()) })
-            .safeParse(exceptionPolicy);
-        if (!exceptionPolicySafe.success)
-            return undefined;
-        for (const exception of exceptionPolicySafe.data.note) {
-            const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
-            const matches = commitBody.matchAll(regexp);
-            for (const match of matches) {
-                if (Array.isArray(match) && match.length >= 3) {
-                    return exception;
-                }
-            }
-        }
     }
     static getStatus(tracker, isTrackerPolicyEmpty) {
         let status = 'success';

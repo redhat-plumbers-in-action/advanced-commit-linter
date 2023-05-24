@@ -16,7 +16,9 @@ export class TrackerValidator {
 
     // Check if tracker reference is present in commit message
     // ? Only first occurrence is returned - see matchTracker()
-    const detectedTrackers: Tracker = this.gatherTrackers(singleCommitMetadata.message.body);
+    const detectedTrackers: Tracker = this.gatherTrackers(
+      singleCommitMetadata.message.body
+    );
 
     return {
       ...detectedTrackers,

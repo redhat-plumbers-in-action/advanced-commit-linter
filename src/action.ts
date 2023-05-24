@@ -61,6 +61,33 @@ const action = (probot: Probot) => {
       const pr = await PullRequest.getPullRequest(prMetadata.number, context);
       pr.publishComment(validated.validation.message, context);
 
+      // ! FIXME: outsourced to PullRequest
+      const labels = [
+        'needs-tracker',
+        'needs-upstream',
+      ]; /* validator.getLabels(validated); */
+      const removeLabels: string[] =
+        []; /* validator.getRemoveLabels(validated); */
+
+      // fill labels array with labels to add based on configuration and validation results
+
+      await context.octokit.issues.addLabels(
+        context.issue({
+          issue_number: prMetadata.number,
+          labels,
+        })
+      );
+
+      removeLabels.forEach(async label => {
+        await context.octokit.issues.removeLabel(
+          context.issue({
+            issue_number: prMetadata.number,
+            name: label,
+          })
+        );
+      });
+      // ! END FIXME
+
       setOutput('validated-pr-metadata', JSON.stringify(validated, null, 2));
 
       // Update check run - check completed + conclusion

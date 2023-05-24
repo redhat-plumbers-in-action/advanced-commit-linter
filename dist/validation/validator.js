@@ -5,7 +5,7 @@ export class Validator {
     constructor(config, context) {
         this.config = config;
         this.context = context;
-        this.trackerValidator = this.config.tracker.map(config => new TrackerValidator(config));
+        this.trackerValidators = this.config.tracker.map(config => new TrackerValidator(config));
         this.upstreamValidator = new UpstreamValidator(this.config.cherryPick, this.config.isCherryPickPolicyEmpty());
     }
     validateAll(validatedCommits) {
@@ -27,7 +27,7 @@ export class Validator {
         validated.tracker = TrackerValidator.cleanArray({
             status: 'failure',
             message: '',
-            data: this.trackerValidator.map(tracker => tracker.validate(commitMetadata)),
+            data: this.trackerValidators.map(tracker => tracker.validate(commitMetadata)),
         });
         if (validated.tracker) {
             validated.tracker.status = TrackerValidator.getStatus(validated.tracker.data, this.config.isTrackerPolicyEmpty());
