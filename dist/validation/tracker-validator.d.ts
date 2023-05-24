@@ -5,7 +5,7 @@ export declare class TrackerValidator {
     readonly config: ConfigTracker;
     constructor(config: ConfigTracker);
     validate(singleCommitMetadata: SingleCommitMetadata): Tracker;
-    loopPolicy(commitBody: SingleCommitMetadata['message']['body']): Tracker;
+    gatherTrackers(commitBody: SingleCommitMetadata['message']['body']): Tracker;
     matchTracker(keyword: string, trackerFormat: string, commitBody: string): string | undefined;
     static getStatus(tracker: Tracker[], isTrackerPolicyEmpty: boolean): Status;
     /**

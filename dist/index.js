@@ -35668,9 +35668,14 @@ class TrackerValidator {
         this.config = config;
     }
     validate(singleCommitMetadata) {
-        return Object.assign(Object.assign({}, this.loopPolicy(singleCommitMetadata.message.body)), { exception: isException(this.config.exception, singleCommitMetadata.message.body) });
+        // Check if exception label is present in commit message
+        const exception = isException(this.config.exception, singleCommitMetadata.message.body);
+        // Check if tracker reference is present in commit message
+        // ? Only first occurrence is returned - see matchTracker()
+        const detectedTrackers = this.gatherTrackers(singleCommitMetadata.message.body);
+        return Object.assign(Object.assign({}, detectedTrackers), { exception });
     }
-    loopPolicy(commitBody) {
+    gatherTrackers(commitBody) {
         const trackerResult = {};
         for (const keyword of this.config.keyword) {
             for (const issueFormat of this.config['issue-format']) {
