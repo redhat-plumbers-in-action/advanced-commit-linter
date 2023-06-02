@@ -1,3 +1,5 @@
+// ! FIXME: This file is replaced by tracker/ and upstream/ validators and logic inside pull-request.ts
+
 import { Context } from 'probot';
 
 import {
@@ -6,8 +8,8 @@ import {
   ValidatedCommit,
   Status,
 } from '../schema/output';
-import { TrackerValidator } from './tracker-validator';
-import { UpstreamValidator } from './upstream-validator';
+import { TrackerValidator } from './tracker/tracker-validator';
+import { UpstreamCommitValidator } from './upstream/commit-validator';
 
 import { Commit } from '../commit';
 import { Config } from '../config';
@@ -17,8 +19,8 @@ import { events } from '../events';
 import { SingleCommitMetadata } from '../schema/input';
 
 export class Validator {
-  trackerValidator: TrackerValidator[];
-  upstreamValidator: UpstreamValidator;
+  trackerValidators: TrackerValidator[];
+  upstreamValidator: UpstreamCommitValidator;
 
   constructor(
     readonly config: Config,
@@ -26,10 +28,10 @@ export class Validator {
       [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]
   ) {
-    this.trackerValidator = this.config.tracker.map(
+    this.trackerValidators = this.config.tracker.map(
       config => new TrackerValidator(config)
     );
-    this.upstreamValidator = new UpstreamValidator(
+    this.upstreamValidator = new UpstreamCommitValidator(
       this.config.cherryPick,
       this.config.isCherryPickPolicyEmpty()
     );
@@ -60,7 +62,7 @@ export class Validator {
     validated.tracker = TrackerValidator.cleanArray({
       status: 'failure',
       message: '',
-      data: this.trackerValidator.map(tracker =>
+      data: this.trackerValidators.map(tracker =>
         tracker.validate(commitMetadata)
       ),
     });
@@ -255,4 +257,33 @@ export class Validator {
 
     return 'success';
   }
+
+  // getLabels(validated: OutputValidatedPullRequestMetadata): string[] {
+  //   const labels: string[] = [];
+
+  //   if (!this.config.isTrackerPolicyEmpty()) {
+  //     validated.validation.tracker === 'failure') {
+  //     labels.push('needs-tracker');
+  //   }
+
+  //   if (!this.config.isCherryPickPolicyEmpty()) {
+  //     labels.push('needs-upstream');
+  //   }
+
+  //   return labels;
+  // }
+
+  // getRemoveLabels(): string[] {
+  //   const labels: string[] = [];
+
+  //   if (this.config.isTrackerPolicyEmpty()) {
+  //     labels.push('needs-tracker');
+  //   }
+
+  //   if (this.config.isCherryPickPolicyEmpty()) {
+  //     labels.push('needs-upstream');
+  //   }
+
+  //   return labels;
+  // }
 }

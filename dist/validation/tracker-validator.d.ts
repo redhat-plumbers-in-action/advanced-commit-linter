@@ -1,13 +1,12 @@
-import { ConfigException, ConfigTracker } from '../schema/config';
+import { ConfigTracker } from '../schema/config';
 import { SingleCommitMetadata } from '../schema/input';
 import { Status, Tracker, ValidatedCommit } from '../schema/output';
 export declare class TrackerValidator {
     readonly config: ConfigTracker;
     constructor(config: ConfigTracker);
     validate(singleCommitMetadata: SingleCommitMetadata): Tracker;
-    loopPolicy(commitBody: SingleCommitMetadata['message']['body']): Tracker;
+    gatherTrackers(commitBody: SingleCommitMetadata['message']['body']): Tracker;
     matchTracker(keyword: string, trackerFormat: string, commitBody: string): string | undefined;
-    isException(exceptionPolicy: ConfigException | undefined, commitBody: string): string | undefined;
     static getStatus(tracker: Tracker[], isTrackerPolicyEmpty: boolean): Status;
     /**
      * Get tracker message that will be displayed in Pull Request comment summary

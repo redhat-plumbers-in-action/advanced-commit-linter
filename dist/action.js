@@ -31,6 +31,24 @@ const action = (probot) => {
         const validated = Object.assign(Object.assign({}, prMetadataUnsafe), { validation: validationResults, commits: validatedCommits.map(commit => commit.validated) });
         const pr = await PullRequest.getPullRequest(prMetadata.number, context);
         pr.publishComment(validated.validation.message, context);
+        // ! FIXME: outsourced to PullRequest
+        const labels = [
+            'needs-tracker',
+            'needs-upstream',
+        ]; /* validator.getLabels(validated); */
+        const removeLabels = []; /* validator.getRemoveLabels(validated); */
+        // fill labels array with labels to add based on configuration and validation results
+        await context.octokit.issues.addLabels(context.issue({
+            issue_number: prMetadata.number,
+            labels,
+        }));
+        removeLabels.forEach(async (label) => {
+            await context.octokit.issues.removeLabel(context.issue({
+                issue_number: prMetadata.number,
+                name: label,
+            }));
+        });
+        // ! END FIXME
         setOutput('validated-pr-metadata', JSON.stringify(validated, null, 2));
         // Update check run - check completed + conclusion
         // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#update-a-check-run

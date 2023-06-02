@@ -11,7 +11,7 @@ export declare class Validator {
     readonly context: {
         [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events];
-    trackerValidator: TrackerValidator[];
+    trackerValidators: TrackerValidator[];
     upstreamValidator: UpstreamValidator;
     constructor(config: Config, context: {
         [K in keyof typeof events]: Context<(typeof events)[K][number]>;
