@@ -2,26 +2,37 @@ import { error } from '@actions/core';
 import { Context } from 'probot';
 import { z } from 'zod';
 
-import { events } from '../events';
-import { isException } from './util';
+import { events } from '../../events';
+import { isException } from '../util';
 
-import { ConfigCherryPick } from '../schema/config';
-import { SingleCommitMetadata } from '../schema/input';
+import { ConfigCherryPick } from '../../schema/config';
+import { SingleCommitMetadata } from '../../schema/input';
 import {
   Status,
   upstreamDataSchema,
   Upstream,
   ValidatedCommit,
-} from '../schema/output';
+} from '../../schema/output';
+import { Config } from '../../config';
+import { Commit } from '../../commit';
 
-export class UpstreamValidator {
-  constructor(
-    public config: ConfigCherryPick,
-    public isCherryPickPolicyEmpty: boolean
-  ) {}
+export class UpstreamCommitValidator {
+  upstreamData: Upstream['data'] = [];
+  exception: Upstream['exception'];
+  status: Status = 'failure';
+
+  constructor(readonly config: Config, readonly commit: Commit) {
+    this.config.cherryPick.upstream.forEach(singleUpstreamConfig => {
+      this.upstreamData.push(
+        this.validate(singleUpstreamConfig, commit.metadata.message.body)
+      );
+    });
+
+    this.exception = isException();
+    this.status = this.overallStatus(this.trackers);
+  }
 
   async validate(
-    singleCommitMetadata: SingleCommitMetadata,
     context: {
       [K in keyof typeof events]: Context<(typeof events)[K][number]>;
     }[keyof typeof events]

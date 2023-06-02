@@ -1,3 +1,5 @@
+// ! FIXME: This file is replaced by tracker/ and upstream/ validators and logic inside pull-request.ts
+
 import { Context } from 'probot';
 
 import {
@@ -6,8 +8,8 @@ import {
   ValidatedCommit,
   Status,
 } from '../schema/output';
-import { TrackerValidator } from './tracker-validator';
-import { UpstreamValidator } from './upstream-validator';
+import { TrackerValidator } from './tracker/tracker-validator';
+import { UpstreamCommitValidator } from './upstream/commit-validator';
 
 import { Commit } from '../commit';
 import { Config } from '../config';
@@ -18,7 +20,7 @@ import { SingleCommitMetadata } from '../schema/input';
 
 export class Validator {
   trackerValidators: TrackerValidator[];
-  upstreamValidator: UpstreamValidator;
+  upstreamValidator: UpstreamCommitValidator;
 
   constructor(
     readonly config: Config,
@@ -29,7 +31,7 @@ export class Validator {
     this.trackerValidators = this.config.tracker.map(
       config => new TrackerValidator(config)
     );
-    this.upstreamValidator = new UpstreamValidator(
+    this.upstreamValidator = new UpstreamCommitValidator(
       this.config.cherryPick,
       this.config.isCherryPickPolicyEmpty()
     );

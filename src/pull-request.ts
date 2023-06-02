@@ -3,9 +3,43 @@ import { Context } from 'probot';
 
 import { events } from './events';
 import { Metadata } from './metadata';
+import { Commit } from './commit';
+import { TrackerPullRequestValidator } from './validation/tracker/pull-request-validator';
+import { Config } from './config';
+
+import { PullRequestMetadata } from './schema/input';
+import { UpstreamPullRequestValidator } from './validation/upstream/pull-request-validator';
 
 export class PullRequest {
-  constructor(readonly id: number, private _metadata: Metadata) {}
+  readonly id: number;
+
+  readonly commits: Commit[] = [];
+  trackerValidator: TrackerPullRequestValidator;
+  upstreamValidator: UpstreamPullRequestValidator;
+
+  constructor(
+    readonly prMetadata: PullRequestMetadata,
+    readonly config: Config,
+    private _metadata: Metadata
+  ) {
+    this.id = prMetadata.number;
+
+    this.commits = prMetadata.commits.map(commit => new Commit(commit));
+    this.trackerValidator = new TrackerPullRequestValidator(
+      config,
+      this.commits
+    );
+    this.upstreamValidator = new UpstreamPullRequestValidator(
+      config,
+      this.commits
+    );
+  }
+
+  // TODO: use validators to validate PR and commits
+  // TODO: validation is stored in Validators? And we are able to retrieve it in form of object.
+  validate() {
+    return;
+  }
 
   get metadata() {
     return this._metadata;
