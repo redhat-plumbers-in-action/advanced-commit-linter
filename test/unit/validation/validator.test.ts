@@ -65,6 +65,7 @@ describe('Validator Object', () => {
                 "data": {
                   "id": "123",
                   "keyword": "Resolves: #",
+                  "type": "bugzilla",
                   "url": "https://bugzilla.redhat.com/show_bug.cgi?id=123",
                 },
                 "exception": undefined,
@@ -129,6 +130,7 @@ describe('Validator Object', () => {
                 "data": {
                   "id": "123",
                   "keyword": "Resolves: #",
+                  "type": "bugzilla",
                   "url": "https://bugzilla.redhat.com/show_bug.cgi?id=123",
                 },
                 "exception": undefined,
@@ -587,6 +589,7 @@ describe('Validator Object', () => {
       expect(validated.tracker).toMatchInlineSnapshot(`
         {
           "message": "Multiple trackers found",
+          "type": "unknown",
         }
       `);
       expect(validated.message).toMatchInlineSnapshot(`
@@ -613,6 +616,7 @@ describe('Validator Object', () => {
       expect(tracker).toMatchInlineSnapshot(`
         {
           "message": "Multiple trackers found",
+          "type": "unknown",
         }
       `);
     });
@@ -642,7 +646,12 @@ describe('Validator Object', () => {
     test<IValidatorTestContext>('systemd-rhel-policy some failed', context => {
       expect(
         context['systemd-rhel-policy'].overallMessage(
-          { id: '123456789', url: 'www.tracker.url/', message: '' },
+          {
+            id: '123456789',
+            type: 'unknown',
+            url: 'www.tracker.url/',
+            message: '',
+          },
           context['validated-commits']['systemd-rhel-policy'].shouldFail
         )
       ).toMatchInlineSnapshot(`

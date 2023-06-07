@@ -51,6 +51,7 @@ describe('Tracker Validator Object', () => {
           "data": {
             "id": "789",
             "keyword": "Resolves: #",
+            "type": "bugzilla",
             "url": "https://bugzilla.redhat.com/show_bug.cgi?id=789",
           },
           "exception": undefined,
@@ -92,6 +93,7 @@ describe('Tracker Validator Object', () => {
           "data": {
             "id": "789",
             "keyword": "Resolves: #",
+            "type": "bugzilla",
             "url": "https://bugzilla.redhat.com/show_bug.cgi?id=789",
           },
           "exception": "github-only",

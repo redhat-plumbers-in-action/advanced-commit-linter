@@ -7,6 +7,7 @@ export interface ITrackerValidatorTestContext {
 export const trackerValidatorContextFixture: ITrackerValidatorTestContext = {
   'systemd-rhel-policy': new TrackerValidator({
     keyword: ['Resolves: #', 'Related: #'],
+    type: 'bugzilla',
     'issue-format': ['[0-9]+$'],
     url: 'https://bugzilla.redhat.com/show_bug.cgi?id=',
     exception: { note: ['github-only'] },

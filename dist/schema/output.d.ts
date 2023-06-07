@@ -6,12 +6,15 @@ declare const trackerSchema: z.ZodObject<{
     data: z.ZodOptional<z.ZodObject<{
         keyword: z.ZodString;
         id: z.ZodString;
+        type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
         url: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        type: "unknown" | "jira" | "bugzilla";
         keyword: string;
         id: string;
         url?: string | undefined;
     }, {
+        type: "unknown" | "jira" | "bugzilla";
         keyword: string;
         id: string;
         url?: string | undefined;
@@ -19,6 +22,7 @@ declare const trackerSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     exception?: string | undefined;
     data?: {
+        type: "unknown" | "jira" | "bugzilla";
         keyword: string;
         id: string;
         url?: string | undefined;
@@ -26,6 +30,7 @@ declare const trackerSchema: z.ZodObject<{
 }, {
     exception?: string | undefined;
     data?: {
+        type: "unknown" | "jira" | "bugzilla";
         keyword: string;
         id: string;
         url?: string | undefined;
@@ -91,12 +96,15 @@ declare const validatedCommitSchema: z.ZodObject<{
             data: z.ZodOptional<z.ZodObject<{
                 keyword: z.ZodString;
                 id: z.ZodString;
+                type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
                 url: z.ZodOptional<z.ZodString>;
             }, "strip", z.ZodTypeAny, {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
             }, {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
@@ -104,6 +112,7 @@ declare const validatedCommitSchema: z.ZodObject<{
         }, "strip", z.ZodTypeAny, {
             exception?: string | undefined;
             data?: {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
@@ -111,6 +120,7 @@ declare const validatedCommitSchema: z.ZodObject<{
         }, {
             exception?: string | undefined;
             data?: {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
@@ -122,6 +132,7 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
@@ -133,6 +144,7 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
@@ -181,6 +193,7 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
@@ -205,6 +218,7 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
                 id: string;
                 url?: string | undefined;
@@ -259,12 +273,15 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
                 data: z.ZodOptional<z.ZodObject<{
                     keyword: z.ZodString;
                     id: z.ZodString;
+                    type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
                     url: z.ZodOptional<z.ZodString>;
                 }, "strip", z.ZodTypeAny, {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
                 }, {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -272,6 +289,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -279,6 +297,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             }, {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -290,6 +309,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -301,6 +321,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -349,6 +370,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -373,6 +395,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -406,6 +429,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -441,6 +465,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
                     id: string;
                     url?: string | undefined;
@@ -466,16 +491,19 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
         tracker: z.ZodOptional<z.ZodObject<{
             id: z.ZodOptional<z.ZodString>;
+            type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
             url: z.ZodOptional<z.ZodString>;
             message: z.ZodString;
             exception: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
             message: string;
+            type: "unknown" | "jira" | "bugzilla";
             id?: string | undefined;
             url?: string | undefined;
             exception?: string | undefined;
         }, {
             message: string;
+            type: "unknown" | "jira" | "bugzilla";
             id?: string | undefined;
             url?: string | undefined;
             exception?: string | undefined;
@@ -486,6 +514,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         status: "success" | "failure";
         tracker?: {
             message: string;
+            type: "unknown" | "jira" | "bugzilla";
             id?: string | undefined;
             url?: string | undefined;
             exception?: string | undefined;
@@ -495,6 +524,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         status: "success" | "failure";
         tracker?: {
             message: string;
+            type: "unknown" | "jira" | "bugzilla";
             id?: string | undefined;
             url?: string | undefined;
             exception?: string | undefined;
@@ -537,12 +567,15 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                     data: z.ZodOptional<z.ZodObject<{
                         keyword: z.ZodString;
                         id: z.ZodString;
+                        type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
                         url: z.ZodOptional<z.ZodString>;
                     }, "strip", z.ZodTypeAny, {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
                     }, {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -550,6 +583,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 }, "strip", z.ZodTypeAny, {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -557,6 +591,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 }, {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -568,6 +603,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -579,6 +615,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -627,6 +664,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -651,6 +689,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -684,6 +723,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -719,6 +759,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -744,6 +785,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         status: "success" | "failure";
         tracker?: {
             message: string;
+            type: "unknown" | "jira" | "bugzilla";
             id?: string | undefined;
             url?: string | undefined;
             exception?: string | undefined;
@@ -766,6 +808,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
@@ -791,6 +834,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         status: "success" | "failure";
         tracker?: {
             message: string;
+            type: "unknown" | "jira" | "bugzilla";
             id?: string | undefined;
             url?: string | undefined;
             exception?: string | undefined;
@@ -813,6 +857,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
                         id: string;
                         url?: string | undefined;
