@@ -32,6 +32,7 @@ export class TrackerValidator {
           trackerResult.data = {
             keyword,
             id: reference,
+            type: this.config.type,
           };
 
           if (this.config.url) {

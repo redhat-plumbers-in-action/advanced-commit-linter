@@ -18,9 +18,17 @@ export const configCherryPickSchema = z.object({
 
 export type ConfigCherryPick = z.infer<typeof configCherryPickSchema>;
 
+export const configTrackerTypeSchema = z.union([
+  z.literal('jira'),
+  z.literal('bugzilla'),
+]);
+
+export type ConfigTrackerType = z.infer<typeof configTrackerTypeSchema>;
+
 export const configTrackerSchema = z.object({
   keyword: z.array(z.string()),
   'issue-format': z.array(z.string()),
+  type: configTrackerTypeSchema,
   url: z.string().optional(),
   exception: configExceptionSchema.optional(),
 });

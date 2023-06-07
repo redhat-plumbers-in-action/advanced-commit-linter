@@ -33,6 +33,7 @@ const onlyTrackerPolicy = new Config({
     tracker: [
       {
         keyword: ['Resolves: #', 'Related: #'],
+        type: 'bugzilla',
         'issue-format': ['[0-9]+$'],
         url: 'https://bugzilla.redhat.com/show_bug.cgi?id=',
         exception: { note: ['github-only'] },
@@ -65,12 +66,14 @@ const systemdPolicy = new Config({
     tracker: [
       {
         keyword: ['Resolves: #', 'Related: #'],
+        type: 'bugzilla',
         'issue-format': ['[0-9]+$'],
         url: 'https://bugzilla.redhat.com/show_bug.cgi?id=',
         exception: { note: ['github-only'] },
       },
       {
         keyword: ['Resolves: ', 'Related: '],
+        type: 'jira',
         'issue-format': ['JIRA-1234+$'],
         url: 'https://issues.redhat.com/browse/',
         exception: { note: ['github-only'] },

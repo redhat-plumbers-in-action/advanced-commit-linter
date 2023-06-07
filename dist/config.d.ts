@@ -5,6 +5,7 @@ export declare class Config {
     policy: ConfigPolicy;
     constructor(config: unknown);
     get tracker(): {
+        type: "jira" | "bugzilla";
         keyword: string[];
         'issue-format': string[];
         url?: string | undefined;

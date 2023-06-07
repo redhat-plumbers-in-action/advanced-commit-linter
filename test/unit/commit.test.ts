@@ -115,6 +115,7 @@ describe('Commit Object', () => {
                 "data": {
                   "id": "123",
                   "keyword": "Resolves: #",
+                  "type": "bugzilla",
                   "url": "https://bugzilla.redhat.com/show_bug.cgi?id=123",
                 },
                 "exception": "github-only",
@@ -235,6 +236,7 @@ describe('Commit Object', () => {
                 "data": {
                   "id": "123",
                   "keyword": "Resolves: #",
+                  "type": "bugzilla",
                   "url": "https://bugzilla.redhat.com/show_bug.cgi?id=123",
                 },
                 "exception": "github-only",

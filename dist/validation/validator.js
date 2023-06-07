@@ -61,7 +61,7 @@ export class Validator {
         var _a, _b;
         if (this.config.isTrackerPolicyEmpty())
             return undefined;
-        const tracker = { message: '' };
+        const tracker = { message: '', type: 'unknown' };
         const prUniqueTracker = [];
         for (const { validation } of commitsMetadata) {
             if (validation.tracker === undefined ||

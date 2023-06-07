@@ -46,9 +46,12 @@ export declare const configCherryPickSchema: z.ZodObject<{
     } | undefined;
 }>;
 export type ConfigCherryPick = z.infer<typeof configCherryPickSchema>;
+export declare const configTrackerTypeSchema: z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>;
+export type ConfigTrackerType = z.infer<typeof configTrackerTypeSchema>;
 export declare const configTrackerSchema: z.ZodObject<{
     keyword: z.ZodArray<z.ZodString, "many">;
     'issue-format': z.ZodArray<z.ZodString, "many">;
+    type: z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>;
     url: z.ZodOptional<z.ZodString>;
     exception: z.ZodOptional<z.ZodObject<{
         label: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
@@ -61,6 +64,7 @@ export declare const configTrackerSchema: z.ZodObject<{
         note?: string[] | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    type: "jira" | "bugzilla";
     keyword: string[];
     'issue-format': string[];
     url?: string | undefined;
@@ -69,6 +73,7 @@ export declare const configTrackerSchema: z.ZodObject<{
         note?: string[] | undefined;
     } | undefined;
 }, {
+    type: "jira" | "bugzilla";
     keyword: string[];
     'issue-format': string[];
     url?: string | undefined;
@@ -117,6 +122,7 @@ export declare const configPolicySchema: z.ZodObject<{
     tracker: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
         keyword: z.ZodArray<z.ZodString, "many">;
         'issue-format': z.ZodArray<z.ZodString, "many">;
+        type: z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>;
         url: z.ZodOptional<z.ZodString>;
         exception: z.ZodOptional<z.ZodObject<{
             label: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
@@ -129,6 +135,7 @@ export declare const configPolicySchema: z.ZodObject<{
             note?: string[] | undefined;
         }>>;
     }, "strip", z.ZodTypeAny, {
+        type: "jira" | "bugzilla";
         keyword: string[];
         'issue-format': string[];
         url?: string | undefined;
@@ -137,6 +144,7 @@ export declare const configPolicySchema: z.ZodObject<{
             note?: string[] | undefined;
         } | undefined;
     }, {
+        type: "jira" | "bugzilla";
         keyword: string[];
         'issue-format': string[];
         url?: string | undefined;
@@ -156,6 +164,7 @@ export declare const configPolicySchema: z.ZodObject<{
         } | undefined;
     };
     tracker: {
+        type: "jira" | "bugzilla";
         keyword: string[];
         'issue-format': string[];
         url?: string | undefined;
@@ -175,6 +184,7 @@ export declare const configPolicySchema: z.ZodObject<{
         } | undefined;
     } | undefined;
     tracker?: {
+        type: "jira" | "bugzilla";
         keyword: string[];
         'issue-format': string[];
         url?: string | undefined;
@@ -225,6 +235,7 @@ export declare const configSchema: z.ZodObject<{
         tracker: z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodObject<{
             keyword: z.ZodArray<z.ZodString, "many">;
             'issue-format': z.ZodArray<z.ZodString, "many">;
+            type: z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>;
             url: z.ZodOptional<z.ZodString>;
             exception: z.ZodOptional<z.ZodObject<{
                 label: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
@@ -237,6 +248,7 @@ export declare const configSchema: z.ZodObject<{
                 note?: string[] | undefined;
             }>>;
         }, "strip", z.ZodTypeAny, {
+            type: "jira" | "bugzilla";
             keyword: string[];
             'issue-format': string[];
             url?: string | undefined;
@@ -245,6 +257,7 @@ export declare const configSchema: z.ZodObject<{
                 note?: string[] | undefined;
             } | undefined;
         }, {
+            type: "jira" | "bugzilla";
             keyword: string[];
             'issue-format': string[];
             url?: string | undefined;
@@ -264,6 +277,7 @@ export declare const configSchema: z.ZodObject<{
             } | undefined;
         };
         tracker: {
+            type: "jira" | "bugzilla";
             keyword: string[];
             'issue-format': string[];
             url?: string | undefined;
@@ -283,6 +297,7 @@ export declare const configSchema: z.ZodObject<{
             } | undefined;
         } | undefined;
         tracker?: {
+            type: "jira" | "bugzilla";
             keyword: string[];
             'issue-format': string[];
             url?: string | undefined;
@@ -304,6 +319,7 @@ export declare const configSchema: z.ZodObject<{
             } | undefined;
         };
         tracker: {
+            type: "jira" | "bugzilla";
             keyword: string[];
             'issue-format': string[];
             url?: string | undefined;
@@ -325,6 +341,7 @@ export declare const configSchema: z.ZodObject<{
             } | undefined;
         } | undefined;
         tracker?: {
+            type: "jira" | "bugzilla";
             keyword: string[];
             'issue-format': string[];
             url?: string | undefined;

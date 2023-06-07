@@ -123,7 +123,7 @@ export class Validator {
     if (this.config.isTrackerPolicyEmpty()) return undefined;
 
     const tracker: OutputValidatedPullRequestMetadata['validation']['tracker'] =
-      { message: '' };
+      { message: '', type: 'unknown' };
 
     const prUniqueTracker: Tracker[] = [];
     for (const { validation } of commitsMetadata) {

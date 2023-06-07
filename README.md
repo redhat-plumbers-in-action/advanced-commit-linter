@@ -69,6 +69,7 @@ policy:
     - keyword:
         - 'Resolves: #'
         - 'Related: #'
+      type: bugzilla
       issue-format:
         - '[0-9]+$'
       url: 'https://bugzilla.redhat.com/show_bug.cgi?id='
@@ -78,6 +79,7 @@ policy:
     - keyword:
         - 'Resolves: '
         - 'Related: '
+      type: jira
       issue-format:
         - 'JIRA-1234'
       url: 'https://issues.redhat.com/browse/'
@@ -221,6 +223,7 @@ policy:
     - keyword:
         - 'Resolves: #'
         - 'Related: #'
+      type: bugzilla
       issue-format:
         - '[0-9]+$'
       url: 'https://bugzilla.redhat.com/show_bug.cgi?id='
@@ -230,6 +233,7 @@ policy:
     - keyword:
         - 'Resolves: '
         - 'Related: '
+      type: jira
       issue-format:
         - 'JIRA-1234'
       url: 'https://issues.redhat.com/browse/'
@@ -269,6 +273,14 @@ Keyword that prefixes tracker identificator.
 
 * requirements: `required`
 * example: `Fixes:`
+
+### `tracker[].type` keyword
+
+Type of tracker. Data can be used by postprocessing scripts/GitHub Actions.
+
+Currently supproted types of trackers are: `bugzilla`, `jira` and `unknown`.
+
+* requirements: `required`
 
 ### `tracker[].issue-format` keyword
 

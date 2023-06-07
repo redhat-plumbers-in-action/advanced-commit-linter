@@ -9,9 +9,14 @@ export const configCherryPickSchema = z.object({
     })),
     exception: configExceptionSchema.optional(),
 });
+export const configTrackerTypeSchema = z.union([
+    z.literal('jira'),
+    z.literal('bugzilla'),
+]);
 export const configTrackerSchema = z.object({
     keyword: z.array(z.string()),
     'issue-format': z.array(z.string()),
+    type: configTrackerTypeSchema,
     url: z.string().optional(),
     exception: configExceptionSchema.optional(),
 });
