@@ -1,7 +1,7 @@
 import { getInput } from '@actions/core';
 import MetadataController from 'issue-metadata';
 import { z } from 'zod';
-class Metadata {
+export class Metadata {
     constructor(issueNumber, controller, metadata) {
         var _a;
         this.issueNumber = issueNumber;
@@ -36,5 +36,4 @@ class Metadata {
     }
 }
 Metadata.metadataCommentID = 'comment-id';
-export { Metadata };
 //# sourceMappingURL=metadata.js.map
