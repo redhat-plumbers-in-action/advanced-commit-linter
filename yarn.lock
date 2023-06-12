@@ -3189,12 +3189,12 @@ __metadata:
   linkType: hard
 
 "issue-metadata@npm:^0.1.6":
-  version: 0.1.6
-  resolution: "issue-metadata@npm:0.1.6"
+  version: 0.1.7
+  resolution: "issue-metadata@npm:0.1.7"
   dependencies:
     "@octokit/request": ^6.2.3
     zod: ^3.21.4
-  checksum: c0ba12156b71aa3288daeda7fe156b63c03ba68eb7992361a352973abe0334a7e00443dbe8baed244e9f8222339ebd854b52d6c27c1c7e3f743549396a588ca2
+  checksum: f5908df4b71864ef0dc9e191f31f8f5895548ce1c807f989c8d82dd947dac3b5858d36e90bbac38ac29b1199f28dd5cabd541b22d2dd66a2dfdf40dc5dfaa71a
   languageName: node
   linkType: hard
 
