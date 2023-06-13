@@ -10,7 +10,6 @@ import {
   IValidatorTestContext,
   validatorContextFixture,
 } from '../fixtures/validation/validator.fixture';
-import { Commit } from '../../../src/commit';
 
 describe('Validator Object', () => {
   beforeEach<IValidatorTestContext>(context => {

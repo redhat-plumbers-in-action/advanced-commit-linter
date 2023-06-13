@@ -1,4 +1,5 @@
 import { getInput } from '@actions/core';
+import { context } from '@actions/github';
 import MetadataController from 'issue-metadata';
 import { z } from 'zod';
 export class Metadata {
@@ -21,12 +22,10 @@ export class Metadata {
             return;
         await this.controller.setMetadata(this.issueNumber, Metadata.metadataCommentID, this.commentID);
     }
-    static async getMetadata(issueNumber, context) {
-        const controller = new MetadataController('advanced-commit-linter', context.repo({
-            headers: {
+    static async getMetadata(issueNumber) {
+        const controller = new MetadataController('advanced-commit-linter', Object.assign(Object.assign({}, context.repo), { headers: {
                 authorization: `Bearer ${getInput('token', { required: true })}`,
-            },
-        }));
+            } }));
         const parsedCommentID = z
             .string()
             .safeParse(await controller.getMetadata(issueNumber, Metadata.metadataCommentID));

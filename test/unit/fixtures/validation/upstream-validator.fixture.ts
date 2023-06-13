@@ -1,13 +1,9 @@
-import { Context } from 'probot';
-
-import { events } from '../../../../src/events';
+import { CustomOctokit } from '../../../../src/octokit';
 import { UpstreamValidator } from '../../../../src/validation/upstream-validator';
 
 export interface IUpstreamValidatorTestContext {
   'systemd-rhel-policy': UpstreamValidator;
-  githubContext: (expectedResult: 'pass' | 'fail') => {
-    [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-  }[keyof typeof events];
+  githubContext: (expectedResult: 'pass' | 'fail') => CustomOctokit;
 }
 
 export const upstreamValidatorContextFixture: IUpstreamValidatorTestContext = {
@@ -23,25 +19,19 @@ export const upstreamValidatorContextFixture: IUpstreamValidatorTestContext = {
   ),
   githubContext: (expectedResult: 'pass' | 'fail') => {
     return {
-      octokit: {
-        repos: {
-          getCommit: () =>
-            Promise.resolve({
-              data:
-                expectedResult === 'pass'
-                  ? {
-                      commit: { message: 'commit title' },
-                      sha: '2222222222222222222222222222222222222222',
-                      html_url:
-                        'https://github.com/upstream/repo/commit/2222222222222222222222222222222222222222',
-                    }
-                  : {},
-              status: expectedResult === 'pass' ? 200 : 404,
-            }),
-        },
-      },
-    } as {
-      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events];
+      request: (endpoint: any, request: any) =>
+        Promise.resolve({
+          data:
+            expectedResult === 'pass'
+              ? {
+                  commit: { message: 'commit title' },
+                  sha: '2222222222222222222222222222222222222222',
+                  html_url:
+                    'https://github.com/upstream/repo/commit/2222222222222222222222222222222222222222',
+                }
+              : {},
+          status: expectedResult === 'pass' ? 200 : 404,
+        }),
+    } as CustomOctokit;
   },
 };
