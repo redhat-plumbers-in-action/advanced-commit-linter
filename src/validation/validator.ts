@@ -1,5 +1,3 @@
-import { Context } from 'probot';
-
 import {
   OutputValidatedPullRequestMetadata,
   Tracker,
@@ -11,8 +9,7 @@ import { UpstreamValidator } from './upstream-validator';
 
 import { Commit } from '../commit';
 import { Config } from '../config';
-
-import { events } from '../events';
+import { CustomOctokit } from '../octokit';
 
 import { SingleCommitMetadata } from '../schema/input';
 
@@ -20,12 +17,7 @@ export class Validator {
   trackerValidator: TrackerValidator[];
   upstreamValidator: UpstreamValidator;
 
-  constructor(
-    readonly config: Config,
-    readonly context: {
-      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]
-  ) {
+  constructor(readonly config: Config, readonly octokit: CustomOctokit) {
     this.trackerValidator = this.config.tracker.map(
       config => new TrackerValidator(config)
     );
@@ -79,7 +71,7 @@ export class Validator {
 
     validated.upstream = await this.upstreamValidator.validate(
       commitMetadata,
-      this.context
+      this.octokit
     );
     const { status, message } = this.validationSummary(
       validated,

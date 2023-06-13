@@ -110,24 +110,28 @@ describe('Tracker Validator Object', () => {
             {
               data: {
                 keyword: 'keyword',
+                type: 'unknown',
                 id: '123',
               },
             },
             {
               data: {
                 keyword: 'keyword',
+                type: 'unknown',
                 id: '123',
               },
             },
             {
               data: {
                 keyword: 'keyword',
+                type: 'unknown',
                 id: '456',
               },
             },
             {
               data: {
                 keyword: 'keyword',
+                type: 'unknown',
                 id: '456',
               },
               exception: 'exception',
@@ -146,24 +150,28 @@ describe('Tracker Validator Object', () => {
               "data": {
                 "id": "123",
                 "keyword": "keyword",
+                "type": "unknown",
               },
             },
             {
               "data": {
                 "id": "123",
                 "keyword": "keyword",
+                "type": "unknown",
               },
             },
             {
               "data": {
                 "id": "456",
                 "keyword": "keyword",
+                "type": "unknown",
               },
             },
             {
               "data": {
                 "id": "456",
                 "keyword": "keyword",
+                "type": "unknown",
               },
               "exception": "exception",
             },
@@ -190,6 +198,7 @@ describe('Tracker Validator Object', () => {
               data: {
                 id: '123',
                 keyword: 'Resolves: #',
+                type: 'bugzilla',
                 url: 'https://bugzilla.redhat.com/show_bug.cgi?id=123',
               },
             },
@@ -209,6 +218,7 @@ describe('Tracker Validator Object', () => {
               data: {
                 id: '123',
                 keyword: 'Resolves: #',
+                type: 'bugzilla',
                 url: 'https://bugzilla.redhat.com/show_bug.cgi?id=123',
               },
             },
@@ -217,6 +227,7 @@ describe('Tracker Validator Object', () => {
               data: {
                 id: '456',
                 keyword: 'Related: #',
+                type: 'bugzilla',
                 url: 'https://bugzilla.redhat.com/show_bug.cgi?id=456',
               },
             },

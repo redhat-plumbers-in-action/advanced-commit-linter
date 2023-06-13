@@ -1,5 +1,4 @@
-import { Context } from 'probot';
-import { events } from './events';
+import { CustomOctokit } from './octokit';
 import { ConfigPolicy } from './schema/config';
 export declare class Config {
     policy: ConfigPolicy;
@@ -25,8 +24,6 @@ export declare class Config {
     };
     isTrackerPolicyEmpty(): boolean;
     isCherryPickPolicyEmpty(): boolean;
-    static getConfig(context: {
-        [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]): Promise<Config>;
+    static getConfig(octokit: CustomOctokit): Promise<Config>;
     static isConfigEmpty(config: unknown): boolean;
 }

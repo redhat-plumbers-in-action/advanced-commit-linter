@@ -1,9 +1,7 @@
 import { getInput } from '@actions/core';
+import { context } from '@actions/github';
 import MetadataController from 'issue-metadata';
-import { Context } from 'probot';
 import { z } from 'zod';
-
-import { events } from './events';
 
 type MetadataObjectT = {
   commentID: string | undefined;
@@ -42,20 +40,13 @@ export class Metadata {
     );
   }
 
-  static async getMetadata(
-    issueNumber: number,
-    context: {
-      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]
-  ) {
-    const controller = new MetadataController(
-      'advanced-commit-linter',
-      context.repo({
-        headers: {
-          authorization: `Bearer ${getInput('token', { required: true })}`,
-        },
-      })
-    );
+  static async getMetadata(issueNumber: number) {
+    const controller = new MetadataController('advanced-commit-linter', {
+      ...context.repo,
+      headers: {
+        authorization: `Bearer ${getInput('token', { required: true })}`,
+      },
+    });
 
     const parsedCommentID = z
       .string()

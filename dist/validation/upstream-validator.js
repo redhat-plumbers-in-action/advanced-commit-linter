@@ -7,10 +7,10 @@ export class UpstreamValidator {
         this.config = config;
         this.isCherryPickPolicyEmpty = isCherryPickPolicyEmpty;
     }
-    async validate(singleCommitMetadata, context) {
+    async validate(singleCommitMetadata, octokit) {
         let data = [];
         for (const cherryPick of singleCommitMetadata.message.cherryPick) {
-            data = data.concat(await this.loopPolicy(cherryPick, context));
+            data = data.concat(await this.loopPolicy(cherryPick, octokit));
         }
         const result = {
             data,
@@ -20,15 +20,15 @@ export class UpstreamValidator {
         result.status = this.getStatus(result.data, result.exception);
         return result;
     }
-    async loopPolicy(cherryPick, context) {
+    async loopPolicy(cherryPick, octokit) {
         return this.cleanArray(this.config.upstream.map(async (upstream) => {
-            return await this.verifyCherryPick(cherryPick, upstream, context);
+            return await this.verifyCherryPick(cherryPick, upstream, octokit);
         }));
     }
     // TODO: return undefined if all upstreams are empty
-    async verifyCherryPick(cherryPick, upstream, context) {
+    async verifyCherryPick(cherryPick, upstream, octokit) {
         try {
-            const { status, data } = await context.octokit.repos.getCommit({
+            const { status, data } = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}', {
                 owner: upstream.github.split('/')[0],
                 repo: upstream.github.split('/')[1],
                 ref: cherryPick.sha,

@@ -1,8 +1,5 @@
 import { error } from '@actions/core';
-import { Context } from 'probot';
 import { z } from 'zod';
-
-import { events } from '../events';
 
 import {
   ConfigCherryPick,
@@ -16,6 +13,7 @@ import {
   Upstream,
   ValidatedCommit,
 } from '../schema/output';
+import { CustomOctokit } from '../octokit';
 
 export class UpstreamValidator {
   constructor(
@@ -25,14 +23,12 @@ export class UpstreamValidator {
 
   async validate(
     singleCommitMetadata: SingleCommitMetadata,
-    context: {
-      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]
+    octokit: CustomOctokit
   ): Promise<Upstream | undefined> {
     let data: Upstream['data'] = [];
 
     for (const cherryPick of singleCommitMetadata.message.cherryPick) {
-      data = data.concat(await this.loopPolicy(cherryPick, context));
+      data = data.concat(await this.loopPolicy(cherryPick, octokit));
     }
 
     const result: Upstream = {
@@ -51,13 +47,11 @@ export class UpstreamValidator {
 
   async loopPolicy(
     cherryPick: SingleCommitMetadata['message']['cherryPick'][number],
-    context: {
-      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]
+    octokit: CustomOctokit
   ): Promise<Upstream['data']> {
     return this.cleanArray(
       this.config.upstream.map(async upstream => {
-        return await this.verifyCherryPick(cherryPick, upstream, context);
+        return await this.verifyCherryPick(cherryPick, upstream, octokit);
       })
     );
   }
@@ -66,16 +60,17 @@ export class UpstreamValidator {
   async verifyCherryPick(
     cherryPick: SingleCommitMetadata['message']['cherryPick'][number],
     upstream: ConfigCherryPick['upstream'][number],
-    context: {
-      [K in keyof typeof events]: Context<(typeof events)[K][number]>;
-    }[keyof typeof events]
+    octokit: CustomOctokit
   ): Promise<Partial<Upstream['data'][number]>> {
     try {
-      const { status, data } = await context.octokit.repos.getCommit({
-        owner: upstream.github.split('/')[0],
-        repo: upstream.github.split('/')[1],
-        ref: cherryPick.sha,
-      });
+      const { status, data } = await octokit.request(
+        'GET /repos/{owner}/{repo}/commits/{ref}',
+        {
+          owner: upstream.github.split('/')[0],
+          repo: upstream.github.split('/')[1],
+          ref: cherryPick.sha,
+        }
+      );
 
       return status === 200
         ? { sha: data.sha, repo: upstream.github, url: data.html_url }

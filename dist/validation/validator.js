@@ -2,9 +2,9 @@ import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
 import { Commit } from '../commit';
 export class Validator {
-    constructor(config, context) {
+    constructor(config, octokit) {
         this.config = config;
-        this.context = context;
+        this.octokit = octokit;
         this.trackerValidator = this.config.tracker.map(config => new TrackerValidator(config));
         this.upstreamValidator = new UpstreamValidator(this.config.cherryPick, this.config.isCherryPickPolicyEmpty());
     }
@@ -33,7 +33,7 @@ export class Validator {
             validated.tracker.status = TrackerValidator.getStatus(validated.tracker.data, this.config.isTrackerPolicyEmpty());
             validated.tracker.message = TrackerValidator.getMessage(validated.tracker.data, validated.tracker.status, this.config.isTrackerPolicyEmpty());
         }
-        validated.upstream = await this.upstreamValidator.validate(commitMetadata, this.context);
+        validated.upstream = await this.upstreamValidator.validate(commitMetadata, this.octokit);
         const { status, message } = this.validationSummary(validated, commitMetadata.message.title, commitMetadata.url);
         validated.status =
             status === 'success' && ((_a = validated.tracker) === null || _a === void 0 ? void 0 : _a.status) === 'success'
