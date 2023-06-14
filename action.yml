@@ -12,6 +12,10 @@ inputs:
     required: true
     default: ${{ github.event.number }}
     description: Pull Request metadata
+  config-path:
+    required: true
+    default: .github/advanced-commit-linter.yml
+    description: Path to configuration file
   token:
     required: true
     description: GitHub TOKEN or PAT

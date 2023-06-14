@@ -177,6 +177,7 @@ Action currently accepts the following options:
 - uses: redhat-plumbers-in-action/advanced-commit-linter@v1
   with:
     pr-metadata: <pr-metadata.json>
+    config-path: <path to config file>
     token:       <GitHub token or PAT>
 
 # ...
@@ -190,6 +191,13 @@ Pull Request metadata has the following format: [metadata format](https://github
 
 * default value: `undefined`
 * requirements: `required`
+
+### config-path
+
+Path to configuration file. Configuration file format is described in: [Policy section](#policy).
+
+* default value: `.github/advanced-commit-linter.yml`
+* requirements: `optional`
 
 ### token
 
