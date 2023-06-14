@@ -1,5 +1,5 @@
-import { configSchema } from './schema/config';
 import { context } from '@actions/github';
+import { configSchema } from './schema/config';
 export class Config {
     constructor(config) {
         this.policy = configSchema.parse(config).policy;
