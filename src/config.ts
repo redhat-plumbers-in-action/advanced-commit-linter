@@ -1,6 +1,7 @@
+import { context } from '@actions/github';
+
 import { CustomOctokit } from './octokit';
 import { configSchema, ConfigPolicy } from './schema/config';
-import { context } from '@actions/github';
 
 export class Config {
   policy: ConfigPolicy;
