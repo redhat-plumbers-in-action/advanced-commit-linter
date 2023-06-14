@@ -22408,8 +22408,9 @@ class Config {
         return this.policy['cherry-pick'].upstream.length === 0;
     }
     static async getConfig(octokit) {
-        const retrievedConfig = (await octokit.config.get(Object.assign(Object.assign({}, github.context.repo), { path: '.github/advanced-commit-linter.yml' }))).config;
-        (0,core.debug)(`Configuration '.github/advanced-commit-linter.yml': ${JSON.stringify(retrievedConfig)}`);
+        const path = (0,core.getInput)('config-path', { required: true });
+        const retrievedConfig = (await octokit.config.get(Object.assign(Object.assign({}, github.context.repo), { path }))).config;
+        (0,core.debug)(`Configuration '${path}': ${JSON.stringify(retrievedConfig)}`);
         if (Config.isConfigEmpty(retrievedConfig)) {
             throw new Error(`Missing configuration. Please setup 'Advanced Commit Linter' Action using 'advanced-commit-linter.yml' file.`);
         }
