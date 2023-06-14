@@ -1,3 +1,4 @@
+import { debug } from '@actions/core';
 import { context } from '@actions/github';
 
 import { CustomOctokit } from './octokit';
@@ -27,10 +28,18 @@ export class Config {
   }
 
   static async getConfig(octokit: CustomOctokit): Promise<Config> {
-    const retrievedConfig = await octokit.config.get({
-      ...context.repo,
-      path: 'advanced-commit-linter.yml',
-    });
+    const retrievedConfig = (
+      await octokit.config.get({
+        ...context.repo,
+        path: '.github/advanced-commit-linter.yml',
+      })
+    ).config;
+
+    debug(
+      `Configuration '.github/advanced-commit-linter.yml': ${JSON.stringify(
+        retrievedConfig
+      )}`
+    );
 
     if (Config.isConfigEmpty(retrievedConfig)) {
       throw new Error(

@@ -22390,6 +22390,7 @@ const configSchema = z.object({
 ;// CONCATENATED MODULE: ./src/config.ts
 
 
+
 class Config {
     constructor(config) {
         this.policy = configSchema.parse(config).policy;
@@ -22407,7 +22408,8 @@ class Config {
         return this.policy['cherry-pick'].upstream.length === 0;
     }
     static async getConfig(octokit) {
-        const retrievedConfig = await octokit.config.get(Object.assign(Object.assign({}, github.context.repo), { path: 'advanced-commit-linter.yml' }));
+        const retrievedConfig = (await octokit.config.get(Object.assign(Object.assign({}, github.context.repo), { path: '.github/advanced-commit-linter.yml' }))).config;
+        (0,core.debug)(`Configuration '.github/advanced-commit-linter.yml': ${JSON.stringify(retrievedConfig)}`);
         if (Config.isConfigEmpty(retrievedConfig)) {
             throw new Error(`Missing configuration. Please setup 'Advanced Commit Linter' Action using 'advanced-commit-linter.yml' file.`);
         }
