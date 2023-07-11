@@ -58,7 +58,7 @@ export class Validator {
     // ! when commit is marked by exception and commit with tracker exist return only tracker othervise return exception
     // ! when multiple trackers exist return error???
     generalTracker(commitsMetadata) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         if (this.config.isTrackerPolicyEmpty())
             return undefined;
         const tracker = { message: '', type: 'unknown' };
@@ -100,7 +100,13 @@ export class Validator {
             tracker.message = `${trackers.join(', ')}`;
             return tracker;
         }
-        return Object.assign(Object.assign({}, tracker), { id: (_a = prUniqueTracker[0].data) === null || _a === void 0 ? void 0 : _a.id, url: (_b = prUniqueTracker[0].data) === null || _b === void 0 ? void 0 : _b.url, message: 'Tracker found', exception: prUniqueTracker[0].exception });
+        return {
+            id: (_a = prUniqueTracker[0].data) === null || _a === void 0 ? void 0 : _a.id,
+            type: (_c = (_b = prUniqueTracker[0].data) === null || _b === void 0 ? void 0 : _b.type) !== null && _c !== void 0 ? _c : 'unknown',
+            url: (_d = prUniqueTracker[0].data) === null || _d === void 0 ? void 0 : _d.url,
+            message: 'Tracker found',
+            exception: prUniqueTracker[0].exception,
+        };
     }
     overallMessage(tracker, commitsMetadata) {
         let trackerID = '**Missing, needs inspection! ✋**';

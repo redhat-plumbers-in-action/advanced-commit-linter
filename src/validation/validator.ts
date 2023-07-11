@@ -169,8 +169,8 @@ export class Validator {
     }
 
     return {
-      ...tracker,
       id: prUniqueTracker[0].data?.id,
+      type: prUniqueTracker[0].data?.type ?? 'unknown',
       url: prUniqueTracker[0].data?.url,
       message: 'Tracker found',
       exception: prUniqueTracker[0].exception,
