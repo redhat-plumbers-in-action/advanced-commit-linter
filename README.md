@@ -243,7 +243,7 @@ policy:
         - 'Related: '
       type: jira
       issue-format:
-        - 'JIRA-1234'
+        - 'RHELPLAN-\d+$'
       url: 'https://issues.redhat.com/browse/'
       exception:
         note:
@@ -314,4 +314,148 @@ Property that describes possible exceptions for referencing trackers in commit m
 
 ### validated-pr-metadata
 
-TBA
+<details>
+  <summary>Example of validated metadata object</summary>
+
+  ```ts
+  const metadata = {
+    number: 15,
+    labels: [
+      {
+        id: 5610751380,
+        name: 'bug',
+        description: 'Bug label',
+      },
+    ],
+    milestone: {},
+    commits: [
+      {
+        sha: 'b145cbd729d33cc50d299079a9a5c643531ad053',
+        url: 'https://github.com/redhat-plumbers-in-action/advanced-commit-linter/commit/b145cbd729d33cc50d299079a9a5c643531ad053',
+        message: {
+          title: 'fix Typo in README.md',
+          body: 'fix: typo\
+  \
+  rhel-only\
+  \
+  Related: RHELPLAN-1234',
+          cherryPick: [],
+        },
+        validation: {
+          status: 'success',
+          message:
+            '| https://github.com/redhat-plumbers-in-action/advanced-commit-linter/commit/b145cbd729d33cc50d299079a9a5c643531ad053 - _fix: typo_ | `rhel-only` |',
+          tracker: {
+            status: 'success',
+            message:
+              '[RHELPLAN-1234](https://issues.redhat.com/browse/RHELPLAN-1234)',
+            data: [
+              {
+                data: {
+                  keyword: 'Related: ',
+                  id: 'RHELPLAN-1234',
+                  type: 'jira',
+                  url: 'https://issues.redhat.com/browse/RHELPLAN-1234',
+                },
+              },
+            ],
+          },
+          upstream: {
+            data: [],
+            status: 'success',
+            exception: 'rhel-only',
+          },
+        },
+      },
+    ],
+    validation: {
+      status: 'success',
+      tracker: {
+        message: 'Tracker found',
+        type: 'unknown',
+        id: 'RHELPLAN-1234',
+        url: 'https://issues.redhat.com/browse/RHELPLAN-1234',
+      },
+      message:
+        'Tracker - [RHELPLAN-1234](https://issues.redhat.com/browse/RHELPLAN-1234)\
+  \
+  #### The following commits meet all requirements\
+  \
+  | commit | upstream |\
+  |---|---|\
+  | https://github.com/redhat-plumbers-in-action/advanced-commit-linter/commit/b145cbd729d33cc50d299079a9a5c643531ad053 - _fix: typo_ | `rhel-only` |',
+    },
+  };
+  ```
+
+</details>
+
+#### `commits[].validation.status` keyword
+
+Status of commit validation. Can be one of the following values:
+
+* `success` - commit meets all requirements
+* `failure` - commit does not meet all requirements
+
+#### `commits[].validation.message` keyword
+
+Message that describes commit validation status.
+
+#### `commits[].validation.tracker` keyword
+
+Object that describes all trackers detected in commit message and their validation status.
+
+```ts
+tracker: {
+  status: 'success',
+  message: '[RHELPLAN-1234](https://issues.redhat.com/browse/RHELPLAN-1234)',
+  data: [{
+    data: {
+      keyword: 'Related: ',
+      id: 'RHELPLAN-1234',
+      type: 'jira',
+      url: 'https://issues.redhat.com/browse/RHELPLAN-1234',
+    },
+  }],
+}
+```
+
+#### `commits[].validation.upstream` keyword
+
+Object that describes all upstreams detected in commit message and their validation status.
+
+```ts
+upstream: {
+  data: [{
+    sha: 'b145cbd729d33cc50d299079a9a5c643531ad053',
+    repo: 'systemd/systemd',
+    url: 'https://github.com/systemd/systemd/commit/b145cbd729d33cc50d299079a9a5c643531ad053',
+  }],
+  status: 'success',
+  exception: 'rhel-only',
+}
+```
+
+#### `validation` keyword
+
+Object that describes overall validation status of all commits in Pull Request.
+
+```ts
+validation: {
+  status: 'success',
+  tracker: {
+    message: 'Tracker found',
+    type: 'unknown',
+    id: 'RHELPLAN-1234',
+    url: 'https://issues.redhat.com/browse/RHELPLAN-1234',
+  },
+  message:
+    'Tracker - [RHELPLAN-1234](https://issues.redhat.com/browse/RHELPLAN-1234)\
+\
+#### The following commits meet all requirements\
+\
+| commit | upstream |\
+|---|---|\
+| https://github.com/redhat-plumbers-in-action/advanced-commit-linter/commit/b145cbd729d33cc50d299079a9a5c643531ad053 - _fix: typo_ | `rhel-only` |',
+}
+```
