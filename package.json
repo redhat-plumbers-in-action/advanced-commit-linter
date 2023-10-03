@@ -24,7 +24,7 @@
     "commit-messages"
   ],
   "author": "jamacku@redhat.com",
-  "packageManager": "yarn@3.6.0",
+  "packageManager": "yarn@3.6.4",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "1.10.0",
