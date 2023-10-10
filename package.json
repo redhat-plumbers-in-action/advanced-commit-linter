@@ -1,6 +1,6 @@
 {
   "name": "advanced-commit-linter",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "Lint commit messages based on policy",
   "main": "src/main.ts",
   "scripts": {
