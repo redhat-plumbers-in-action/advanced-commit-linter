@@ -6,7 +6,10 @@ import { Metadata } from './metadata';
 import { CustomOctokit } from './octokit';
 
 export class PullRequest {
-  constructor(readonly id: number, private _metadata: Metadata) {}
+  constructor(
+    readonly id: number,
+    private _metadata: Metadata
+  ) {}
 
   get metadata() {
     return this._metadata;

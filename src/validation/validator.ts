@@ -17,7 +17,10 @@ export class Validator {
   trackerValidator: TrackerValidator[];
   upstreamValidator: UpstreamValidator;
 
-  constructor(readonly config: Config, readonly octokit: CustomOctokit) {
+  constructor(
+    readonly config: Config,
+    readonly octokit: CustomOctokit
+  ) {
     this.trackerValidator = this.config.tracker.map(
       config => new TrackerValidator(config)
     );
