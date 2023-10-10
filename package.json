@@ -41,12 +41,12 @@
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
     "@vercel/ncc": "0.38.0",
-    "@vitest/coverage-v8": "^0.32.0",
+    "@vitest/coverage-v8": "^0.34.0",
     "eslint": "^8.29.0",
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "3.0.3",
     "ts-node": "10.9.1",
     "typescript": "^5.0.0",
-    "vitest": "0.32.2"
+    "vitest": "0.34.6"
   }
 }
