@@ -683,15 +683,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@probot/octokit-plugin-config@npm:^1.1.6":
-  version: 1.1.6
-  resolution: "@probot/octokit-plugin-config@npm:1.1.6"
+"@probot/octokit-plugin-config@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@probot/octokit-plugin-config@npm:2.0.0"
   dependencies:
     "@types/js-yaml": ^4.0.5
+    glob: ^10.3.10
     js-yaml: ^4.1.0
   peerDependencies:
-    "@octokit/core": ">=3"
-  checksum: 6767e1b94be4330951423e9fa81e8a90e8bed2d44b1386fddbaff25ea564e2ad90c670fef7cc7255f2d9884aafaffe1fa043bcbb07a90d35f7e11ef97b1bff40
+    "@octokit/core": ">=5"
+  checksum: 6abf76666fda90ae787d88387b3717036d624f543f4a92a2ddeb8618719a54a437838fd794ba132088790bec4e42117628426cf502d5686dd9b1452da582faff
   languageName: node
   linkType: hard
 
@@ -1050,7 +1051,7 @@ __metadata:
     "@actions/github": ^5.1.1
     "@octokit/core": ^5.0.0
     "@octokit/types": ^12.0.0
-    "@probot/octokit-plugin-config": ^1.1.6
+    "@probot/octokit-plugin-config": ^2.0.0
     "@total-typescript/ts-reset": ^0.5.0
     "@types/node": 18.18.4
     "@typescript-eslint/eslint-plugin": ^5.46.1
@@ -2016,7 +2017,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2":
+"glob@npm:^10.2.2, glob@npm:^10.3.10":
   version: 10.3.10
   resolution: "glob@npm:10.3.10"
   dependencies:
