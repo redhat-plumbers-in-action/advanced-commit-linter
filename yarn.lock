@@ -2316,12 +2316,12 @@ __metadata:
   linkType: hard
 
 "issue-metadata@npm:^0.1.6":
-  version: 0.1.7
-  resolution: "issue-metadata@npm:0.1.7"
+  version: 0.1.8
+  resolution: "issue-metadata@npm:0.1.8"
   dependencies:
     "@octokit/request": ^6.2.3
-    zod: ^3.21.4
-  checksum: f5908df4b71864ef0dc9e191f31f8f5895548ce1c807f989c8d82dd947dac3b5858d36e90bbac38ac29b1199f28dd5cabd541b22d2dd66a2dfdf40dc5dfaa71a
+    zod: ^3.22.4
+  checksum: 730da763e339afff8599d5fdc0078186eee2f0dbdc3ec53a39f8b91e4347b310bbd7aac3d62b20127fb7cd7cd841452f1f18329dd14fcd6f0b1bd6ed8e4f578d
   languageName: node
   linkType: hard
 
@@ -3893,7 +3893,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.20.6, zod@npm:^3.21.4":
+"zod@npm:^3.20.6, zod@npm:^3.22.4":
   version: 3.22.4
   resolution: "zod@npm:3.22.4"
   checksum: 80bfd7f8039b24fddeb0718a2ec7c02aa9856e4838d6aa4864335a047b6b37a3273b191ef335bf0b2002e5c514ef261ffcda5a589fb084a48c336ffc4cdbab7f
