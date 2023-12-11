@@ -17,6 +17,10 @@ export class PullRequest {
 
   async publishComment(content: string, octokit: CustomOctokit) {
     if (this.metadata.commentID) {
+      // Check if the comment is already up to date
+      const currentComment = await this.getComment(octokit);
+      if (JSON.stringify(currentComment) === JSON.stringify(content)) return;
+      // Update the comment
       this.updateComment(content, octokit);
       return;
     }
@@ -30,6 +34,23 @@ export class PullRequest {
 
     this.metadata.commentID = commentPayload.id.toString();
     await this.metadata.setMetadata();
+  }
+
+  async getComment(octokit: CustomOctokit): Promise<string> {
+    if (!this.metadata.commentID) return '';
+
+    const comment =
+      (
+        await octokit.request(
+          'GET /repos/{owner}/{repo}/issues/comments/{comment_id}',
+          {
+            ...context.repo,
+            comment_id: +this.metadata.commentID,
+          }
+        )
+      ).data.body ?? '';
+
+    return comment;
   }
 
   private async createComment(
