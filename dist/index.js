@@ -5083,9 +5083,14 @@ var import_graphql = __nccwpck_require__(6442);
 var import_auth_token = __nccwpck_require__(5542);
 
 // pkg/dist-src/version.js
-var VERSION = "5.0.1";
+var VERSION = "5.0.2";
 
 // pkg/dist-src/index.js
+var noop = () => {
+};
+var consoleWarn = console.warn.bind(console);
+var consoleError = console.error.bind(console);
+var userAgentTrail = `octokit-core.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
 var Octokit = class {
   static {
     this.VERSION = VERSION;
@@ -5146,10 +5151,7 @@ var Octokit = class {
         format: ""
       }
     };
-    requestDefaults.headers["user-agent"] = [
-      options.userAgent,
-      `octokit-core.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
-    ].filter(Boolean).join(" ");
+    requestDefaults.headers["user-agent"] = options.userAgent ? `${options.userAgent} ${userAgentTrail}` : userAgentTrail;
     if (options.baseUrl) {
       requestDefaults.baseUrl = options.baseUrl;
     }
@@ -5163,12 +5165,10 @@ var Octokit = class {
     this.graphql = (0, import_graphql.withCustomRequest)(this.request).defaults(requestDefaults);
     this.log = Object.assign(
       {
-        debug: () => {
-        },
-        info: () => {
-        },
-        warn: console.warn.bind(console),
-        error: console.error.bind(console)
+        debug: noop,
+        info: noop,
+        warn: consoleWarn,
+        error: consoleError
       },
       options.log
     );
@@ -5205,9 +5205,9 @@ var Octokit = class {
       this.auth = auth;
     }
     const classConstructor = this.constructor;
-    classConstructor.plugins.forEach((plugin) => {
-      Object.assign(this, plugin(this, options));
-    });
+    for (let i = 0; i < classConstructor.plugins.length; ++i) {
+      Object.assign(this, classConstructor.plugins[i](this, options));
+    }
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
@@ -6966,7 +6966,7 @@ module.exports = __toCommonJS(dist_src_exports);
 var import_core4 = __nccwpck_require__(6762);
 
 // pkg/dist-src/version.js
-var VERSION = "2.0.0";
+var VERSION = "2.0.1";
 
 // pkg/dist-src/compose-config-get.js
 var import_core3 = __nccwpck_require__(6762);
@@ -46428,6 +46428,11 @@ class PullRequest {
     }
     async publishComment(content, octokit) {
         if (this.metadata.commentID) {
+            // Check if the comment is already up to date
+            const currentComment = await this.getComment(octokit);
+            if (JSON.stringify(currentComment) === JSON.stringify(content))
+                return;
+            // Update the comment
             this.updateComment(content, octokit);
             return;
         }
@@ -46438,6 +46443,13 @@ class PullRequest {
         }
         this.metadata.commentID = commentPayload.id.toString();
         await this.metadata.setMetadata();
+    }
+    async getComment(octokit) {
+        var _a;
+        if (!this.metadata.commentID)
+            return '';
+        const comment = (_a = (await octokit.request('GET /repos/{owner}/{repo}/issues/comments/{comment_id}', Object.assign(Object.assign({}, github.context.repo), { comment_id: +this.metadata.commentID }))).data.body) !== null && _a !== void 0 ? _a : '';
+        return comment;
     }
     async createComment(body, octokit) {
         if (!body || body === '')
