@@ -8,7 +8,6 @@ import { Validator } from './validation/validator';
 import { pullRequestMetadataSchema, PullRequestMetadata } from './schema/input';
 import { Commit } from './commit';
 import { OutputValidatedPullRequestMetadata } from './schema/output';
-import { PullRequest } from './pull-request';
 import { CustomOctokit } from './octokit';
 
 async function action(octokit: CustomOctokit) {
@@ -61,9 +60,6 @@ async function action(octokit: CustomOctokit) {
     validation: validationResults,
     commits: validatedCommits.map(commit => commit.validated),
   };
-
-  const pr = await PullRequest.getPullRequest(prMetadata.number);
-  pr.publishComment(validated.validation.message, octokit);
 
   setOutput('validated-pr-metadata', JSON.stringify(validated, null, 2));
 

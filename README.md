@@ -28,7 +28,7 @@
 
 <!-- -->
 
-Advanced Commit Linter is a GitHub Action that lint commit messages of PR. It checks for issue trackers and upstream references. Results are displayed as a status check and Pull Request comment.
+Advanced Commit Linter is a GitHub Action that lint commit messages of PR. It checks for issue trackers and upstream references. Results can be displayed as a status check or Pull Request comment when used together with [issue-commentator](https://github.com/redhat-plumbers-in-action/issue-commentator) GitHub Action.
 
 ## How does it work
 
@@ -43,7 +43,6 @@ TBA
 
 * Tracker references validator
 * Upstream references (cherry-pick) validator
-* Summary comment on Pull Request
 
 ## Usage
 
@@ -155,8 +154,6 @@ jobs:
     permissions:
       # required for creation of checks
       checks: write
-      # required for PR comments
-      pull-requests: write
 
     steps:
       - id: commit-linter
@@ -209,7 +206,7 @@ Set status on Pull Request. If enabled, Action will create check-run with valida
 
 ### token
 
-GitHub token or PAT is used for creating comments on Pull Request and setting checks.
+GitHub token or PAT is used for setting status checks on Pull Request.
 
 ```yml
 # required permission
