@@ -26,6 +26,7 @@ export declare const singleCommitMetadataSchema: z.ZodObject<{
         }[];
     }>;
 }, "strip", z.ZodTypeAny, {
+    url: string;
     message: {
         title: string;
         body: string;
@@ -33,9 +34,9 @@ export declare const singleCommitMetadataSchema: z.ZodObject<{
             sha: string;
         }[];
     };
-    url: string;
     sha: string;
 }, {
+    url: string;
     message: {
         title: string;
         body: string;
@@ -43,7 +44,6 @@ export declare const singleCommitMetadataSchema: z.ZodObject<{
             sha: string;
         }[];
     };
-    url: string;
     sha: string;
 }>;
 export type SingleCommitMetadata = z.infer<typeof singleCommitMetadataSchema>;
@@ -74,6 +74,7 @@ export declare const commitMetadataSchema: z.ZodArray<z.ZodObject<{
         }[];
     }>;
 }, "strip", z.ZodTypeAny, {
+    url: string;
     message: {
         title: string;
         body: string;
@@ -81,9 +82,9 @@ export declare const commitMetadataSchema: z.ZodArray<z.ZodObject<{
             sha: string;
         }[];
     };
-    url: string;
     sha: string;
 }, {
+    url: string;
     message: {
         title: string;
         body: string;
@@ -91,7 +92,6 @@ export declare const commitMetadataSchema: z.ZodArray<z.ZodObject<{
             sha: string;
         }[];
     };
-    url: string;
     sha: string;
 }>, "many">;
 export type CommitMetadata = z.infer<typeof commitMetadataSchema>;
@@ -124,6 +124,7 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
             }[];
         }>;
     }, "strip", z.ZodTypeAny, {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -131,9 +132,9 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
                 sha: string;
             }[];
         };
-        url: string;
         sha: string;
     }, {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -141,12 +142,12 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
                 sha: string;
             }[];
         };
-        url: string;
         sha: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     number: number;
     commits: {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -154,12 +155,12 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
                 sha: string;
             }[];
         };
-        url: string;
         sha: string;
     }[];
 }, {
     number: number;
     commits: {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -167,7 +168,6 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
                 sha: string;
             }[];
         };
-        url: string;
         sha: string;
     }[];
 }>;

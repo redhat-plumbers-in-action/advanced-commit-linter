@@ -9,30 +9,30 @@ declare const trackerSchema: z.ZodObject<{
         type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
         url: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        id: string;
         type: "unknown" | "jira" | "bugzilla";
         keyword: string;
-        id: string;
         url?: string | undefined;
     }, {
+        id: string;
         type: "unknown" | "jira" | "bugzilla";
         keyword: string;
-        id: string;
         url?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
     exception?: string | undefined;
     data?: {
+        id: string;
         type: "unknown" | "jira" | "bugzilla";
         keyword: string;
-        id: string;
         url?: string | undefined;
     } | undefined;
 }, {
     exception?: string | undefined;
     data?: {
+        id: string;
         type: "unknown" | "jira" | "bugzilla";
         keyword: string;
-        id: string;
         url?: string | undefined;
     } | undefined;
 }>;
@@ -99,30 +99,30 @@ declare const validatedCommitSchema: z.ZodObject<{
                 type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
                 url: z.ZodOptional<z.ZodString>;
             }, "strip", z.ZodTypeAny, {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             }, {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             }>>;
         }, "strip", z.ZodTypeAny, {
             exception?: string | undefined;
             data?: {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             } | undefined;
         }, {
             exception?: string | undefined;
             data?: {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             } | undefined;
         }>, "many">;
@@ -132,9 +132,9 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             } | undefined;
         }[];
@@ -144,9 +144,9 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             } | undefined;
         }[];
@@ -193,9 +193,9 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             } | undefined;
         }[];
@@ -218,9 +218,9 @@ declare const validatedCommitSchema: z.ZodObject<{
         data: {
             exception?: string | undefined;
             data?: {
+                id: string;
                 type: "unknown" | "jira" | "bugzilla";
                 keyword: string;
-                id: string;
                 url?: string | undefined;
             } | undefined;
         }[];
@@ -237,6 +237,7 @@ declare const validatedCommitSchema: z.ZodObject<{
 }>;
 export type ValidatedCommit = z.infer<typeof validatedCommitSchema>;
 declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
+    url: z.ZodString;
     message: z.ZodObject<{
         title: z.ZodString;
         body: z.ZodString;
@@ -260,7 +261,6 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             sha: string;
         }[];
     }>;
-    url: z.ZodString;
     sha: z.ZodString;
     validation: z.ZodObject<{
         status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
@@ -276,30 +276,30 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
                     type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
                     url: z.ZodOptional<z.ZodString>;
                 }, "strip", z.ZodTypeAny, {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 }, {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 }>>;
             }, "strip", z.ZodTypeAny, {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }, {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }>, "many">;
@@ -309,9 +309,9 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }[];
@@ -321,9 +321,9 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }[];
@@ -370,9 +370,9 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }[];
@@ -395,9 +395,9 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }[];
@@ -413,6 +413,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
         } | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
+    url: string;
     message: {
         title: string;
         body: string;
@@ -429,9 +430,9 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }[];
@@ -446,9 +447,9 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             exception?: string | undefined;
         } | undefined;
     };
-    url: string;
     sha: string;
 }, {
+    url: string;
     message: {
         title: string;
         body: string;
@@ -465,9 +466,9 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             data: {
                 exception?: string | undefined;
                 data?: {
+                    id: string;
                     type: "unknown" | "jira" | "bugzilla";
                     keyword: string;
-                    id: string;
                     url?: string | undefined;
                 } | undefined;
             }[];
@@ -482,7 +483,6 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             exception?: string | undefined;
         } | undefined;
     };
-    url: string;
     sha: string;
 }>, "many">;
 export type OutputCommitMetadata = z.infer<typeof outputCommitMetadataSchema>;
@@ -531,6 +531,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         } | undefined;
     }>;
     commits: z.ZodArray<z.ZodObject<{
+        url: z.ZodString;
         message: z.ZodObject<{
             title: z.ZodString;
             body: z.ZodString;
@@ -554,7 +555,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 sha: string;
             }[];
         }>;
-        url: z.ZodString;
         sha: z.ZodString;
         validation: z.ZodObject<{
             status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
@@ -570,30 +570,30 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                         type: z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<"jira">, z.ZodLiteral<"bugzilla">]>, z.ZodLiteral<"unknown">]>;
                         url: z.ZodOptional<z.ZodString>;
                     }, "strip", z.ZodTypeAny, {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     }, {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     }>>;
                 }, "strip", z.ZodTypeAny, {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }, {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }>, "many">;
@@ -603,9 +603,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -615,9 +615,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -664,9 +664,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -689,9 +689,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -707,6 +707,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
             } | undefined;
         }>;
     }, "strip", z.ZodTypeAny, {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -723,9 +724,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -740,9 +741,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 exception?: string | undefined;
             } | undefined;
         };
-        url: string;
         sha: string;
     }, {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -759,9 +760,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -776,7 +777,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 exception?: string | undefined;
             } | undefined;
         };
-        url: string;
         sha: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
@@ -792,6 +792,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         } | undefined;
     };
     commits: {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -808,9 +809,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -825,7 +826,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 exception?: string | undefined;
             } | undefined;
         };
-        url: string;
         sha: string;
     }[];
 }, {
@@ -841,6 +841,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         } | undefined;
     };
     commits: {
+        url: string;
         message: {
             title: string;
             body: string;
@@ -857,9 +858,9 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 data: {
                     exception?: string | undefined;
                     data?: {
+                        id: string;
                         type: "unknown" | "jira" | "bugzilla";
                         keyword: string;
-                        id: string;
                         url?: string | undefined;
                     } | undefined;
                 }[];
@@ -874,7 +875,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 exception?: string | undefined;
             } | undefined;
         };
-        url: string;
         sha: string;
     }[];
 }>;
