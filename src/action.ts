@@ -1,5 +1,6 @@
-import { getInput, setOutput } from '@actions/core';
+import { getBooleanInput, getInput, setOutput } from '@actions/core';
 import { context } from '@actions/github';
+import { Endpoints } from '@octokit/types';
 
 import { Config } from './config';
 import { Validator } from './validation/validator';
@@ -22,11 +23,15 @@ async function action(octokit: CustomOctokit) {
   const prMetadata = pullRequestMetadataSchema.parse(prMetadataUnsafe);
   const commitSha = prMetadata.commits[prMetadata.commits.length - 1].sha;
 
+  const setStatus = getBooleanInput('set-status', { required: true });
+  let checkRun:
+    | Endpoints['POST /repos/{owner}/{repo}/check-runs']['response']
+    | undefined;
+
   // Initialize check run - check in progress
   // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#create-a-check-run
-  const checkRun = await octokit.request(
-    'POST /repos/{owner}/{repo}/check-runs',
-    {
+  if (setStatus) {
+    checkRun = await octokit.request('POST /repos/{owner}/{repo}/check-runs', {
       ...context.repo,
       name: 'Advanced Commit Linter',
       head_sha: commitSha,
@@ -36,8 +41,8 @@ async function action(octokit: CustomOctokit) {
         title: 'Advanced Commit Linter',
         summary: 'Commit validation in progress',
       },
-    }
-  );
+    });
+  }
 
   const validator = new Validator(config, octokit);
 
@@ -64,20 +69,22 @@ async function action(octokit: CustomOctokit) {
 
   // Update check run - check completed + conclusion
   // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#update-a-check-run
-  await octokit.request(
-    'PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}',
-    {
-      ...context.repo,
-      check_run_id: checkRun.data.id,
-      status: 'completed' as unknown as undefined,
-      completed_at: new Date().toISOString(),
-      conclusion: validated.validation.status,
-      output: {
-        title: 'Advanced Commit Linter',
-        summary: validated.validation.message,
-      },
-    }
-  );
+  if (setStatus && checkRun) {
+    await octokit.request(
+      'PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}',
+      {
+        ...context.repo,
+        check_run_id: checkRun.data.id,
+        status: 'completed' as unknown as undefined,
+        completed_at: new Date().toISOString(),
+        conclusion: validated.validation.status,
+        output: {
+          title: 'Advanced Commit Linter',
+          summary: validated.validation.message,
+        },
+      }
+    );
+  }
 }
 
 export default action;
