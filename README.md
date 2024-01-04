@@ -178,6 +178,7 @@ Action currently accepts the following options:
   with:
     pr-metadata: <pr-metadata.json>
     config-path: <path to config file>
+    set-status:  <true or false>
     token:       <GitHub token or PAT>
 
 # ...
@@ -197,6 +198,13 @@ Pull Request metadata has the following format: [metadata format](https://github
 Path to configuration file. Configuration file format is described in: [Policy section](#policy).
 
 * default value: `.github/advanced-commit-linter.yml`
+* requirements: `optional`
+
+### set-status
+
+Set status on Pull Request. If enabled, Action will create check-run with validation results.
+
+* default value: `false`
 * requirements: `optional`
 
 ### token
