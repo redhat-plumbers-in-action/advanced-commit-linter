@@ -173,10 +173,11 @@ Action currently accepts the following options:
 
 - uses: redhat-plumbers-in-action/advanced-commit-linter@v1
   with:
-    pr-metadata: <pr-metadata.json>
-    config-path: <path to config file>
-    set-status:  <true or false>
-    token:       <GitHub token or PAT>
+    pr-metadata:    <pr-metadata.json>
+    config-path:    <path to config file>
+    set-status:     <true or false>
+    status-title:  <h3 title of status message>
+    token:          <GitHub token or PAT>
 
 # ...
 ```
@@ -202,6 +203,13 @@ Path to configuration file. Configuration file format is described in: [Policy s
 Set status on Pull Request. If enabled, Action will create check-run with validation results.
 
 * default value: `false`
+* requirements: `optional`
+
+### status-title
+
+Optional H3 title of status message.
+
+* default value: `Commit validation`
 * requirements: `optional`
 
 ### token

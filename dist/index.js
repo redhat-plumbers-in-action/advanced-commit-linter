@@ -47456,13 +47456,14 @@ async function action(octokit) {
     }));
     const prMetadata = pullRequestMetadataSchema.parse(prMetadataUnsafe);
     const commitSha = prMetadata.commits[prMetadata.commits.length - 1].sha;
+    const statusTitle = (0,core.getInput)('status-title', { required: true });
     const setStatus = (0,core.getBooleanInput)('set-status', { required: true });
     let checkRun;
     // Initialize check run - check in progress
     // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#create-a-check-run
     if (setStatus) {
         checkRun = await octokit.request('POST /repos/{owner}/{repo}/check-runs', Object.assign(Object.assign({}, github.context.repo), { name: 'Advanced Commit Linter', head_sha: commitSha, status: 'in_progress', started_at: new Date().toISOString(), output: {
-                title: 'Advanced Commit Linter',
+                title: statusTitle.length === 0 ? 'Advanced Commit Linter' : statusTitle,
                 summary: 'Commit validation in progress',
             } }));
     }
@@ -47470,15 +47471,18 @@ async function action(octokit) {
     const validatedCommits = await Promise.all(prMetadata.commits.map(async (singleCommit) => new Commit(singleCommit).validate(validator)));
     const validationResults = validator.validateAll(validatedCommits);
     const validated = Object.assign(Object.assign({}, prMetadataUnsafe), { validation: validationResults, commits: validatedCommits.map(commit => commit.validated) });
-    (0,core.setOutput)('validated-pr-metadata', JSON.stringify(validated, null, 2));
     // Update check run - check completed + conclusion
     // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#update-a-check-run
     if (setStatus && checkRun) {
         await octokit.request('PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}', Object.assign(Object.assign({}, github.context.repo), { check_run_id: checkRun.data.id, status: 'completed', completed_at: new Date().toISOString(), conclusion: validated.validation.status, output: {
-                title: 'Advanced Commit Linter',
+                title: statusTitle.length === 0 ? 'Advanced Commit Linter' : statusTitle,
                 summary: validated.validation.message,
             } }));
     }
+    if (statusTitle.length > 0) {
+        validated.validation.message = `### ${statusTitle}\n\n${validated.validation.message}`;
+    }
+    (0,core.setOutput)('validated-pr-metadata', JSON.stringify(validated, null, 2));
 }
 /* harmony default export */ const src_action = (action);
 

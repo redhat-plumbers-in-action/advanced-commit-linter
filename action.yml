@@ -16,10 +16,15 @@ inputs:
     required: true
     default: .github/advanced-commit-linter.yml
     description: Path to configuration file
+
   set-status:
     required: true
     default: 'false'
     description: Set check-run status on Pull Request
+  status-title:
+    required: false
+    default: Commit validation
+    description: H3 title of status message
   token:
     required: true
     description: GitHub TOKEN or PAT
