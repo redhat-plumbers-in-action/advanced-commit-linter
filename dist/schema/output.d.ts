@@ -187,6 +187,15 @@ declare const validatedCommitSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     message: string;
     status: "success" | "failure";
+    upstream?: {
+        status: "success" | "failure";
+        data: {
+            url: string;
+            sha: string;
+            repo: string;
+        }[];
+        exception?: string | undefined;
+    } | undefined;
     tracker?: {
         message: string;
         status: "success" | "failure";
@@ -199,19 +208,19 @@ declare const validatedCommitSchema: z.ZodObject<{
                 url?: string | undefined;
             } | undefined;
         }[];
-    } | undefined;
-    upstream?: {
-        status: "success" | "failure";
-        data: {
-            url: string;
-            sha: string;
-            repo: string;
-        }[];
-        exception?: string | undefined;
     } | undefined;
 }, {
     message: string;
     status: "success" | "failure";
+    upstream?: {
+        status: "success" | "failure";
+        data: {
+            url: string;
+            sha: string;
+            repo: string;
+        }[];
+        exception?: string | undefined;
+    } | undefined;
     tracker?: {
         message: string;
         status: "success" | "failure";
@@ -225,18 +234,10 @@ declare const validatedCommitSchema: z.ZodObject<{
             } | undefined;
         }[];
     } | undefined;
-    upstream?: {
-        status: "success" | "failure";
-        data: {
-            url: string;
-            sha: string;
-            repo: string;
-        }[];
-        exception?: string | undefined;
-    } | undefined;
 }>;
 export type ValidatedCommit = z.infer<typeof validatedCommitSchema>;
-declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
+declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<z.objectUtil.extendShape<{
+    sha: z.ZodString;
     url: z.ZodString;
     message: z.ZodObject<{
         title: z.ZodString;
@@ -261,7 +262,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
             sha: string;
         }[];
     }>;
-    sha: z.ZodString;
+}, {
     validation: z.ZodObject<{
         status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
         message: z.ZodString;
@@ -364,6 +365,15 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         message: string;
         status: "success" | "failure";
+        upstream?: {
+            status: "success" | "failure";
+            data: {
+                url: string;
+                sha: string;
+                repo: string;
+            }[];
+            exception?: string | undefined;
+        } | undefined;
         tracker?: {
             message: string;
             status: "success" | "failure";
@@ -376,19 +386,19 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
                     url?: string | undefined;
                 } | undefined;
             }[];
-        } | undefined;
-        upstream?: {
-            status: "success" | "failure";
-            data: {
-                url: string;
-                sha: string;
-                repo: string;
-            }[];
-            exception?: string | undefined;
         } | undefined;
     }, {
         message: string;
         status: "success" | "failure";
+        upstream?: {
+            status: "success" | "failure";
+            data: {
+                url: string;
+                sha: string;
+                repo: string;
+            }[];
+            exception?: string | undefined;
+        } | undefined;
         tracker?: {
             message: string;
             status: "success" | "failure";
@@ -402,17 +412,8 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
                 } | undefined;
             }[];
         } | undefined;
-        upstream?: {
-            status: "success" | "failure";
-            data: {
-                url: string;
-                sha: string;
-                repo: string;
-            }[];
-            exception?: string | undefined;
-        } | undefined;
     }>;
-}, "strip", z.ZodTypeAny, {
+}>, "strip", z.ZodTypeAny, {
     url: string;
     message: {
         title: string;
@@ -424,6 +425,15 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
     validation: {
         message: string;
         status: "success" | "failure";
+        upstream?: {
+            status: "success" | "failure";
+            data: {
+                url: string;
+                sha: string;
+                repo: string;
+            }[];
+            exception?: string | undefined;
+        } | undefined;
         tracker?: {
             message: string;
             status: "success" | "failure";
@@ -436,15 +446,6 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
                     url?: string | undefined;
                 } | undefined;
             }[];
-        } | undefined;
-        upstream?: {
-            status: "success" | "failure";
-            data: {
-                url: string;
-                sha: string;
-                repo: string;
-            }[];
-            exception?: string | undefined;
         } | undefined;
     };
     sha: string;
@@ -460,6 +461,15 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
     validation: {
         message: string;
         status: "success" | "failure";
+        upstream?: {
+            status: "success" | "failure";
+            data: {
+                url: string;
+                sha: string;
+                repo: string;
+            }[];
+            exception?: string | undefined;
+        } | undefined;
         tracker?: {
             message: string;
             status: "success" | "failure";
@@ -472,15 +482,6 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
                     url?: string | undefined;
                 } | undefined;
             }[];
-        } | undefined;
-        upstream?: {
-            status: "success" | "failure";
-            data: {
-                url: string;
-                sha: string;
-                repo: string;
-            }[];
-            exception?: string | undefined;
         } | undefined;
     };
     sha: string;
@@ -530,7 +531,8 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
             exception?: string | undefined;
         } | undefined;
     }>;
-    commits: z.ZodArray<z.ZodObject<{
+    commits: z.ZodArray<z.ZodObject<z.objectUtil.extendShape<{
+        sha: z.ZodString;
         url: z.ZodString;
         message: z.ZodObject<{
             title: z.ZodString;
@@ -555,7 +557,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 sha: string;
             }[];
         }>;
-        sha: z.ZodString;
+    }, {
         validation: z.ZodObject<{
             status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
             message: z.ZodString;
@@ -658,6 +660,15 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         }, "strip", z.ZodTypeAny, {
             message: string;
             status: "success" | "failure";
+            upstream?: {
+                status: "success" | "failure";
+                data: {
+                    url: string;
+                    sha: string;
+                    repo: string;
+                }[];
+                exception?: string | undefined;
+            } | undefined;
             tracker?: {
                 message: string;
                 status: "success" | "failure";
@@ -670,19 +681,19 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                         url?: string | undefined;
                     } | undefined;
                 }[];
-            } | undefined;
-            upstream?: {
-                status: "success" | "failure";
-                data: {
-                    url: string;
-                    sha: string;
-                    repo: string;
-                }[];
-                exception?: string | undefined;
             } | undefined;
         }, {
             message: string;
             status: "success" | "failure";
+            upstream?: {
+                status: "success" | "failure";
+                data: {
+                    url: string;
+                    sha: string;
+                    repo: string;
+                }[];
+                exception?: string | undefined;
+            } | undefined;
             tracker?: {
                 message: string;
                 status: "success" | "failure";
@@ -696,17 +707,8 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                     } | undefined;
                 }[];
             } | undefined;
-            upstream?: {
-                status: "success" | "failure";
-                data: {
-                    url: string;
-                    sha: string;
-                    repo: string;
-                }[];
-                exception?: string | undefined;
-            } | undefined;
         }>;
-    }, "strip", z.ZodTypeAny, {
+    }>, "strip", z.ZodTypeAny, {
         url: string;
         message: {
             title: string;
@@ -718,6 +720,15 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         validation: {
             message: string;
             status: "success" | "failure";
+            upstream?: {
+                status: "success" | "failure";
+                data: {
+                    url: string;
+                    sha: string;
+                    repo: string;
+                }[];
+                exception?: string | undefined;
+            } | undefined;
             tracker?: {
                 message: string;
                 status: "success" | "failure";
@@ -730,15 +741,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                         url?: string | undefined;
                     } | undefined;
                 }[];
-            } | undefined;
-            upstream?: {
-                status: "success" | "failure";
-                data: {
-                    url: string;
-                    sha: string;
-                    repo: string;
-                }[];
-                exception?: string | undefined;
             } | undefined;
         };
         sha: string;
@@ -754,6 +756,15 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         validation: {
             message: string;
             status: "success" | "failure";
+            upstream?: {
+                status: "success" | "failure";
+                data: {
+                    url: string;
+                    sha: string;
+                    repo: string;
+                }[];
+                exception?: string | undefined;
+            } | undefined;
             tracker?: {
                 message: string;
                 status: "success" | "failure";
@@ -766,15 +777,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                         url?: string | undefined;
                     } | undefined;
                 }[];
-            } | undefined;
-            upstream?: {
-                status: "success" | "failure";
-                data: {
-                    url: string;
-                    sha: string;
-                    repo: string;
-                }[];
-                exception?: string | undefined;
             } | undefined;
         };
         sha: string;
@@ -803,6 +805,15 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         validation: {
             message: string;
             status: "success" | "failure";
+            upstream?: {
+                status: "success" | "failure";
+                data: {
+                    url: string;
+                    sha: string;
+                    repo: string;
+                }[];
+                exception?: string | undefined;
+            } | undefined;
             tracker?: {
                 message: string;
                 status: "success" | "failure";
@@ -815,15 +826,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                         url?: string | undefined;
                     } | undefined;
                 }[];
-            } | undefined;
-            upstream?: {
-                status: "success" | "failure";
-                data: {
-                    url: string;
-                    sha: string;
-                    repo: string;
-                }[];
-                exception?: string | undefined;
             } | undefined;
         };
         sha: string;
@@ -852,6 +854,15 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
         validation: {
             message: string;
             status: "success" | "failure";
+            upstream?: {
+                status: "success" | "failure";
+                data: {
+                    url: string;
+                    sha: string;
+                    repo: string;
+                }[];
+                exception?: string | undefined;
+            } | undefined;
             tracker?: {
                 message: string;
                 status: "success" | "failure";
@@ -864,15 +875,6 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                         url?: string | undefined;
                     } | undefined;
                 }[];
-            } | undefined;
-            upstream?: {
-                status: "success" | "failure";
-                data: {
-                    url: string;
-                    sha: string;
-                    repo: string;
-                }[];
-                exception?: string | undefined;
             } | undefined;
         };
         sha: string;
