@@ -23,6 +23,7 @@
     "commit-messages"
   ],
   "author": "jamacku@redhat.com",
+  "type": "module",
   "packageManager": "yarn@4.2.2",
   "license": "MIT",
   "dependencies": {
