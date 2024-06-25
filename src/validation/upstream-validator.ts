@@ -98,7 +98,7 @@ export class UpstreamValidator {
 
       for (const match of matches) {
         if (Array.isArray(match) && match.length >= 3) {
-          return exception;
+          return match[2];
         }
       }
     }

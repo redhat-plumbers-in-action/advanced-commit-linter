@@ -34974,7 +34974,7 @@ class TrackerValidator {
             const matches = commitBody.matchAll(regexp);
             for (const match of matches) {
                 if (Array.isArray(match) && match.length >= 3) {
-                    return exception;
+                    return match[2];
                 }
             }
         }
@@ -35169,7 +35169,7 @@ class UpstreamValidator {
             const matches = commitBody.matchAll(regexp);
             for (const match of matches) {
                 if (Array.isArray(match) && match.length >= 3) {
-                    return exception;
+                    return match[2];
                 }
             }
         }
