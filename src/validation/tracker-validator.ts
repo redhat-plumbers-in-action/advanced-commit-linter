@@ -85,7 +85,7 @@ export class TrackerValidator {
 
       for (const match of matches) {
         if (Array.isArray(match) && match.length >= 3) {
-          return exception;
+          return match[2];
         }
       }
     }
