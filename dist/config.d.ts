@@ -25,5 +25,5 @@ export declare class Config {
     isTrackerPolicyEmpty(): boolean;
     isCherryPickPolicyEmpty(): boolean;
     static getConfig(octokit: CustomOctokit): Promise<Config>;
-    static isConfigEmpty(config: unknown): boolean;
+    static isConfigEmpty(config: unknown): config is null | undefined;
 }
