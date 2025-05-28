@@ -236,7 +236,7 @@ declare const validatedCommitSchema: z.ZodObject<{
     } | undefined;
 }>;
 export type ValidatedCommit = z.infer<typeof validatedCommitSchema>;
-declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<z.objectUtil.extendShape<{
+declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<{
     sha: z.ZodString;
     url: z.ZodString;
     message: z.ZodObject<{
@@ -262,7 +262,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<z.objectUtil.ex
             sha: string;
         }[];
     }>;
-}, {
+} & {
     validation: z.ZodObject<{
         status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
         message: z.ZodString;
@@ -413,7 +413,7 @@ declare const outputCommitMetadataSchema: z.ZodArray<z.ZodObject<z.objectUtil.ex
             }[];
         } | undefined;
     }>;
-}>, "strip", z.ZodTypeAny, {
+}, "strip", z.ZodTypeAny, {
     url: string;
     message: {
         title: string;
@@ -531,7 +531,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
             exception?: string | undefined;
         } | undefined;
     }>;
-    commits: z.ZodArray<z.ZodObject<z.objectUtil.extendShape<{
+    commits: z.ZodArray<z.ZodObject<{
         sha: z.ZodString;
         url: z.ZodString;
         message: z.ZodObject<{
@@ -557,7 +557,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 sha: string;
             }[];
         }>;
-    }, {
+    } & {
         validation: z.ZodObject<{
             status: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"failure">]>;
             message: z.ZodString;
@@ -708,7 +708,7 @@ export declare const outputValidatedPullRequestMetadataSchema: z.ZodObject<{
                 }[];
             } | undefined;
         }>;
-    }>, "strip", z.ZodTypeAny, {
+    }, "strip", z.ZodTypeAny, {
         url: string;
         message: {
             title: string;
