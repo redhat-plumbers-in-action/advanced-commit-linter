@@ -816,12 +816,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.15.23":
-  version: 22.15.23
-  resolution: "@types/node@npm:22.15.23"
+"@types/node@npm:22.15.32":
+  version: 22.15.32
+  resolution: "@types/node@npm:22.15.32"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/e3ae0629dfb4357dad2a7838c481656abf089d852d83f0d0f14368f03ad21ce276cbecfdf62be2276ef39920db6b114e5bc8d87c37714bbab9aefb0ce1eb1473
+  checksum: 10c0/63a2fa52adf1134d1b3bee8b1862d4b8e4550fffc190551068d3d41a41d9e5c0c8f1cb81faa18767b260637360f662115c26c5e4e7718868ead40c4a57cbc0e3
   languageName: node
   linkType: hard
 
@@ -979,7 +979,7 @@ __metadata:
     "@octokit/types": "npm:14.1.0"
     "@probot/octokit-plugin-config": "npm:3.0.2"
     "@total-typescript/ts-reset": "npm:0.6.1"
-    "@types/node": "npm:22.15.23"
+    "@types/node": "npm:22.15.32"
     "@vercel/ncc": "npm:0.38.3"
     "@vitest/coverage-v8": "npm:3.1.4"
     prettier: "npm:3.5.3"
