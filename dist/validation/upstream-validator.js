@@ -1,13 +1,14 @@
 import { error } from '@actions/core';
 import { z } from 'zod';
-import { configExceptionSchema, } from '../schema/config';
 import { upstreamDataSchema, } from '../schema/output';
+import { isException } from './util';
 export class UpstreamValidator {
     constructor(config, isCherryPickPolicyEmpty) {
         this.config = config;
         this.isCherryPickPolicyEmpty = isCherryPickPolicyEmpty;
     }
     async validate(singleCommitMetadata, octokit) {
+        var _a;
         let data = [];
         for (const cherryPick of singleCommitMetadata.message.cherryPick) {
             data = data.concat(await this.loopPolicy(cherryPick, octokit));
@@ -15,7 +16,8 @@ export class UpstreamValidator {
         const result = {
             data,
             status: 'failure',
-            exception: this.isException(this.config.exception, singleCommitMetadata.message.body),
+            // TODO: `?? ''` is workaround. It should be removed after check in general message is updated.
+            exception: (_a = isException(this.config.exception, singleCommitMetadata.message.body)) !== null && _a !== void 0 ? _a : '',
         };
         result.status = this.getStatus(result.data, result.exception);
         return result;
@@ -41,23 +43,6 @@ export class UpstreamValidator {
             error(`Error ocurred when verifying upstream commit: ${e}`);
         }
         return {};
-    }
-    isException(exceptionPolicy, commitBody) {
-        const exceptionPolicySafe = configExceptionSchema
-            .extend({ note: z.array(z.string()) })
-            .safeParse(exceptionPolicy);
-        if (!exceptionPolicySafe.success)
-            return '';
-        for (const exception of exceptionPolicySafe.data.note) {
-            const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
-            const matches = commitBody.matchAll(regexp);
-            for (const match of matches) {
-                if (Array.isArray(match) && match.length >= 3) {
-                    return match[2];
-                }
-            }
-        }
-        return '';
     }
     getStatus(data, exception) {
         let status = 'failure';

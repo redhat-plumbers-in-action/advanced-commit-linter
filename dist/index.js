@@ -31343,7 +31343,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 330:
+/***/ 2466:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -35641,15 +35641,34 @@ class Config {
     }
 }
 
-;// CONCATENATED MODULE: ./src/validation/tracker-validator.ts
+;// CONCATENATED MODULE: ./src/validation/util.ts
 
+
+function isException(exceptionPolicy, commitBody) {
+    const exceptionPolicySafe = configExceptionSchema
+        .extend({ note: arrayType(stringType()) })
+        .safeParse(exceptionPolicy);
+    if (!exceptionPolicySafe.success)
+        return undefined;
+    for (const exception of exceptionPolicySafe.data.note) {
+        const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
+        const matches = commitBody.matchAll(regexp);
+        for (const match of matches) {
+            if (Array.isArray(match) && match.length >= 3) {
+                return exception;
+            }
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/validation/tracker-validator.ts
 
 class TrackerValidator {
     constructor(config) {
         this.config = config;
     }
     validate(singleCommitMetadata) {
-        return Object.assign(Object.assign({}, this.loopPolicy(singleCommitMetadata.message.body)), { exception: this.isException(this.config.exception, singleCommitMetadata.message.body) });
+        return Object.assign(Object.assign({}, this.loopPolicy(singleCommitMetadata.message.body)), { exception: isException(this.config.exception, singleCommitMetadata.message.body) });
     }
     loopPolicy(commitBody) {
         const trackerResult = {};
@@ -35668,7 +35687,7 @@ class TrackerValidator {
                 }
             }
         }
-        const exception = this.isException(this.config.exception, commitBody);
+        const exception = isException(this.config.exception, commitBody);
         if (exception) {
             trackerResult.exception = exception;
         }
@@ -35682,22 +35701,6 @@ class TrackerValidator {
                 return match[3];
         }
         return undefined;
-    }
-    isException(exceptionPolicy, commitBody) {
-        const exceptionPolicySafe = configExceptionSchema
-            .extend({ note: arrayType(stringType()) })
-            .safeParse(exceptionPolicy);
-        if (!exceptionPolicySafe.success)
-            return undefined;
-        for (const exception of exceptionPolicySafe.data.note) {
-            const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
-            const matches = commitBody.matchAll(regexp);
-            for (const match of matches) {
-                if (Array.isArray(match) && match.length >= 3) {
-                    return match[2];
-                }
-            }
-        }
     }
     static getStatus(tracker, isTrackerPolicyEmpty) {
         let status = 'success';
@@ -35845,6 +35848,7 @@ class UpstreamValidator {
         this.isCherryPickPolicyEmpty = isCherryPickPolicyEmpty;
     }
     async validate(singleCommitMetadata, octokit) {
+        var _a;
         let data = [];
         for (const cherryPick of singleCommitMetadata.message.cherryPick) {
             data = data.concat(await this.loopPolicy(cherryPick, octokit));
@@ -35852,7 +35856,8 @@ class UpstreamValidator {
         const result = {
             data,
             status: 'failure',
-            exception: this.isException(this.config.exception, singleCommitMetadata.message.body),
+            // TODO: `?? ''` is workaround. It should be removed after check in general message is updated.
+            exception: (_a = isException(this.config.exception, singleCommitMetadata.message.body)) !== null && _a !== void 0 ? _a : '',
         };
         result.status = this.getStatus(result.data, result.exception);
         return result;
@@ -35878,23 +35883,6 @@ class UpstreamValidator {
             (0,core.error)(`Error ocurred when verifying upstream commit: ${e}`);
         }
         return {};
-    }
-    isException(exceptionPolicy, commitBody) {
-        const exceptionPolicySafe = configExceptionSchema
-            .extend({ note: arrayType(stringType()) })
-            .safeParse(exceptionPolicy);
-        if (!exceptionPolicySafe.success)
-            return '';
-        for (const exception of exceptionPolicySafe.data.note) {
-            const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
-            const matches = commitBody.matchAll(regexp);
-            for (const match of matches) {
-                if (Array.isArray(match) && match.length >= 3) {
-                    return match[2];
-                }
-            }
-        }
-        return '';
     }
     getStatus(data, exception) {
         let status = 'failure';
@@ -36203,7 +36191,7 @@ async function action(octokit) {
 __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7484);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _action__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(330);
+/* harmony import */ var _action__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2466);
 /* harmony import */ var _octokit__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4601);
 
 

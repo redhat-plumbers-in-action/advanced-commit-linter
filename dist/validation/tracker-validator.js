@@ -1,11 +1,10 @@
-import { z } from 'zod';
-import { configExceptionSchema, } from '../schema/config';
+import { isException } from './util';
 export class TrackerValidator {
     constructor(config) {
         this.config = config;
     }
     validate(singleCommitMetadata) {
-        return Object.assign(Object.assign({}, this.loopPolicy(singleCommitMetadata.message.body)), { exception: this.isException(this.config.exception, singleCommitMetadata.message.body) });
+        return Object.assign(Object.assign({}, this.loopPolicy(singleCommitMetadata.message.body)), { exception: isException(this.config.exception, singleCommitMetadata.message.body) });
     }
     loopPolicy(commitBody) {
         const trackerResult = {};
@@ -24,7 +23,7 @@ export class TrackerValidator {
                 }
             }
         }
-        const exception = this.isException(this.config.exception, commitBody);
+        const exception = isException(this.config.exception, commitBody);
         if (exception) {
             trackerResult.exception = exception;
         }
@@ -38,22 +37,6 @@ export class TrackerValidator {
                 return match[3];
         }
         return undefined;
-    }
-    isException(exceptionPolicy, commitBody) {
-        const exceptionPolicySafe = configExceptionSchema
-            .extend({ note: z.array(z.string()) })
-            .safeParse(exceptionPolicy);
-        if (!exceptionPolicySafe.success)
-            return undefined;
-        for (const exception of exceptionPolicySafe.data.note) {
-            const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
-            const matches = commitBody.matchAll(regexp);
-            for (const match of matches) {
-                if (Array.isArray(match) && match.length >= 3) {
-                    return match[2];
-                }
-            }
-        }
     }
     static getStatus(tracker, isTrackerPolicyEmpty) {
         let status = 'success';
