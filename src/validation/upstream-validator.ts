@@ -1,11 +1,7 @@
 import { error } from '@actions/core';
 import { z } from 'zod';
 
-import {
-  ConfigCherryPick,
-  configExceptionSchema,
-  ConfigException,
-} from '../schema/config';
+import { ConfigCherryPick } from '../schema/config';
 import { SingleCommitMetadata } from '../schema/input';
 import {
   Status,
@@ -14,6 +10,7 @@ import {
   ValidatedCommit,
 } from '../schema/output';
 import { CustomOctokit } from '../octokit';
+import { isException } from './util';
 
 export class UpstreamValidator {
   constructor(
@@ -34,10 +31,10 @@ export class UpstreamValidator {
     const result: Upstream = {
       data,
       status: 'failure',
-      exception: this.isException(
-        this.config.exception,
-        singleCommitMetadata.message.body
-      ),
+      // TODO: `?? ''` is workaround. It should be removed after check in general message is updated.
+      exception:
+        isException(this.config.exception, singleCommitMetadata.message.body) ??
+        '',
     };
 
     result.status = this.getStatus(result.data, result.exception);
@@ -80,30 +77,6 @@ export class UpstreamValidator {
     }
 
     return {};
-  }
-
-  isException(
-    exceptionPolicy: ConfigException | undefined,
-    commitBody: string
-  ) {
-    const exceptionPolicySafe = configExceptionSchema
-      .extend({ note: z.array(z.string()) })
-      .safeParse(exceptionPolicy);
-
-    if (!exceptionPolicySafe.success) return '';
-
-    for (const exception of exceptionPolicySafe.data.note) {
-      const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
-      const matches = commitBody.matchAll(regexp);
-
-      for (const match of matches) {
-        if (Array.isArray(match) && match.length >= 3) {
-          return match[2];
-        }
-      }
-    }
-
-    return '';
   }
 
   getStatus(data: Upstream['data'], exception: Upstream['exception']): Status {
