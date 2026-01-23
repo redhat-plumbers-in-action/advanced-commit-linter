@@ -25,6 +25,7 @@ export const configPolicySchema = z.object({
     tracker: z.array(configTrackerSchema).optional().default([]),
 });
 export const configSchema = z.object({
+    // TODO: Get rid of as unknown as ConfigPolicy in the future
     policy: configPolicySchema.optional().default({}),
 });
 //# sourceMappingURL=config.js.map
