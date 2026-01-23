@@ -4,9 +4,9 @@ export declare class Config {
     policy: ConfigPolicy;
     constructor(config: unknown);
     get tracker(): {
-        type: "jira" | "bugzilla";
         keyword: string[];
         'issue-format': string[];
+        type: "jira" | "bugzilla";
         url?: string | undefined;
         exception?: {
             label?: string[] | undefined;

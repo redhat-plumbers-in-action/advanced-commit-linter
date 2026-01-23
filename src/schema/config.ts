@@ -43,5 +43,6 @@ export const configPolicySchema = z.object({
 export type ConfigPolicy = z.infer<typeof configPolicySchema>;
 
 export const configSchema = z.object({
-  policy: configPolicySchema.optional().default({}),
+  // TODO: Get rid of as unknown as ConfigPolicy in the future
+  policy: configPolicySchema.optional().default({} as unknown as ConfigPolicy),
 });
