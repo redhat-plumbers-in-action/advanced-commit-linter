@@ -32,7 +32,7 @@
     "@octokit/core": "7.0.2",
     "@octokit/plugin-throttling": "11.0.1",
     "@probot/octokit-plugin-config": "3.0.2",
-    "zod": "3.25.67"
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@octokit/types": "14.1.0",
