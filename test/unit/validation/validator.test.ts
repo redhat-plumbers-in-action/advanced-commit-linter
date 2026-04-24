@@ -18,6 +18,8 @@ describe('Validator Object', () => {
       validatorContextFixture['only-tracker-policy'];
     context['only-cherry-pick-policy'] =
       validatorContextFixture['only-cherry-pick-policy'];
+    context['cherry-pick-with-label'] =
+      validatorContextFixture['cherry-pick-with-label'];
     context['systemd-rhel-policy'] =
       validatorContextFixture['systemd-rhel-policy'];
     context['validated-commits'] = validatorContextFixture['validated-commits'];
@@ -27,6 +29,7 @@ describe('Validator Object', () => {
     expect(context['no-check-policy']).toBeDefined();
     expect(context['only-tracker-policy']).toBeDefined();
     expect(context['only-cherry-pick-policy']).toBeDefined();
+    expect(context['cherry-pick-with-label']).toBeDefined();
     expect(context['systemd-rhel-policy']).toBeDefined();
   });
 
@@ -618,6 +621,36 @@ describe('Validator Object', () => {
           "type": "unknown",
         }
       `);
+    });
+  });
+
+  describe('getUpstreamLabel()', () => {
+    it<IValidatorTestContext>('returns empty labels when cherry-pick policy is empty', context => {
+      const labels = context['no-check-policy'].getUpstreamLabel(
+        context['validated-commits']['no-check-policy']['shouldPass']
+      );
+      expect(labels).toEqual({ add: [], remove: [] });
+    });
+
+    it<IValidatorTestContext>('returns default label in remove when no label is configured and upstream passes', context => {
+      const labels = context['only-cherry-pick-policy'].getUpstreamLabel(
+        context['validated-commits']['only-cherry-pick-policy']['shouldPass']
+      );
+      expect(labels).toEqual({ add: [], remove: ['pr/needs-upstream'] });
+    });
+
+    it<IValidatorTestContext>('returns label in remove when upstream validation passes', context => {
+      const labels = context['cherry-pick-with-label'].getUpstreamLabel(
+        context['validated-commits']['cherry-pick-with-label']['shouldPass']
+      );
+      expect(labels).toEqual({ add: [], remove: ['pr/needs-upstream'] });
+    });
+
+    it<IValidatorTestContext>('returns label in add when upstream validation fails', context => {
+      const labels = context['cherry-pick-with-label'].getUpstreamLabel(
+        context['validated-commits']['cherry-pick-with-label']['shouldFail']
+      );
+      expect(labels).toEqual({ add: ['pr/needs-upstream'], remove: [] });
     });
   });
 

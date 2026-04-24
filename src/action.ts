@@ -1,9 +1,11 @@
 import { getBooleanInput, getInput, setOutput } from '@actions/core';
 import { context } from '@actions/github';
+import { z } from 'zod';
 import { Endpoints } from '@octokit/types';
 
 import { Config } from './config';
 import { Validator } from './validation/validator';
+import { setLabels, removeLabel } from './util';
 
 import { pullRequestMetadataSchema, PullRequestMetadata } from './schema/input';
 import { Commit } from './commit';
@@ -82,6 +84,32 @@ async function action(octokit: CustomOctokit) {
         },
       }
     );
+  }
+
+  const labelActions = validator.getUpstreamLabel(validatedCommits);
+
+  if (labelActions.add.length > 0 || labelActions.remove.length > 0) {
+    const currentLabels = z
+      .array(z.object({ name: z.string() }).transform(label => label.name))
+      .parse(
+        (
+          await octokit.request(
+            'GET /repos/{owner}/{repo}/issues/{issue_number}/labels',
+            {
+              ...context.repo,
+              issue_number: prMetadata.number,
+            }
+          )
+        ).data
+      );
+
+    await setLabels(octokit, prMetadata.number, labelActions.add);
+
+    for (const label of labelActions.remove) {
+      if (currentLabels.includes(label)) {
+        await removeLabel(octokit, prMetadata.number, label);
+      }
+    }
   }
 
   if (statusTitle.length > 0) {

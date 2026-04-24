@@ -17,11 +17,13 @@ export declare class Config {
         upstream: {
             github: string;
         }[];
+        label: string;
         exception?: {
             label?: string[] | undefined;
             note?: string[] | undefined;
         } | undefined;
     };
+    get upstreamLabel(): string;
     isTrackerPolicyEmpty(): boolean;
     isCherryPickPolicyEmpty(): boolean;
     static getConfig(octokit: CustomOctokit): Promise<Config>;

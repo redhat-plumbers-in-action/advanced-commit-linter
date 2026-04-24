@@ -14,14 +14,14 @@ import { CustomOctokit } from '../octokit';
 import { SingleCommitMetadata } from '../schema/input';
 
 export class Validator {
-  trackerValidator: TrackerValidator[];
+  trackerValidators: TrackerValidator[];
   upstreamValidator: UpstreamValidator;
 
   constructor(
     readonly config: Config,
     readonly octokit: CustomOctokit
   ) {
-    this.trackerValidator = this.config.tracker.map(
+    this.trackerValidators = this.config.tracker.map(
       config => new TrackerValidator(config)
     );
     this.upstreamValidator = new UpstreamValidator(
@@ -55,7 +55,7 @@ export class Validator {
     validated.tracker = TrackerValidator.cleanArray({
       status: 'failure',
       message: '',
-      data: this.trackerValidator.map(tracker =>
+      data: this.trackerValidators.map(tracker =>
         tracker.validate(commitMetadata)
       ),
     });
@@ -249,5 +249,29 @@ export class Validator {
     }
 
     return 'success';
+  }
+
+  getUpstreamLabel(validatedCommits: Commit[]): {
+    add: string[];
+    remove: string[];
+  } {
+    const labels: { add: string[]; remove: string[] } = {
+      add: [],
+      remove: [],
+    };
+
+    if (this.config.isCherryPickPolicyEmpty()) return labels;
+
+    const hasUpstreamFailure = validatedCommits.some(
+      commit => commit.validation.upstream?.status === 'failure'
+    );
+
+    if (hasUpstreamFailure) {
+      labels.add.push(this.config.upstreamLabel);
+    } else {
+      labels.remove.push(this.config.upstreamLabel);
+    }
+
+    return labels;
   }
 }

@@ -14,6 +14,7 @@ export const configCherryPickSchema = z.object({
     })
   ),
   exception: configExceptionSchema.optional(),
+  label: z.string().default('pr/needs-upstream'),
 });
 
 export type ConfigCherryPick = z.infer<typeof configCherryPickSchema>;
@@ -36,7 +37,9 @@ export const configTrackerSchema = z.object({
 export type ConfigTracker = z.infer<typeof configTrackerSchema>;
 
 export const configPolicySchema = z.object({
-  'cherry-pick': configCherryPickSchema.optional().default({ upstream: [] }),
+  'cherry-pick': configCherryPickSchema
+    .optional()
+    .default({ upstream: [], label: 'pr/needs-upstream' }),
   tracker: z.array(configTrackerSchema).optional().default([]),
 });
 

@@ -8,6 +8,7 @@ export const configCherryPickSchema = z.object({
         github: z.string(),
     })),
     exception: configExceptionSchema.optional(),
+    label: z.string().default('pr/needs-upstream'),
 });
 export const configTrackerTypeSchema = z.union([
     z.literal('jira'),
@@ -21,7 +22,9 @@ export const configTrackerSchema = z.object({
     exception: configExceptionSchema.optional(),
 });
 export const configPolicySchema = z.object({
-    'cherry-pick': configCherryPickSchema.optional().default({ upstream: [] }),
+    'cherry-pick': configCherryPickSchema
+        .optional()
+        .default({ upstream: [], label: 'pr/needs-upstream' }),
     tracker: z.array(configTrackerSchema).optional().default([]),
 });
 export const configSchema = z.object({

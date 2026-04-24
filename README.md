@@ -241,6 +241,7 @@ policy:
     exception:
       note:
         - rhel-only
+    label: 'pr/needs-upstream'
   tracker:
     - keyword:
         - 'Resolves: #'
@@ -284,6 +285,13 @@ Supported keys:
 Property that describes possible exceptions for referencing upstream commits in commit messages. Currently supported exceptions:
 
 * `note` - for example `downstream-only` or `rhel-only`
+
+### `cherry-pick.label` keyword
+
+Label that will be set on Pull Request based on validation results.
+
+* requirements: `optional`
+* default value: `pr/needs-upstream`
 
 ### `tracker` keyword
 

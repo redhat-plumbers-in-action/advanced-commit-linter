@@ -11,6 +11,9 @@ export class Config {
     get cherryPick() {
         return this.policy['cherry-pick'];
     }
+    get upstreamLabel() {
+        return this.policy['cherry-pick'].label;
+    }
     isTrackerPolicyEmpty() {
         return this.policy.tracker.length === 0;
     }
