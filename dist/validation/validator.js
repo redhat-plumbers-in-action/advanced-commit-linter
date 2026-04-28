@@ -9,56 +9,77 @@ export class Validator {
         this.upstreamValidator = new UpstreamValidator(this.config.cherryPick, this.config.isCherryPickPolicyEmpty());
     }
     validateAll(validatedCommits) {
-        const tracker = this.generalTracker(validatedCommits);
-        const status = this.overallStatus(tracker, validatedCommits);
-        const message = this.overallMessage(tracker, validatedCommits);
-        return {
-            status,
-            tracker,
-            message,
-        };
+        const tracker = this.aggregatePrTracker(validatedCommits);
+        const status = this.computePrStatus(tracker, validatedCommits);
+        const message = this.buildPrMessage(tracker, validatedCommits);
+        return { status, tracker, message };
     }
     async validateCommit(commitMetadata) {
-        var _a;
-        const validated = {
-            status: 'failure',
-            message: '',
-        };
-        validated.tracker = TrackerValidator.cleanArray({
-            status: 'failure',
-            message: '',
-            data: this.trackerValidator.map(tracker => tracker.validate(commitMetadata)),
-        });
-        if (validated.tracker) {
-            validated.tracker.status = TrackerValidator.getStatus(validated.tracker.data, this.config.isTrackerPolicyEmpty());
-            validated.tracker.message = TrackerValidator.getMessage(validated.tracker.data, validated.tracker.status, this.config.isTrackerPolicyEmpty());
-        }
-        validated.upstream = await this.upstreamValidator.validate(commitMetadata, this.octokit);
-        const { status, message } = this.validationSummary(validated, commitMetadata.message.title, commitMetadata.url);
-        validated.status =
-            status === 'success' && ((_a = validated.tracker) === null || _a === void 0 ? void 0 : _a.status) === 'success'
-                ? 'success'
-                : 'failure';
-        validated.message = message;
-        return validated;
+        const tracker = this.buildTrackerResult(commitMetadata);
+        const upstream = await this.upstreamValidator.validate(commitMetadata, this.octokit);
+        const { status: summaryStatus, message } = this.buildCommitSummary({ tracker, upstream }, commitMetadata.message.title, commitMetadata.url);
+        const status = summaryStatus === 'success' && (tracker === null || tracker === void 0 ? void 0 : tracker.status) === 'success'
+            ? 'success'
+            : 'failure';
+        return { status, message, tracker, upstream };
     }
-    validationSummary(data, commitTitle, commitUrl) {
-        const upstreamSummary = this.upstreamValidator.summary(data, {
-            upstream: !this.config.isCherryPickPolicyEmpty(),
-            tracker: !this.config.isTrackerPolicyEmpty(),
+    buildTrackerResult(commitMetadata) {
+        const rawData = this.trackerValidator.map(t => t.validate(commitMetadata));
+        const cleaned = Validator.cleanTrackerArray({
+            status: 'failure',
+            message: '',
+            data: rawData,
+        });
+        if (!cleaned)
+            return cleaned;
+        const isTrackerPolicyEmpty = this.config.isTrackerPolicyEmpty();
+        const status = Validator.getTrackerStatus(cleaned.data, isTrackerPolicyEmpty);
+        const message = Validator.getTrackerMessage(cleaned.data, status, isTrackerPolicyEmpty);
+        return Object.assign(Object.assign({}, cleaned), { status, message });
+    }
+    buildCommitSummary(data, commitTitle, commitUrl) {
+        var _a, _b, _c;
+        let status = 'success';
+        const messages = [];
+        if (!this.config.isTrackerPolicyEmpty()) {
+            if (data.tracker && data.tracker.status === 'failure') {
+                status = 'failure';
+                messages.push(data.tracker.message);
+            }
+        }
+        if (!this.config.isCherryPickPolicyEmpty()) {
+            if (data.upstream && data.upstream.status === 'failure') {
+                status = 'failure';
+                messages.push('**Missing upstream reference** ‼️');
+            }
+        }
+        if (status === 'failure') {
+            return {
+                status,
+                message: `| ${commitUrl} - _${commitTitle}_ | ${messages.join('</br>')} |`,
+            };
+        }
+        if ((!data.upstream || data.upstream.data.length === 0) &&
+            !((_a = data.upstream) === null || _a === void 0 ? void 0 : _a.exception)) {
+            return {
+                status: 'success',
+                message: `| ${commitUrl} - _${commitTitle}_ | _no upstream_ |`,
+            };
+        }
+        const upstreamParts = [];
+        if ((_b = data.upstream) === null || _b === void 0 ? void 0 : _b.exception) {
+            upstreamParts.push(`\`${data.upstream.exception}\``);
+        }
+        (_c = data.upstream) === null || _c === void 0 ? void 0 : _c.data.forEach(upstream => {
+            upstreamParts.push(`${upstream.url}`);
         });
         return {
-            status: upstreamSummary.status,
-            message: `| ${commitUrl} - _${commitTitle}_ | ${upstreamSummary.message} |`,
+            status: 'success',
+            message: `| ${commitUrl} - _${commitTitle}_ | ${upstreamParts.join('</br>')} |`,
         };
     }
-    // TODO:
-    // ! get unique trackers of commits
-    // ! get unique tracker of PR
-    // ! when commit is marked by exception and commit with tracker exist return only tracker othervise return exception
-    // ! when multiple trackers exist return error???
-    generalTracker(commitsMetadata) {
-        var _a, _b, _c, _d;
+    aggregatePrTracker(commitsMetadata) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         if (this.config.isTrackerPolicyEmpty())
             return undefined;
         const tracker = { message: '', type: 'unknown' };
@@ -74,10 +95,10 @@ export class Validator {
                 return tracker;
             }
             const uniqueTracker = [];
-            for (const tracker of validation.tracker.data) {
-                const isDuplicate = uniqueTracker.find(obj => { var _a, _b; return ((_a = obj.data) === null || _a === void 0 ? void 0 : _a.id) === ((_b = tracker.data) === null || _b === void 0 ? void 0 : _b.id); });
+            for (const t of validation.tracker.data) {
+                const isDuplicate = uniqueTracker.find(obj => { var _a, _b; return ((_a = obj.data) === null || _a === void 0 ? void 0 : _a.id) === ((_b = t.data) === null || _b === void 0 ? void 0 : _b.id); });
                 if (!isDuplicate) {
-                    uniqueTracker.push(tracker);
+                    uniqueTracker.push(t);
                 }
             }
             if (uniqueTracker.length > 1) {
@@ -90,38 +111,42 @@ export class Validator {
             }
         }
         if (prUniqueTracker.length > 1) {
-            const trackers = prUniqueTracker.map(tracker => {
+            const realTrackers = prUniqueTracker.filter(t => t.data);
+            const exceptionOnly = prUniqueTracker.filter(t => !t.data);
+            if (realTrackers.length === 1) {
+                const parts = [
+                    ...exceptionOnly.map(t => `\`${t.exception}\``),
+                    `[${(_a = realTrackers[0].data) === null || _a === void 0 ? void 0 : _a.id}](${(_b = realTrackers[0].data) === null || _b === void 0 ? void 0 : _b.url})`,
+                ];
+                return {
+                    id: (_c = realTrackers[0].data) === null || _c === void 0 ? void 0 : _c.id,
+                    type: (_e = (_d = realTrackers[0].data) === null || _d === void 0 ? void 0 : _d.type) !== null && _e !== void 0 ? _e : 'unknown',
+                    url: (_f = realTrackers[0].data) === null || _f === void 0 ? void 0 : _f.url,
+                    message: parts.join(', '),
+                    exception: realTrackers[0].exception,
+                };
+            }
+            const trackers = prUniqueTracker.map(t => {
                 var _a, _b;
-                if (tracker.exception) {
-                    return `\`${tracker.exception}\``;
-                }
-                return `[${(_a = tracker.data) === null || _a === void 0 ? void 0 : _a.id}](${(_b = tracker.data) === null || _b === void 0 ? void 0 : _b.url})`;
+                if (t.exception && !t.data)
+                    return `\`${t.exception}\``;
+                return `[${(_a = t.data) === null || _a === void 0 ? void 0 : _a.id}](${(_b = t.data) === null || _b === void 0 ? void 0 : _b.url})`;
             });
             tracker.message = `${trackers.join(', ')}`;
             return tracker;
         }
         return {
-            id: (_a = prUniqueTracker[0].data) === null || _a === void 0 ? void 0 : _a.id,
-            type: (_c = (_b = prUniqueTracker[0].data) === null || _b === void 0 ? void 0 : _b.type) !== null && _c !== void 0 ? _c : 'unknown',
-            url: (_d = prUniqueTracker[0].data) === null || _d === void 0 ? void 0 : _d.url,
+            id: (_g = prUniqueTracker[0].data) === null || _g === void 0 ? void 0 : _g.id,
+            type: (_j = (_h = prUniqueTracker[0].data) === null || _h === void 0 ? void 0 : _h.type) !== null && _j !== void 0 ? _j : 'unknown',
+            url: (_k = prUniqueTracker[0].data) === null || _k === void 0 ? void 0 : _k.url,
             message: 'Tracker found',
             exception: prUniqueTracker[0].exception,
         };
     }
-    overallMessage(tracker, commitsMetadata) {
-        let trackerID = '**Missing, needs inspection! ✋**';
-        // ! FIXME: This is duplication of code from TrackerValidator.getMessage() and should be refactored
-        if (tracker) {
-            if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && !(tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
-                trackerID = tracker.message;
-            }
-            else if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && (tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
-                trackerID = `\`${tracker.exception}\``;
-            }
-            else if (tracker === null || tracker === void 0 ? void 0 : tracker.id) {
-                trackerID = `[${tracker.id}](${tracker.url})`;
-            }
-        }
+    buildPrMessage(tracker, commitsMetadata) {
+        const trackerID = !tracker && this.config.isTrackerPolicyEmpty()
+            ? '_no tracker_'
+            : Validator.formatTrackerId(tracker);
         const validCommits = Commit.getValidCommits(commitsMetadata);
         const invalidCommits = Commit.getInvalidCommits(commitsMetadata);
         let summaryMessage = `Tracker - ${trackerID}`;
@@ -143,27 +168,76 @@ export class Validator {
         }
         return summaryMessage;
     }
-    overallStatus(tracker, commitsMetadata) {
+    computePrStatus(tracker, commitsMetadata) {
         if (!this.config.isTrackerPolicyEmpty()) {
-            if (tracker === undefined) {
+            if (tracker === undefined)
                 return 'failure';
-            }
-            if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && !(tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
+            if (!(tracker === null || tracker === void 0 ? void 0 : tracker.id) && !(tracker === null || tracker === void 0 ? void 0 : tracker.exception))
                 return 'failure';
-            }
-            if ((tracker === null || tracker === void 0 ? void 0 : tracker.id) === '' && (tracker === null || tracker === void 0 ? void 0 : tracker.exception)) {
+            if ((tracker === null || tracker === void 0 ? void 0 : tracker.id) === '' && (tracker === null || tracker === void 0 ? void 0 : tracker.exception))
                 return 'failure';
-            }
         }
         if (!this.config.isCherryPickPolicyEmpty()) {
-            commitsMetadata.forEach(commit => {
-                var _a;
-                if (((_a = commit.validation.upstream) === null || _a === void 0 ? void 0 : _a.status) === 'failure') {
-                    return 'failure';
-                }
-            });
+            const hasUpstreamFailure = commitsMetadata.some(commit => { var _a; return ((_a = commit.validation.upstream) === null || _a === void 0 ? void 0 : _a.status) === 'failure'; });
+            if (hasUpstreamFailure)
+                return 'failure';
         }
         return 'success';
+    }
+    static formatTrackerId(tracker) {
+        var _a;
+        if (!tracker)
+            return '**Missing, needs inspection! ✋**';
+        if (tracker.id)
+            return `[${tracker.id}](${tracker.url})`;
+        if (tracker.exception)
+            return `\`${tracker.exception}\``;
+        return (_a = tracker.message) !== null && _a !== void 0 ? _a : '**Missing, needs inspection! ✋**';
+    }
+    static getTrackerStatus(tracker, isTrackerPolicyEmpty) {
+        if (isTrackerPolicyEmpty)
+            return 'success';
+        if (tracker.length === 0)
+            return 'failure';
+        for (const single of tracker) {
+            if (single.data === undefined && single.exception === undefined) {
+                return 'failure';
+            }
+        }
+        return 'success';
+    }
+    static getTrackerMessage(trackers, status, isTrackerPolicyEmpty) {
+        var _a;
+        if (isTrackerPolicyEmpty)
+            return '_no tracker_';
+        if (status === 'failure')
+            return '**Missing issue tracker** ✋';
+        const trackersResult = [];
+        for (const singleTracker of trackers) {
+            if (!(singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.data) && !(singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.exception))
+                continue;
+            if ((singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.exception) && !(singleTracker === null || singleTracker === void 0 ? void 0 : singleTracker.data)) {
+                trackersResult.push(singleTracker.exception);
+                continue;
+            }
+            if (!singleTracker.data)
+                continue;
+            if (!singleTracker.data.url || ((_a = singleTracker.data) === null || _a === void 0 ? void 0 : _a.url) === '') {
+                trackersResult.push(singleTracker.data.id);
+                continue;
+            }
+            trackersResult.push(`[${singleTracker.data.id}](${singleTracker.data.url})`);
+        }
+        return trackersResult.join(', ');
+    }
+    static cleanTrackerArray(validationArray) {
+        if (validationArray === undefined)
+            return undefined;
+        if (Array.isArray(validationArray.data) &&
+            validationArray.data.length === 0)
+            return validationArray;
+        const cleanedData = validationArray.data.filter(tracker => Object.values(tracker).some(v => v !== undefined));
+        return Object.assign(Object.assign({}, validationArray), { data: cleanedData });
     }
 }
 //# sourceMappingURL=validator.js.map

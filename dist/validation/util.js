@@ -1,13 +1,9 @@
-import { z } from 'zod';
-import { configExceptionSchema } from '../schema/config';
 export function isException(exceptionPolicy, commitBody) {
-    const exceptionPolicySafe = configExceptionSchema
-        .extend({ note: z.array(z.string()) })
-        .safeParse(exceptionPolicy);
-    if (!exceptionPolicySafe.success)
+    if (!(exceptionPolicy === null || exceptionPolicy === void 0 ? void 0 : exceptionPolicy.note) || exceptionPolicy.note.length === 0)
         return undefined;
-    for (const exception of exceptionPolicySafe.data.note) {
-        const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
+    for (const exception of exceptionPolicy.note) {
+        // `\\n` matches literal backslash-n text in API responses; `^` with `m` flag handles actual newlines
+        const regexp = new RegExp(`(^\\s*|\\\\n)(${exception})$`, 'gm');
         const matches = commitBody.matchAll(regexp);
         for (const match of matches) {
             if (Array.isArray(match) && match.length >= 3) {

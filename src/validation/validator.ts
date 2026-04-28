@@ -66,9 +66,7 @@ export class Validator {
   private buildTrackerResult(
     commitMetadata: SingleCommitMetadata
   ): ValidatedCommit['tracker'] {
-    const rawData = this.trackerValidator.map(t =>
-      t.validate(commitMetadata)
-    );
+    const rawData = this.trackerValidator.map(t => t.validate(commitMetadata));
 
     const cleaned = Validator.cleanTrackerArray({
       status: 'failure',
@@ -79,7 +77,10 @@ export class Validator {
     if (!cleaned) return cleaned;
 
     const isTrackerPolicyEmpty = this.config.isTrackerPolicyEmpty();
-    const status = Validator.getTrackerStatus(cleaned.data, isTrackerPolicyEmpty);
+    const status = Validator.getTrackerStatus(
+      cleaned.data,
+      isTrackerPolicyEmpty
+    );
     const message = Validator.getTrackerMessage(
       cleaned.data,
       status,
