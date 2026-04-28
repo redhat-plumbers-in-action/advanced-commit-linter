@@ -3,12 +3,7 @@ import { z } from 'zod';
 
 import { ConfigCherryPick } from '../schema/config';
 import { SingleCommitMetadata } from '../schema/input';
-import {
-  Status,
-  upstreamDataSchema,
-  Upstream,
-  ValidatedCommit,
-} from '../schema/output';
+import { Status, upstreamDataSchema, Upstream } from '../schema/output';
 import { CustomOctokit } from '../octokit';
 import { isException } from './util';
 
@@ -28,18 +23,15 @@ export class UpstreamValidator {
       data = data.concat(await this.loopPolicy(cherryPick, octokit));
     }
 
-    const result: Upstream = {
+    const exception =
+      isException(this.config.exception, singleCommitMetadata.message.body) ??
+      '';
+
+    return {
       data,
-      status: 'failure',
-      // TODO: `?? ''` is workaround. It should be removed after check in general message is updated.
-      exception:
-        isException(this.config.exception, singleCommitMetadata.message.body) ??
-        '',
+      status: this.getStatus(data, exception),
+      exception,
     };
-
-    result.status = this.getStatus(result.data, result.exception);
-
-    return result;
   }
 
   async loopPolicy(
@@ -53,7 +45,6 @@ export class UpstreamValidator {
     );
   }
 
-  // TODO: return undefined if all upstreams are empty
   async verifyCherryPick(
     cherryPick: SingleCommitMetadata['message']['cherryPick'][number],
     upstream: ConfigCherryPick['upstream'][number],
@@ -80,13 +71,9 @@ export class UpstreamValidator {
   }
 
   getStatus(data: Upstream['data'], exception: Upstream['exception']): Status {
-    let status: Status = 'failure';
-
-    if (data.length > 0 || exception || this.isCherryPickPolicyEmpty) {
-      status = 'success';
-    }
-
-    return status;
+    return data.length > 0 || exception || this.isCherryPickPolicyEmpty
+      ? 'success'
+      : 'failure';
   }
 
   async cleanArray(
@@ -95,63 +82,9 @@ export class UpstreamValidator {
     if (validationArray === undefined) return [];
 
     const data = await Promise.all(validationArray);
-
-    const filtered = data.filter(
-      item => JSON.stringify(item) !== JSON.stringify({})
-    );
-
+    const filtered = data.filter(item => Object.keys(item).length > 0);
     const parsed = z.array(upstreamDataSchema).safeParse(filtered);
 
     return parsed.success ? parsed.data : [];
-  }
-
-  summary(
-    data: ValidatedCommit,
-    validation: {
-      upstream: boolean;
-      tracker: boolean;
-    }
-  ): Pick<ValidatedCommit, 'status' | 'message'> {
-    const validationSummary: Pick<ValidatedCommit, 'status' | 'message'> = {
-      status: 'success',
-      message: '',
-    };
-
-    const message: string[] = [];
-
-    if (validation.tracker) {
-      if (data.tracker && data.tracker.status === 'failure') {
-        validationSummary.status = 'failure';
-        message.push(data.tracker.message);
-      }
-    }
-
-    if (validation.upstream) {
-      if (data.upstream && data.upstream.status === 'failure') {
-        validationSummary.status = 'failure';
-        message.push('**Missing upstream reference** ‼️');
-      }
-    }
-
-    if (validationSummary.status === 'failure') {
-      validationSummary.message = message.join('</br>');
-      return validationSummary;
-    }
-
-    if (
-      (!data.upstream || data.upstream.data.length === 0) &&
-      data.upstream?.exception === ''
-    )
-      return { status: 'success', message: '_no upstream_' };
-
-    if (data.upstream?.exception) {
-      message.push(`\`${data.upstream?.exception}\``);
-    }
-
-    data.upstream?.data.forEach(upstream => {
-      message.push(`${upstream.url}`);
-    });
-
-    return { status: 'success', message: message.join('</br>') };
   }
 }

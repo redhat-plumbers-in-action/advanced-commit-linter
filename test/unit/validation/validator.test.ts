@@ -606,9 +606,9 @@ describe('Validator Object', () => {
     });
   });
 
-  describe('generalTracker()', () => {
+  describe('aggregatePrTracker()', () => {
     test<IValidatorTestContext>('single tracker', context => {
-      const tracker = context['systemd-rhel-policy'].generalTracker(
+      const tracker = context['systemd-rhel-policy'].aggregatePrTracker(
         context['validated-commits']['systemd-rhel-policy'].shouldPass
       );
 
@@ -621,10 +621,10 @@ describe('Validator Object', () => {
     });
   });
 
-  describe('overallMessage()', () => {
+  describe('buildPrMessage()', () => {
     test<IValidatorTestContext>('systemd-rhel-policy all passed', context => {
       expect(
-        context['systemd-rhel-policy'].overallMessage(
+        context['systemd-rhel-policy'].buildPrMessage(
           undefined,
           context['validated-commits']['systemd-rhel-policy'].shouldPass
         )
@@ -644,7 +644,7 @@ describe('Validator Object', () => {
 
     test<IValidatorTestContext>('systemd-rhel-policy some failed', context => {
       expect(
-        context['systemd-rhel-policy'].overallMessage(
+        context['systemd-rhel-policy'].buildPrMessage(
           {
             id: '123456789',
             type: 'unknown',
