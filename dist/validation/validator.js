@@ -82,6 +82,9 @@ export class Validator {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         if (this.config.isTrackerPolicyEmpty())
             return undefined;
+        if (commitsMetadata.length === 0) {
+            return { message: '**Missing issue tracker ✋**', type: 'unknown' };
+        }
         const tracker = { message: '', type: 'unknown' };
         const prUniqueTracker = [];
         for (const { validation } of commitsMetadata) {
@@ -188,8 +191,11 @@ export class Validator {
         var _a;
         if (!tracker)
             return '**Missing, needs inspection! ✋**';
-        if (tracker.id)
-            return `[${tracker.id}](${tracker.url})`;
+        if (tracker.id) {
+            if (tracker.url)
+                return `[${tracker.id}](${tracker.url})`;
+            return tracker.id;
+        }
         if (tracker.exception)
             return `\`${tracker.exception}\``;
         return (_a = tracker.message) !== null && _a !== void 0 ? _a : '**Missing, needs inspection! ✋**';
