@@ -67,7 +67,7 @@ describe('Commit Object', () => {
           },
           "upstream": {
             "data": [],
-            "exception": "",
+            "exception": undefined,
             "status": "success",
           },
         },
@@ -126,7 +126,7 @@ describe('Commit Object', () => {
           },
           "upstream": {
             "data": [],
-            "exception": "",
+            "exception": undefined,
             "status": "success",
           },
         },

@@ -23,9 +23,10 @@ export class UpstreamValidator {
       data = data.concat(await this.loopPolicy(cherryPick, octokit));
     }
 
-    const exception =
-      isException(this.config.exception, singleCommitMetadata.message.body) ??
-      '';
+    const exception = isException(
+      this.config.exception,
+      singleCommitMetadata.message.body
+    );
 
     return {
       data,
