@@ -3,11 +3,11 @@ export function isException(exceptionPolicy, commitBody) {
         return undefined;
     for (const exception of exceptionPolicy.note) {
         // `\\n` matches literal backslash-n text in API responses; `^` with `m` flag handles actual newlines
-        const regexp = new RegExp(`(^\\s*|\\\\n)(${exception})$`, 'gm');
+        const regexp = new RegExp(`(^\\s*|\\\\n|\\n)(${exception})$`, 'gm');
         const matches = commitBody.matchAll(regexp);
         for (const match of matches) {
             if (Array.isArray(match) && match.length >= 3) {
-                return exception;
+                return match[2];
             }
         }
     }

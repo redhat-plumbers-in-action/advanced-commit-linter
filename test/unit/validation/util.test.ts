@@ -49,4 +49,12 @@ describe('Validation Utilities', () => {
     const policy: ConfigException = { note: ['exception-note'] };
     expect(isException(policy, '')).toBeUndefined();
   });
+
+  test('isException returns matched text, not the regex pattern', () => {
+    const policy: ConfigException = {
+      note: ['rhel-only: (feature|bugfix|policy|doc|workaround|ci|test|other)'],
+    };
+    const commitBody = 'commit message\n\nrhel-only: ci';
+    expect(isException(policy, commitBody)).toEqual('rhel-only: ci');
+  });
 });
