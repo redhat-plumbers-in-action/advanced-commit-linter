@@ -24,14 +24,6 @@ export class Commit {
     };
   }
 
-  haveTracker(): boolean {
-    return this.validation.upstream !== undefined;
-  }
-
-  haveUpstream(): boolean {
-    return this.validation.upstream !== undefined;
-  }
-
   static getValidCommits(commits: Commit[]): Commit[] {
     return commits.filter(commit => commit.validation.status === 'success');
   }

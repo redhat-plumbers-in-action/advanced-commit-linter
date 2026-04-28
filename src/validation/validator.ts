@@ -241,11 +241,10 @@ export class Validator {
     }
 
     if (!this.config.isCherryPickPolicyEmpty()) {
-      commitsMetadata.forEach(commit => {
-        if (commit.validation.upstream?.status === 'failure') {
-          return 'failure';
-        }
-      });
+      const hasUpstreamFailure = commitsMetadata.some(
+        commit => commit.validation.upstream?.status === 'failure'
+      );
+      if (hasUpstreamFailure) return 'failure';
     }
 
     return 'success';
