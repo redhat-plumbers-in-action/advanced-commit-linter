@@ -150,6 +150,10 @@ export class Validator {
   ): OutputValidatedPullRequestMetadata['validation']['tracker'] {
     if (this.config.isTrackerPolicyEmpty()) return undefined;
 
+    if (commitsMetadata.length === 0) {
+      return { message: '**Missing issue tracker ✋**', type: 'unknown' };
+    }
+
     const tracker: OutputValidatedPullRequestMetadata['validation']['tracker'] =
       { message: '', type: 'unknown' };
 
@@ -289,7 +293,10 @@ export class Validator {
       | undefined
   ): string {
     if (!tracker) return '**Missing, needs inspection! ✋**';
-    if (tracker.id) return `[${tracker.id}](${tracker.url})`;
+    if (tracker.id) {
+      if (tracker.url) return `[${tracker.id}](${tracker.url})`;
+      return tracker.id;
+    }
     if (tracker.exception) return `\`${tracker.exception}\``;
     return tracker.message ?? '**Missing, needs inspection! ✋**';
   }

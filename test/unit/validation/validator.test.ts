@@ -752,10 +752,27 @@ describe('Validator Object', () => {
       ).toEqual('Multiple trackers found');
     });
 
+    test('returns plain id when url is missing', () => {
+      expect(Validator.formatTrackerId({ id: '123' })).toEqual('123');
+    });
+
     test('returns fallback for undefined tracker', () => {
       expect(Validator.formatTrackerId(undefined)).toEqual(
         '**Missing, needs inspection! ✋**'
       );
+    });
+  });
+
+  describe('aggregatePrTracker()', () => {
+    test<IValidatorTestContext>('handles empty commits array', context => {
+      const tracker = context['only-tracker-policy'].aggregatePrTracker([]);
+
+      expect(tracker).toMatchInlineSnapshot(`
+        {
+          "message": "**Missing issue tracker ✋**",
+          "type": "unknown",
+        }
+      `);
     });
   });
 });
