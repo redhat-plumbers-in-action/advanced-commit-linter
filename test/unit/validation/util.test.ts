@@ -2,10 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { isException } from '../../../src/validation/util';
 
-import {
-  ConfigException,
-  configExceptionSchema,
-} from '../../../src/schema/config';
+import { ConfigException } from '../../../src/schema/config';
 
 describe('Validation Utilities', () => {
   test('isException', () => {
@@ -36,5 +33,20 @@ describe('Validation Utilities', () => {
     expect(isException(exceptionPolicy, commitBody)).toMatchInlineSnapshot(
       `undefined`
     );
+  });
+
+  test('isException with empty note array', () => {
+    const policy: ConfigException = { note: [] };
+    expect(isException(policy, 'some body')).toBeUndefined();
+  });
+
+  test('isException with no note property', () => {
+    const policy: ConfigException = { label: ['some-label'] };
+    expect(isException(policy, 'some body')).toBeUndefined();
+  });
+
+  test('isException with empty commit body', () => {
+    const policy: ConfigException = { note: ['exception-note'] };
+    expect(isException(policy, '')).toBeUndefined();
   });
 });

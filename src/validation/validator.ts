@@ -192,8 +192,26 @@ export class Validator {
     }
 
     if (prUniqueTracker.length > 1) {
+      const realTrackers = prUniqueTracker.filter(t => t.data);
+      const exceptionOnly = prUniqueTracker.filter(t => !t.data);
+
+      if (realTrackers.length === 1) {
+        const parts: string[] = [
+          ...exceptionOnly.map(t => `\`${t.exception}\``),
+          `[${realTrackers[0].data?.id}](${realTrackers[0].data?.url})`,
+        ];
+
+        return {
+          id: realTrackers[0].data?.id,
+          type: realTrackers[0].data?.type ?? 'unknown',
+          url: realTrackers[0].data?.url,
+          message: parts.join(', '),
+          exception: realTrackers[0].exception,
+        };
+      }
+
       const trackers = prUniqueTracker.map(t => {
-        if (t.exception) return `\`${t.exception}\``;
+        if (t.exception && !t.data) return `\`${t.exception}\``;
         return `[${t.data?.id}](${t.data?.url})`;
       });
 
@@ -214,7 +232,10 @@ export class Validator {
     tracker: OutputValidatedPullRequestMetadata['validation']['tracker'],
     commitsMetadata: Commit[]
   ): string {
-    const trackerID = Validator.formatTrackerId(tracker);
+    const trackerID =
+      !tracker && this.config.isTrackerPolicyEmpty()
+        ? '_no tracker_'
+        : Validator.formatTrackerId(tracker);
 
     const validCommits = Commit.getValidCommits(commitsMetadata);
     const invalidCommits = Commit.getInvalidCommits(commitsMetadata);

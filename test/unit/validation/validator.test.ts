@@ -11,6 +11,9 @@ import {
   validatorContextFixture,
 } from '../fixtures/validation/validator.fixture';
 
+import { Commit } from '../../../src/commit';
+import { Validator } from '../../../src/validation/validator';
+
 describe('Validator Object', () => {
   beforeEach<IValidatorTestContext>(context => {
     context['no-check-policy'] = validatorContextFixture['no-check-policy'];
@@ -198,9 +201,8 @@ describe('Validator Object', () => {
     });
   });
 
-  // ! FIXME - this test is failing, but it should pass
   describe('validateAll()', () => {
-    it.skip<IValidatorTestContext>('no-check-policy configuration', context => {
+    it<IValidatorTestContext>('no-check-policy configuration', context => {
       const validated = context['no-check-policy'].validateAll(
         context['validated-commits']['no-check-policy']['shouldPass']
       );
@@ -221,7 +223,7 @@ describe('Validator Object', () => {
       `);
     });
 
-    it.skip<IValidatorTestContext>('only-tracker-policy configuration', context => {
+    it<IValidatorTestContext>('only-tracker-policy configuration', context => {
       const validated = context['only-tracker-policy'].validateAll(
         context['validated-commits']['only-tracker-policy']['shouldPass']
       );
@@ -230,11 +232,15 @@ describe('Validator Object', () => {
       expect(validated.tracker).toBeDefined();
       expect(validated.tracker).toMatchInlineSnapshot(`
         {
+          "exception": undefined,
+          "id": "123",
           "message": "\`github-only\`, [123](https://bugzilla.redhat.com/show_bug.cgi?id=123)",
+          "type": "bugzilla",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=123",
         }
       `);
       expect(validated.message).toMatchInlineSnapshot(`
-        "Tracker - \`github-only\`, [123](https://bugzilla.redhat.com/show_bug.cgi?id=123)
+        "Tracker - [123](https://bugzilla.redhat.com/show_bug.cgi?id=123)
 
         #### The following commits meet all requirements
 
@@ -250,7 +256,6 @@ describe('Validator Object', () => {
       `);
     });
 
-    // ! FIXME - this test is failing, but it should pass
     it<IValidatorTestContext>('only-cherry-pick-policy configuration', context => {
       const validated = context['only-cherry-pick-policy'].validateAll(
         context['validated-commits']['only-cherry-pick-policy']['shouldPass']
@@ -562,7 +567,7 @@ describe('Validator Object', () => {
       expect(validated.status).toEqual('success');
       expect(validated.tracker).toBeUndefined();
       expect(validated.message).toMatchInlineSnapshot(`
-        "Tracker - **Missing, needs inspection! ✋**
+        "Tracker - _no tracker_
 
         #### The following commits meet all requirements
 
@@ -669,6 +674,88 @@ describe('Validator Object', () => {
         |---|---|
         | https://github.com/org/repo/commit/1111111111111111111111111111111111111111 - _feat: add new feature_ | **Missing issue tracker** ✋</br>**Missing upstream reference** ‼️ |"
       `);
+    });
+  });
+
+  describe('computePrStatus()', () => {
+    test<IValidatorTestContext>('returns failure when cherry-pick policy active and upstream fails', context => {
+      const commitWithUpstreamFailure = new Commit(upstreamAndTracker);
+      commitWithUpstreamFailure.validation = {
+        status: 'failure',
+        message: '',
+        tracker: {
+          status: 'success',
+          message: '[123](https://bugzilla.redhat.com/show_bug.cgi?id=123)',
+          data: [
+            {
+              data: {
+                keyword: 'Resolves: #',
+                id: '123',
+                type: 'bugzilla',
+                url: 'https://bugzilla.redhat.com/show_bug.cgi?id=123',
+              },
+            },
+          ],
+        },
+        upstream: {
+          status: 'failure',
+          data: [],
+        },
+      };
+
+      const tracker = {
+        id: '123',
+        type: 'bugzilla' as const,
+        url: 'https://bugzilla.redhat.com/show_bug.cgi?id=123',
+        message: 'Tracker found',
+      };
+
+      expect(
+        context['only-cherry-pick-policy'].computePrStatus(tracker, [
+          commitWithUpstreamFailure,
+        ])
+      ).toEqual('failure');
+    });
+
+    test<IValidatorTestContext>('returns success when no policies configured', context => {
+      const commit = new Commit(plainCommit);
+      commit.validation = {
+        status: 'success',
+        message: '',
+      };
+
+      expect(
+        context['no-check-policy'].computePrStatus(undefined, [commit])
+      ).toEqual('success');
+    });
+  });
+
+  describe('formatTrackerId()', () => {
+    test('returns id with url when available', () => {
+      expect(
+        Validator.formatTrackerId({
+          id: '123',
+          url: 'https://bugzilla.redhat.com/123',
+        })
+      ).toEqual('[123](https://bugzilla.redhat.com/123)');
+    });
+
+    test('returns exception when no id', () => {
+      expect(
+        Validator.formatTrackerId({ exception: 'github-only' })
+      ).toEqual('`github-only`');
+    });
+
+    test('returns message when no id or exception', () => {
+      expect(
+        Validator.formatTrackerId({ message: 'Multiple trackers found' })
+      ).toEqual('Multiple trackers found');
+    });
+
+    test('returns fallback for undefined tracker', () => {
+      expect(Validator.formatTrackerId(undefined)).toEqual(
+        '**Missing, needs inspection! ✋**'
+      );
     });
   });
 });
