@@ -45,7 +45,7 @@ describe('Validator Object', () => {
           },
           "upstream": {
             "data": [],
-            "exception": "",
+            "exception": undefined,
             "status": "success",
           },
         }
@@ -75,7 +75,7 @@ describe('Validator Object', () => {
           },
           "upstream": {
             "data": [],
-            "exception": "",
+            "exception": undefined,
             "status": "success",
           },
         }
@@ -169,7 +169,7 @@ describe('Validator Object', () => {
             },
             "upstream": {
               "data": [],
-              "exception": "",
+              "exception": undefined,
               "status": "failure",
             },
           }
@@ -324,7 +324,7 @@ describe('Validator Object', () => {
                     "url": "upstream-url",
                   },
                 ],
-                "exception": "",
+                "exception": undefined,
                 "status": "success",
               },
             },
@@ -412,7 +412,7 @@ describe('Validator Object', () => {
                     "url": "upstream-url",
                   },
                 ],
-                "exception": "",
+                "exception": undefined,
                 "status": "success",
               },
             },
@@ -458,7 +458,7 @@ describe('Validator Object', () => {
                     "url": "upstream-url",
                   },
                 ],
-                "exception": "",
+                "exception": undefined,
                 "status": "success",
               },
             },

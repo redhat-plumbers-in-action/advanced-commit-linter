@@ -120,7 +120,7 @@ export class Validator {
 
     if (
       (!data.upstream || data.upstream.data.length === 0) &&
-      data.upstream?.exception === ''
+      !data.upstream?.exception
     ) {
       return {
         status: 'success',

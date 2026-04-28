@@ -34,7 +34,7 @@ describe('Upstream Validator Object', () => {
       ).toMatchInlineSnapshot(`
         {
           "data": [],
-          "exception": "",
+          "exception": undefined,
           "status": "failure",
         }
       `);
@@ -72,7 +72,7 @@ describe('Upstream Validator Object', () => {
               "url": "https://github.com/upstream/repo/commit/2222222222222222222222222222222222222222",
             },
           ],
-          "exception": "",
+          "exception": undefined,
           "status": "success",
         }
       `);
@@ -99,7 +99,7 @@ describe('Upstream Validator Object', () => {
       ).toMatchInlineSnapshot(`
         {
           "data": [],
-          "exception": "",
+          "exception": undefined,
           "status": "failure",
         }
       `);
