@@ -1,4 +1,4 @@
-import { OutputValidatedPullRequestMetadata, ValidatedCommit, Status } from '../schema/output';
+import { OutputValidatedPullRequestMetadata, Tracker, ValidatedCommit, Status } from '../schema/output';
 import { TrackerValidator } from './tracker-validator';
 import { UpstreamValidator } from './upstream-validator';
 import { Commit } from '../commit';
@@ -13,8 +13,18 @@ export declare class Validator {
     constructor(config: Config, octokit: CustomOctokit);
     validateAll(validatedCommits: Commit[]): OutputValidatedPullRequestMetadata['validation'];
     validateCommit(commitMetadata: SingleCommitMetadata): Promise<ValidatedCommit>;
-    validationSummary(data: ValidatedCommit, commitTitle: string, commitUrl: string): Pick<ValidatedCommit, 'status' | 'message'>;
-    generalTracker(commitsMetadata: Commit[]): OutputValidatedPullRequestMetadata['validation']['tracker'];
-    overallMessage(tracker: OutputValidatedPullRequestMetadata['validation']['tracker'], commitsMetadata: Commit[]): string;
-    overallStatus(tracker: OutputValidatedPullRequestMetadata['validation']['tracker'], commitsMetadata: Commit[]): Status;
+    private buildTrackerResult;
+    private buildCommitSummary;
+    aggregatePrTracker(commitsMetadata: Commit[]): OutputValidatedPullRequestMetadata['validation']['tracker'];
+    buildPrMessage(tracker: OutputValidatedPullRequestMetadata['validation']['tracker'], commitsMetadata: Commit[]): string;
+    computePrStatus(tracker: OutputValidatedPullRequestMetadata['validation']['tracker'], commitsMetadata: Commit[]): Status;
+    static formatTrackerId(tracker: {
+        id?: string;
+        url?: string;
+        exception?: string;
+        message?: string;
+    } | undefined): string;
+    static getTrackerStatus(tracker: Tracker[], isTrackerPolicyEmpty: boolean): Status;
+    static getTrackerMessage(trackers: Tracker[], status: Status, isTrackerPolicyEmpty: boolean): string;
+    static cleanTrackerArray(validationArray: ValidatedCommit['tracker']): ValidatedCommit['tracker'];
 }

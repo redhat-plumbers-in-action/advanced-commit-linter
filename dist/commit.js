@@ -13,12 +13,6 @@ export class Commit {
     get validated() {
         return Object.assign(Object.assign({}, this.metadata), { validation: this.validation });
     }
-    haveTracker() {
-        return this.validation.upstream !== undefined;
-    }
-    haveUpstream() {
-        return this.validation.upstream !== undefined;
-    }
     static getValidCommits(commits) {
         return commits.filter(commit => commit.validation.status === 'success');
     }

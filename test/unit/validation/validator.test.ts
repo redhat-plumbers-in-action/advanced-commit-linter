@@ -741,9 +741,9 @@ describe('Validator Object', () => {
     });
 
     test('returns exception when no id', () => {
-      expect(
-        Validator.formatTrackerId({ exception: 'github-only' })
-      ).toEqual('`github-only`');
+      expect(Validator.formatTrackerId({ exception: 'github-only' })).toEqual(
+        '`github-only`'
+      );
     });
 
     test('returns message when no id or exception', () => {

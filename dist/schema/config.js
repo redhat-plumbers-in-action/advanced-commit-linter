@@ -25,7 +25,9 @@ export const configPolicySchema = z.object({
     tracker: z.array(configTrackerSchema).optional().default([]),
 });
 export const configSchema = z.object({
-    // TODO: Get rid of as unknown as ConfigPolicy in the future
-    policy: configPolicySchema.optional().default({}),
+    policy: configPolicySchema.optional().default({
+        'cherry-pick': { upstream: [] },
+        tracker: [],
+    }),
 });
 //# sourceMappingURL=config.js.map
