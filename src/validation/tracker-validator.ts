@@ -59,6 +59,7 @@ export class TrackerValidator {
     trackerFormat: string,
     commitBody: string
   ): string | undefined {
+    // `\\n` matches literal backslash-n text in API responses; `^` with `m` flag handles actual newlines
     const regexp = new RegExp(
       `(^\\s*|\\\\n|\\n)(${keyword})(${trackerFormat})$`,
       'gm'
