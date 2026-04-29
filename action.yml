@@ -34,5 +34,5 @@ outputs:
     description: Original Pull Request metadata extended with validation data
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: node24
+  main: dist/main.js
