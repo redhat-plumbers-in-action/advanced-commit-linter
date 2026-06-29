@@ -28,10 +28,17 @@ export class UpstreamValidator {
       singleCommitMetadata.message.body
     );
 
+    const revertWaiver =
+      singleCommitMetadata.message.revert.length > 0
+        ? `revert of ${singleCommitMetadata.message.revert.map(r => r.sha).join(', ')}`
+        : undefined;
+
+    const effectiveException = exception ?? revertWaiver;
+
     return {
       data,
-      status: this.getStatus(data, exception),
-      exception,
+      status: this.getStatus(data, effectiveException),
+      exception: effectiveException,
     };
   }
 

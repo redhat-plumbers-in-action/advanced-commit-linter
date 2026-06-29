@@ -15,6 +15,7 @@ export const plainCommit: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature`,
     cherryPick: [],
+    revert: [],
   },
 };
 
@@ -25,6 +26,7 @@ export const plainCommitWithUpstreamException: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\nrhel-only`,
     cherryPick: [],
+    revert: [],
   },
 };
 
@@ -35,6 +37,7 @@ export const plainCommitWithTrackerException: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\ngithub-only`,
     cherryPick: [],
+    revert: [],
   },
 };
 
@@ -45,6 +48,7 @@ export const tracker: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\nResolves: #123`,
     cherryPick: [],
+    revert: [],
   },
 };
 
@@ -55,6 +59,7 @@ export const TrackerWithException: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\ngithub-only\n\nResolves: #123`,
     cherryPick: [],
+    revert: [],
   },
 };
 
@@ -65,6 +70,7 @@ export const upstream: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\n(cherry picked from commit 2222222222222222222222222222222222222222)`,
     cherryPick: [{ sha: '2222222222222222222222222222222222222222' }],
+    revert: [],
   },
 };
 
@@ -75,6 +81,7 @@ export const upstreamWithException: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\nrhel-only\n\n(cherry picked from commit 2222222222222222222222222222222222222222)`,
     cherryPick: [{ sha: '2222222222222222222222222222222222222222' }],
+    revert: [],
   },
 };
 
@@ -85,6 +92,7 @@ export const upstreamAndTracker: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\n(cherry picked from commit 2222222222222222222222222222222222222222)\n\nResolves: #123`,
     cherryPick: [{ sha: '2222222222222222222222222222222222222222' }],
+    revert: [],
   },
 };
 
@@ -95,6 +103,7 @@ export const upstreamAndTrackerWithException: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\n(cherry picked from commit 2222222222222222222222222222222222222222)\n\ngithub-only\n\nResolves: #123`,
     cherryPick: [{ sha: '2222222222222222222222222222222222222222' }],
+    revert: [],
   },
 };
 
@@ -105,6 +114,7 @@ export const upstreamWithExceptionAndTracker: SingleCommitMetadata = {
     title: 'feat: add new feature',
     body: `feat: add new feature\n\n(cherry picked from commit 2222222222222222222222222222222222222222)\n\nResolves: #123\n\nrhel-only`,
     cherryPick: [{ sha: '2222222222222222222222222222222222222222' }],
+    revert: [],
   },
 };
 
@@ -116,6 +126,7 @@ export const upstreamWithExceptionAndTrackerWithException: SingleCommitMetadata 
       title: 'feat: add new feature',
       body: `feat: add new feature\n\n(cherry picked from commit 2222222222222222222222222222222222222222)\n\ngithub-only\n\nResolves: #123\n\nrhel-only`,
       cherryPick: [{ sha: '2222222222222222222222222222222222222222' }],
+      revert: [],
     },
   };
 

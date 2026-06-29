@@ -11,6 +11,13 @@ export const singleCommitMetadataSchema = z.object({
         sha: z.string(),
       })
     ),
+    revert: z
+      .array(
+        z.object({
+          sha: z.string(),
+        })
+      )
+      .default([]),
   }),
 });
 
