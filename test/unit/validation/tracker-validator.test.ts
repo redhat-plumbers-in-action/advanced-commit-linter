@@ -26,6 +26,7 @@ describe('Tracker Validator Object', () => {
             title: 'commit title',
             body: 'commit title',
             cherryPick: [],
+            revert: [],
           },
         })
       ).toMatchInlineSnapshot(`
@@ -44,6 +45,7 @@ describe('Tracker Validator Object', () => {
             title: 'commit title',
             body: 'commit title\n\nResolves: #789',
             cherryPick: [],
+            revert: [],
           },
         })
       ).toMatchInlineSnapshot(`
@@ -68,6 +70,7 @@ describe('Tracker Validator Object', () => {
             title: 'commit title',
             body: 'commit title\n\ngithub-only',
             cherryPick: [],
+            revert: [],
           },
         })
       ).toMatchInlineSnapshot(`
@@ -86,6 +89,7 @@ describe('Tracker Validator Object', () => {
             title: 'commit title',
             body: 'commit title\n\ngithub-only\n\nResolves: #789',
             cherryPick: [],
+            revert: [],
           },
         })
       ).toMatchInlineSnapshot(`

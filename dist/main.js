@@ -47179,7 +47179,12 @@ var singleCommitMetadataSchema = external_exports.object({
       external_exports.object({
         sha: external_exports.string()
       })
-    )
+    ),
+    revert: external_exports.array(
+      external_exports.object({
+        sha: external_exports.string()
+      })
+    ).default([])
   })
 });
 var commitMetadataSchema = external_exports.array(singleCommitMetadataSchema);
@@ -47252,10 +47257,12 @@ var UpstreamValidator = class {
       this.config.exception,
       singleCommitMetadata.message.body
     );
+    const revertWaiver = singleCommitMetadata.message.revert.length > 0 ? `revert of ${singleCommitMetadata.message.revert.map((r) => r.sha).join(", ")}` : void 0;
+    const effectiveException = exception ?? revertWaiver;
     return {
       data,
-      status: this.getStatus(data, exception),
-      exception
+      status: this.getStatus(data, effectiveException),
+      exception: effectiveException
     };
   }
   async loopPolicy(cherryPick, octokit2) {

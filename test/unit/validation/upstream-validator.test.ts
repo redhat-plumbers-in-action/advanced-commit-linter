@@ -27,6 +27,7 @@ describe('Upstream Validator Object', () => {
               title: 'commit title',
               body: 'commit title',
               cherryPick: [],
+              revert: [],
             },
           },
           context.githubContext('fail')
@@ -54,6 +55,7 @@ describe('Upstream Validator Object', () => {
                   sha: '2222222222222222222222222222222222222222',
                 },
               ],
+              revert: [],
             },
           },
           context.githubContext('pass')
@@ -92,6 +94,7 @@ describe('Upstream Validator Object', () => {
                   sha: '1111111',
                 },
               ],
+              revert: [],
             },
           },
           context.githubContext('fail')
@@ -115,6 +118,7 @@ describe('Upstream Validator Object', () => {
               title: 'commit title',
               body: 'commit title\n\nrhel-only',
               cherryPick: [],
+              revert: [],
             },
           },
           context.githubContext('fail')
@@ -142,6 +146,7 @@ describe('Upstream Validator Object', () => {
                   sha: '2222222222222222222222222222222222222222',
                 },
               ],
+              revert: [],
             },
           },
           context.githubContext('pass')
@@ -160,6 +165,62 @@ describe('Upstream Validator Object', () => {
               "url": "https://github.com/upstream/repo/commit/2222222222222222222222222222222222222222",
             },
           ],
+          "exception": "rhel-only",
+          "status": "success",
+        }
+      `);
+    });
+
+    test<IUpstreamValidatorTestContext>('revert waives missing upstream', async context => {
+      expect(
+        await context['systemd-rhel-policy'].validate(
+          {
+            sha: '123',
+            url: 'https://github.com/org/repo/commit/123',
+            message: {
+              title: 'Revert "some commit"',
+              body: 'This reverts commit 4444444444444444444444444444444444444444.',
+              cherryPick: [],
+              revert: [
+                {
+                  sha: '4444444444444444444444444444444444444444',
+                },
+              ],
+            },
+          },
+          context.githubContext('fail')
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "data": [],
+          "exception": "revert of 4444444444444444444444444444444444444444",
+          "status": "success",
+        }
+      `);
+    });
+
+    test<IUpstreamValidatorTestContext>('revert with existing exception keeps exception', async context => {
+      expect(
+        await context['systemd-rhel-policy'].validate(
+          {
+            sha: '123',
+            url: 'https://github.com/org/repo/commit/123',
+            message: {
+              title: 'Revert "some commit"',
+              body: 'This reverts commit 4444444444444444444444444444444444444444.\n\nrhel-only',
+              cherryPick: [],
+              revert: [
+                {
+                  sha: '4444444444444444444444444444444444444444',
+                },
+              ],
+            },
+          },
+          context.githubContext('fail')
+        )
+      ).toMatchInlineSnapshot(`
+        {
+          "data": [],
           "exception": "rhel-only",
           "status": "success",
         }
