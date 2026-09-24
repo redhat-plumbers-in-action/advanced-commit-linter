@@ -26,8 +26,7 @@ async function action(octokit: CustomOctokit) {
 
   const setStatus = getBooleanInput('set-status', { required: true });
   let checkRun:
-    | Endpoints['POST /repos/{owner}/{repo}/check-runs']['response']
-    | undefined;
+    Endpoints['POST /repos/{owner}/{repo}/check-runs']['response'] | undefined;
 
   // Initialize check run - check in progress
   // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#create-a-check-run
